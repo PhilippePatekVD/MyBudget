@@ -5,125 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Finance Synchro | Deep Ocean v7.0</title>
+    <title>Family Hub | v8.0 Luxury Ocean</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            /* Palette Bleue Prononcée */
             --blue-dark: #0f172a;
-            --blue-mid: #2563eb;
-            --blue-light: #f8fafc;
-            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e3a8a 40%, #3b82f6 75%, #f8fafc 100%);
-            
-            --surface: rgba(255, 255, 255, 0.95);
-            --card: #ffffff;
-            --accent: #2563eb;
+            --blue-mid: #1e40af;
+            --blue-accent: #3b82f6;
+            --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
+            --glass: rgba(255, 255, 255, 0.95);
+            --glass-dark: rgba(15, 23, 42, 0.8);
+            --accent: #3b82f6;
             --success: #10b981;
             --danger: #ef4444;
             --text-dark: #0f172a;
             --muted: #64748b;
-            --shadow: 0 15px 35px rgba(0,0,0,0.15);
-            --r: 20px;
+            --r: 24px;
         }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Inter', sans-serif;
             color: var(--text-dark);
             background: var(--bg-gradient);
             background-attachment: fixed;
             min-height: 100vh;
-            padding: 20px;
+            padding-bottom: 30px;
         }
 
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; }
 
-        /* LOGO */
-        .bank-logo {
-            width: 45px; height: 45px;
-            background: white; color: var(--blue-dark);
-            border-radius: 12px; display: grid; place-items: center;
-            font-size: 1.3rem; box-shadow: var(--shadow);
+        /* --- LOGO CUSTO --- */
+        .family-logo {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: white; width: 70px; height: 70px; border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); margin: 0 auto;
         }
+        .logo-icons { display: flex; gap: 4px; color: var(--blue-dark); font-size: 0.9rem; }
+        .logo-dogs { display: flex; gap: 8px; color: var(--blue-accent); font-size: 0.6rem; margin-top: 2px; }
 
-        /* LOGIN */
-        #login-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg-gradient);
+        /* --- AUTH --- */
+        #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-gradient); display: flex; align-items: center; justify-content: center; }
+        .login-box { background: white; width: min(380px, 90%); padding: 40px; border-radius: var(--r); text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+
+        /* --- NAVIGATION --- */
+        .header-main { padding: 40px 20px 20px; text-align: center; color: white; }
+        .header-main h1 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 15px; }
+        .btn-back-home { position: absolute; top: 30px; left: 20px; color: white; background: rgba(255,255,255,0.1); border: none; padding: 10px; border-radius: 12px; cursor: pointer; }
+
+        /* --- HOME HUB --- */
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .hub-card {
+            background: var(--glass); border-radius: var(--r); padding: 25px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            cursor: pointer; transition: transform 0.3s; border: 1px solid rgba(255,255,255,0.2);
         }
-        .login-box {
-            background: white; width: min(400px, 90%);
-            padding: 40px; border-radius: var(--r);
-            box-shadow: var(--shadow); text-align: center;
-        }
-        .login-box h1 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-top: 15px; }
+        .hub-card:active { transform: scale(0.95); }
+        .hub-card i { font-size: 2rem; color: var(--blue-accent); margin-bottom: 12px; }
+        .hub-card span { font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .hub-card p { font-size: 0.65rem; color: var(--muted); margin-top: 5px; }
 
-        /* LAYOUT */
-        .app-wrap { max-width: 1000px; margin: 0 auto; display: grid; gap: 20px; }
-        
-        .header-bar {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 15px 25px; border-radius: var(--r);
-            display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .header-bar h1 { font-family: 'Playfair Display', serif; color: white; font-size: 1.4rem; }
-        .header-bar h1 span { color: #93c5fd; }
+        /* --- MODULE VIEWS --- */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 15px; }
+        .card { background: white; border-radius: var(--r); padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        h2 { font-family: 'Playfair Display', serif; margin-bottom: 20px; font-size: 1.4rem; color: var(--blue-dark); border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
 
-        /* STATS CARDS */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        .stat-card {
-            background: white; padding: 20px; border-radius: var(--r);
-            box-shadow: var(--shadow); border-bottom: 4px solid var(--accent);
-        }
-        .stat-label { font-size: 0.65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-        .stat-value { font-size: 1.4rem; font-weight: 800; margin-top: 5px; }
-
-        /* MAIN */
-        .main-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-        .card { background: white; padding: 25px; border-radius: var(--r); box-shadow: var(--shadow); }
-
-        /* TABS */
-        .tabs-nav { display: flex; gap: 5px; margin-bottom: 20px; background: #f1f5f9; padding: 5px; border-radius: 12px; }
-        .tab-btn { 
-            flex: 1; background: none; border: none; font: inherit; font-weight: 600; 
-            color: var(--muted); cursor: pointer; padding: 8px; border-radius: 8px; font-size: 0.8rem;
-        }
-        .tab-btn.active { background: white; color: var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-
-        /* SAVINGS SPECIFIC */
-        .savings-input-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #f1f5f9; }
-        .savings-label { display: flex; align-items: center; gap: 10px; font-weight: 600; }
-        .savings-field { width: 120px; text-align: right; font-weight: 700; border: 1px solid #e2e8f0; padding: 8px; border-radius: 8px; }
-
-        /* FORMS */
+        /* --- FORMS & UI --- */
         .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; text-transform: uppercase; }
-        input, select {
-            width: 100%; padding: 12px; border-radius: 10px;
-            border: 1px solid #e2e8f0; font: inherit; outline: none;
-        }
-        .btn-main {
-            width: 100%; padding: 14px; border-radius: 10px; border: none;
-            background: var(--blue-mid); color: white; font-weight: 700; cursor: pointer;
-        }
+        label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font: inherit; outline: none; }
+        .btn-action { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--blue-accent); color: white; font-weight: 700; cursor: pointer; }
+        
+        /* FINANCE SPECIFIC */
+        .finance-subnav { display: flex; gap: 5px; background: #f1f5f9; padding: 5px; border-radius: 12px; margin-bottom: 20px; }
+        .sub-btn { flex: 1; padding: 8px; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--muted); background: none; }
+        .sub-btn.active { background: white; color: var(--blue-accent); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 
-        /* TABLE */
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 12px 5px; border-bottom: 1px solid #f1f5f9; font-size: 0.8rem; }
-        .amt-pos { color: var(--success); font-weight: 700; }
-        .amt-neg { color: var(--danger); font-weight: 700; }
+        /* SAVINGS TABLE */
+        .savings-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        .savings-val { width: 130px; text-align: right; font-weight: 700; border: 1px solid #e2e8f0; padding: 6px; border-radius: 8px; }
 
-        @media (max-width: 900px) { .main-grid, .stats-grid { grid-template-columns: 1fr; } }
+        /* LISTS */
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f8fafc; }
+        .tag { font-size: 0.65rem; padding: 4px 10px; border-radius: 6px; font-weight: 700; }
+
+        @media (max-width: 600px) { .hub-grid { grid-template-columns: 1fr; } .finance-layout { display: grid; grid-template-columns: 1fr !important; } }
     </style>
 </head>
 <body>
@@ -131,151 +103,158 @@
 <!-- LOGIN -->
 <div id="login-overlay">
     <div class="login-box">
-        <div class="bank-logo" style="margin: 0 auto;"><i class="fa-solid fa-vault"></i></div>
-        <h1>Finance <span>Synchro</span></h1>
-        <p style="color: var(--muted); font-size: 0.7rem; letter-spacing: 1px; margin-top: 10px;">ACCÈS AU COFFRE PRIVÉ</p>
-        <div style="margin-top: 25px;">
-            <input type="email" id="email" placeholder="Email" style="margin-bottom: 10px;">
-            <input type="password" id="password" placeholder="Mot de passe">
-            <button class="btn-main" id="login-btn" style="margin-top: 20px;">Ouvrir le Coffre</button>
+        <div class="family-logo">
+            <div class="logo-icons"><i class="fa-solid fa-person"></i><i class="fa-solid fa-person-dress"></i></div>
+            <div class="logo-dogs"><i class="fa-solid fa-dog"></i><i class="fa-solid fa-dog"></i></div>
         </div>
-        <p id="error-msg" style="color:var(--danger); font-size:0.75rem; margin-top:15px;"></p>
+        <h1>Family Hub</h1>
+        <p style="color: var(--muted); font-size: 0.7rem; letter-spacing: 2px; margin-top: 15px;">LE COFFRE DE LA MAISON</p>
+        <div style="margin-top: 30px;">
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Mot de passe">
+            <button class="btn-action" id="login-btn" style="margin-top: 15px;">Ouvrir</button>
+        </div>
     </div>
 </div>
 
-<!-- APP -->
-<div id="app-content" class="app-wrap hidden">
-    <header class="header-bar">
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <div class="bank-logo" style="width:32px; height:32px; font-size:0.9rem;"><i class="fa-solid fa-building-columns"></i></div>
-            <h1>Finance <span>Synchro</span></h1>
-        </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <select id="filter-month" class="num" style="width: auto; padding: 4px 8px; font-size: 0.8rem; background: rgba(255,255,255,0.1); color: white; border-color: rgba(255,255,255,0.3);"></select>
-            <button id="logout-btn" style="background:none; border:none; color:white; cursor:pointer;"><i class="fa-solid fa-power-off"></i></button>
-        </div>
-    </header>
+<header class="header-main">
+    <button class="btn-back-home hidden" id="back-home"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="family-logo">
+        <div class="logo-icons"><i class="fa-solid fa-person"></i><i class="fa-solid fa-person-dress"></i></div>
+        <div class="logo-dogs"><i class="fa-solid fa-dog"></i><i class="fa-solid fa-dog"></i></div>
+    </div>
+    <h1 id="app-title">Family Hub</h1>
+    <p id="app-subtitle">Gestion Privée Synchro</p>
+</header>
 
-    <div class="stats-grid">
-        <div class="stat-card" style="border-color: var(--success)">
-            <div class="stat-label">Revenus</div>
-            <div id="res-inc" class="stat-value num" style="color: var(--success)">0.00</div>
+<main class="container">
+    
+    <!-- HOME HUB GRID -->
+    <div id="view-hub" class="hub-grid">
+        <div class="hub-card" onclick="openModule('finance')">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Finance</span>
+            <p>Comptes & Épargne</p>
         </div>
-        <div class="stat-card" style="border-color: var(--danger)">
-            <div class="stat-label">Dépenses</div>
-            <div id="res-exp" class="stat-value num" style="color: var(--danger)">0.00</div>
+        <div class="hub-card" onclick="openModule('vacances')">
+            <i class="fa-solid fa-umbrella-beach"></i>
+            <span>Vacances</span>
+            <p>Charlotte & Kévin</p>
         </div>
-        <div class="stat-card" style="border-color: var(--accent)">
-            <div class="stat-label">Reste à vivre</div>
-            <div id="res-net" class="stat-value num">0.00</div>
+        <div class="hub-card" onclick="openModule('projets')">
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Projets</span>
+            <p>Achat & Travaux</p>
+        </div>
+        <div class="hub-card" onclick="openModule('sport')">
+            <i class="fa-solid fa-heart-pulse"></i>
+            <span>Sport</span>
+            <p>Suivi Physique</p>
         </div>
     </div>
 
-    <div class="main-grid">
-        <!-- FORMULAIRE -->
-        <div class="card">
-            <h3 style="font-family: 'Playfair Display', serif; margin-bottom: 20px; font-size: 1.2rem;" id="form-title">Nouveau Flux</h3>
-            <form id="entry-form">
-                <div class="input-group">
-                    <div style="display: flex; gap: 5px; background: #f1f5f9; padding: 4px; border-radius: 10px;">
-                        <input type="radio" name="rtype" id="t-exp" value="expense" checked style="display:none">
-                        <label for="t-exp" id="l-exp" style="flex:1; text-align:center; padding:8px; margin:0; cursor:pointer; border-radius:7px; background:white; font-size:0.75rem;">Dépense</label>
-                        <input type="radio" name="rtype" id="t-inc" value="income" style="display:none">
-                        <label for="t-inc" id="l-inc" style="flex:1; text-align:center; padding:8px; margin:0; cursor:pointer; border-radius:7px; font-size:0.75rem;">Revenu</label>
+    <!-- MODULE FINANCE (v7.0 Intégrée) -->
+    <div id="view-finance" class="module-view hidden">
+        <div class="card" style="background: var(--blue-dark); color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div><small style="opacity: 0.6;">SOLDE NET MENSUEL</small><div id="res-net" class="num" style="font-size: 1.8rem; font-weight: 800;">0.00</div></div>
+                <select id="filter-month" class="num" style="width: auto; background: rgba(255,255,255,0.1); color: white; border: none; font-size: 0.8rem;"></select>
+            </div>
+        </div>
+
+        <div class="finance-subnav">
+            <button class="sub-btn active" onclick="switchFinanceTab('journal')">Journal</button>
+            <button class="sub-btn" onclick="switchFinanceTab('analyse')">Analyse</button>
+            <button class="sub-btn" onclick="switchFinanceTab('flux')">Flux</button>
+            <button class="sub-btn" onclick="switchFinanceTab('epargne')">Épargne</button>
+        </div>
+
+        <div id="fin-journal">
+            <div class="card">
+                <h2>Nouvelle Transaction</h2>
+                <form id="form-finance">
+                    <div style="display: flex; gap: 5px; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 15px;">
+                        <input type="radio" name="ftype" id="f-exp" value="expense" checked style="display:none"><label for="f-exp" id="l-exp" style="flex:1; text-align:center; padding:8px; cursor:pointer; border-radius:7px; background:white; font-size:0.75rem;">Dépense</label>
+                        <input type="radio" name="ftype" id="f-inc" value="income" style="display:none"><label for="f-inc" id="l-inc" style="flex:1; text-align:center; padding:8px; cursor:pointer; border-radius:7px; font-size:0.75rem;">Revenu</label>
                     </div>
-                </div>
-                <div class="input-group"><label>Date</label><input type="date" id="f-date" required></div>
-                <div class="input-group"><label>Nom</label><input type="text" id="f-desc" placeholder="..." required></div>
-                <div class="input-group"><label>CHF</label><input type="number" id="f-amt" step="0.01" required></div>
-                <div class="input-group">
-                    <label>Catégorie</label>
-                    <select id="f-cat">
-                        <optgroup label="Fixes & Factures">
-                            <option value="Logement">🏠 Logement</option>
-                            <option value="Assurances">🛡️ Assurances</option>
-                            <option value="Électricité">⚡ Électricité</option>
-                            <option value="Internet & Téléphone">📱 Internet / Mobile</option>
-                            <option value="Factures administratives">📄 Administratif</option>
-                            <option value="Santé">🏥 Santé</option>
-                        </optgroup>
-                        <optgroup label="Quotidien">
-                            <option value="Alimentation">🛒 Alimentation</option>
-                            <option value="Restaurant">🍴 Restaurant</option>
-                            <option value="Transport">🚗 Transport</option>
-                            <option value="Recharge voiture">🔋 Recharge voiture</option>
-                            <option value="Loisirs">🎉 Loisirs</option>
-                            <option value="Shopping">🛍️ Shopping</option>
-                            <option value="Abonnements digitaux">💻 Digital / Streaming</option>
-                        </optgroup>
-                        <optgroup label="Futur">
-                            <option value="3e pillier">🏦 3e pilier</option>
-                            <option value="Immobilier Suisse">🏘️ Immo CH</option>
-                            <option value="Immobilier France">🇫🇷 Immo FR</option>
-                            <option value="Epargne">📈 Épargne</option>
-                        </optgroup>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <input type="date" id="fi-date" required>
+                        <input type="number" id="fi-amt" placeholder="Montant CHF" step="0.01" required>
+                    </div>
+                    <input type="text" id="fi-desc" placeholder="Libellé..." required>
+                    <select id="fi-cat">
+                        <option value="Logement">🏠 Logement</option><option value="Alimentation">🛒 Alimentation</option>
+                        <option value="Transport">🚗 Transport</option><option value="Loisirs">🎉 Loisirs</option>
+                        <option value="Santé">🏥 Santé</option><option value="Immobilier Suisse">🏘️ Immo CH</option>
                         <option value="Revenu">💰 Revenu</option>
-                        <option value="Autre">⚙️ Autre</option>
                     </select>
+                    <button type="submit" class="btn-action">Enregistrer</button>
+                </form>
+            </div>
+            <div class="card">
+                <table><tbody id="finance-table"></tbody></table>
+            </div>
+        </div>
+
+        <div id="fin-analyse" class="hidden"><div class="card"><canvas id="financeChart" style="height:300px;"></canvas></div></div>
+        
+        <div id="fin-epargne" class="hidden">
+            <div class="card">
+                <h2>Patrimoine Liquide</h2>
+                <div class="savings-row"><span>SwissQuote</span><input type="number" id="sav-sq" class="savings-val" onchange="syncSavings()"></div>
+                <div class="savings-row"><span>Épargne Perso</span><input type="number" id="sav-ep" class="savings-val" onchange="syncSavings()"></div>
+                <div class="savings-row"><span>Épargne Commune</span><input type="number" id="sav-ec" class="savings-val" onchange="syncSavings()"></div>
+                <div style="margin-top:20px; padding:20px; background:var(--blue-dark); color:white; border-radius:15px; text-align:center;">
+                    <small>TOTAL DISPONIBLE</small><div id="sav-total" class="num" style="font-size:1.5rem; font-weight:800;">0.00 CHF</div>
                 </div>
-                <button type="submit" class="btn-main" id="submit-btn">Confirmer</button>
-                <button type="button" id="cancel-edit" class="hidden" style="width:100%; border:none; background:none; margin-top:10px; color:var(--muted); font-size:0.8rem; cursor:pointer;">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODULE VACANCES -->
+    <div id="view-vacances" class="module-view hidden">
+        <div class="card">
+            <h2>Dates Charlotte</h2>
+            <div id="list-vac-charlotte"></div>
+        </div>
+        <div class="card">
+            <h2>Dates Kévin</h2>
+            <div id="list-vac-kevin"></div>
+        </div>
+        <div class="card">
+            <h2>Ajouter des Congés</h2>
+            <form id="form-vac">
+                <select id="v-who"><option value="Charlotte">Charlotte</option><option value="Kévin">Kévin</option></select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="date" id="v-start" required>
+                    <input type="date" id="v-end" required>
+                </div>
+                <input type="text" id="v-desc" placeholder="Destination / Motif">
+                <button type="submit" class="btn-action">Valider les dates</button>
             </form>
         </div>
+    </div>
 
-        <!-- AFFICHAGE -->
+    <!-- MODULE PROJETS -->
+    <div id="view-projets" class="module-view hidden">
         <div class="card">
-            <nav class="tabs-nav">
-                <button class="tab-btn active" id="btn-journal">Journal</button>
-                <button class="tab-btn" id="btn-repartition">Analyse</button>
-                <button class="tab-btn" id="btn-comparatif">Flux</button>
-                <button class="tab-btn" id="btn-epargne" style="background: var(--blue-dark); color: white;">Épargne</button>
-            </nav>
-
-            <!-- JOURNAL -->
-            <div id="tab-journal">
-                <table id="data-table">
-                    <thead><tr><th style="width: 60px;">Date</th><th>Description</th><th style="text-align:right;">CHF</th><th></th></tr></thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-
-            <!-- CHART PIE -->
-            <div id="tab-repartition" class="hidden">
-                <div style="height: 320px;"><canvas id="pieChart"></canvas></div>
-            </div>
-
-            <!-- CHART BAR -->
-            <div id="tab-comparatif" class="hidden">
-                <div style="height: 320px;"><canvas id="barChart"></canvas></div>
-            </div>
-
-            <!-- EPARGNE -->
-            <div id="tab-epargne" class="hidden">
-                <h4 style="margin-bottom: 20px; font-family: 'Playfair Display', serif; border-bottom: 2px solid var(--blue-dark); padding-bottom: 5px;">Avoirs Disponibles</h4>
-                
-                <div class="savings-input-row">
-                    <div class="savings-label"><i class="fa-solid fa-chart-line" style="color:var(--accent)"></i> SwissQuote</div>
-                    <input type="number" id="sq-val" class="savings-field" value="0" onchange="saveSavings()">
+            <h2>Portfolio Projets</h2>
+            <div id="list-projets"></div>
+        </div>
+        <div class="card">
+            <h2>Nouveau Projet Family</h2>
+            <form id="form-proj">
+                <input type="text" id="p-name" placeholder="Nom du projet (ex: Piscine, Cuisine...)" required>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <input type="date" id="p-deadline" required>
+                    <input type="number" id="p-budget" placeholder="Budget estimé CHF" required>
                 </div>
-                
-                <div class="savings-input-row">
-                    <div class="savings-label"><i class="fa-solid fa-user-shield" style="color:var(--success)"></i> Épargne Perso</div>
-                    <input type="number" id="ep-val" class="savings-field" value="0" onchange="saveSavings()">
-                </div>
-
-                <div class="savings-input-row">
-                    <div class="savings-label"><i class="fa-solid fa-users-rectangle" style="color:var(--danger)"></i> Épargne Commune</div>
-                    <input type="number" id="ec-val" class="savings-field" value="0" onchange="saveSavings()">
-                </div>
-
-                <div style="margin-top: 30px; padding: 20px; background: var(--blue-dark); color: white; border-radius: 15px; text-align: center;">
-                    <div class="stat-label" style="color:rgba(255,255,255,0.6)">Fortune Liquide Totale</div>
-                    <div id="savings-total" class="num" style="font-size: 1.8rem; font-weight: 800; margin-top: 5px;">0.00 CHF</div>
-                </div>
-            </div>
+                <button type="submit" class="btn-action">Lancer le projet</button>
+            </form>
         </div>
     </div>
-</div>
+
+</main>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -288,207 +267,147 @@
         projectId: "mybudget-ecb46",
         storageBucket: "mybudget-ecb46.firebasestorage.app",
         messagingSenderId: "891853073723",
-        appId: "1:891853073723:web:29ec6bcf063a7fa8e8db1e",
-        measurementId: "G-Q4DFKZLXLG"
+        appId: "1:891853073723:web:29ec6bcf063a7fa8e8db1e"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    let allData = [];
-    let pieChart, barChart;
-    let editId = null;
+    let allFinData = [];
+    let finChart;
 
-    // --- NAVIGATION TABS ---
-    const tabs = ['journal', 'repartition', 'comparatif', 'epargne'];
-    tabs.forEach(t => {
-        document.getElementById('btn-'+t).onclick = () => {
-            tabs.forEach(tab => {
-                document.getElementById('tab-'+tab).classList.add('hidden');
-                document.getElementById('btn-'+tab).classList.remove('active');
-            });
-            document.getElementById('tab-'+t).classList.remove('hidden');
-            document.getElementById('btn-'+t).classList.add('active');
-            render();
-        };
-    });
+    // --- NAVIGATION ---
+    window.openModule = (mod) => {
+        document.getElementById('view-hub').classList.add('hidden');
+        document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
+        document.getElementById('view-'+mod).classList.remove('hidden');
+        document.getElementById('back-home').classList.remove('hidden');
+        document.getElementById('app-title').innerText = mod.charAt(0).toUpperCase() + mod.slice(1);
+        document.getElementById('app-subtitle').innerText = "Module Familial";
+        if(mod === 'finance') renderFinance();
+    };
+
+    window.goHome = () => {
+        document.getElementById('view-hub').classList.remove('hidden');
+        document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
+        document.getElementById('back-home').classList.add('hidden');
+        document.getElementById('app-title').innerText = "Family Hub";
+        document.getElementById('app-subtitle').innerText = "Gestion Privée Synchro";
+    };
+    document.getElementById('back-home').onclick = window.goHome;
+
+    window.switchFinanceTab = (tab) => {
+        ['journal', 'analyse', 'epargne'].forEach(t => {
+            const el = document.getElementById('fin-'+t);
+            if(el) el.classList.add('hidden');
+        });
+        document.getElementById('fin-'+tab).classList.remove('hidden');
+        document.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    };
 
     // --- AUTH ---
     document.getElementById('login-btn').onclick = () => {
         signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
-            .catch(err => document.getElementById('error-msg').innerText = "Accès refusé.");
+            .catch(() => alert("Accès refusé."));
     };
-    document.getElementById('logout-btn').onclick = () => signOut(auth);
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
             document.getElementById('login-overlay').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('hidden');
-            init(user.uid); 
-            subscribe(user.uid);
-            loadSavings(user.uid);
+            initData(user.uid);
         } else {
             document.getElementById('login-overlay').classList.remove('hidden');
-            document.getElementById('app-content').classList.add('hidden');
         }
     });
 
-    // --- DATA SAVINGS ---
-    window.saveSavings = async () => {
+    // --- FIREBASE SYNC ---
+    function initData(uid) {
+        // Init Month Filter
+        const sel = document.getElementById('filter-month');
+        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        sel.innerHTML = '<option value="all">Historique</option>';
+        for(let i=0; i<12; i++) {
+            const v = `2026-${String(i+1).padStart(2,'0')}`;
+            sel.innerHTML += `<option value="${v}" ${i === new Date().getMonth() ? 'selected' : ''}>${months[i]}</option>`;
+        }
+        sel.onchange = renderFinance;
+
+        // Finance Sync
+        onSnapshot(query(collection(db, "transactions"), where("uid", "==", uid)), snap => {
+            allFinData = []; snap.forEach(d => allFinData.push({id: d.id, ...d.data()}));
+            renderFinance();
+        });
+
+        // Vacations Sync
+        onSnapshot(query(collection(db, "vacations"), where("uid", "==", uid)), snap => {
+            let cHtml = "", kHtml = "";
+            snap.forEach(d => {
+                const v = d.data();
+                const item = `<div class="list-item"><div><b>${v.desc}</b><br><small>${v.start} au ${v.end}</small></div><i class="fa-solid fa-trash" onclick="window.delDoc('vacations','${d.id}')" style="opacity:0.2"></i></div>`;
+                if(v.who === "Charlotte") cHtml += item; else kHtml += item;
+            });
+            document.getElementById('list-vac-charlotte').innerHTML = cHtml || "Aucun congé.";
+            document.getElementById('list-vac-kevin').innerHTML = kHtml || "Aucun congé.";
+        });
+
+        // Projets Sync
+        onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), snap => {
+            let html = "";
+            snap.forEach(d => {
+                const p = d.data();
+                html += `<div class="list-item"><div><b>${p.name}</b><br><small>Échéance: ${p.deadline}</small></div><div style="text-align:right"><b>${p.budget} CHF</b><br><i class="fa-solid fa-trash" onclick="window.delDoc('projects','${d.id}')" style="opacity:0.1; font-size:0.7rem"></i></div></div>`;
+            });
+            document.getElementById('list-projets').innerHTML = html || "Aucun projet en cours.";
+        });
+
+        loadSavings(uid);
+    }
+
+    // --- RENDER FINANCE ---
+    function renderFinance() {
+        const filter = document.getElementById('filter-month').value;
+        const tbody = document.getElementById('finance-table');
+        tbody.innerHTML = "";
+        let inc = 0, exp = 0, stats = {};
+
+        const filtered = allFinData.filter(d => filter === 'all' || d.date.startsWith(filter)).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        filtered.forEach(t => {
+            const amt = parseFloat(t.amt);
+            if(t.type === 'income') inc += amt; else { exp += amt; stats[t.cat] = (stats[t.cat] || 0) + amt; }
+            tbody.innerHTML += `<tr><td style="font-size:0.7rem; color:var(--muted)">${t.date.split('-').reverse().slice(0,2).join('.')}</td><td><b>${t.desc}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right">${amt.toFixed(2)}</td></tr>`;
+        });
+
+        document.getElementById('res-net').innerText = (inc - exp).toFixed(2) + " CHF";
+    }
+
+    // --- SAVINGS ---
+    window.syncSavings = async () => {
         const uid = auth.currentUser.uid;
-        const vals = {
-            sq: parseFloat(document.getElementById('sq-val').value) || 0,
-            ep: parseFloat(document.getElementById('ep-val').value) || 0,
-            ec: parseFloat(document.getElementById('ec-val').value) || 0
-        };
-        await setDoc(doc(db, "savings", uid), vals);
-        calcSavingsTotal(vals);
+        const data = { sq: parseFloat(document.getElementById('sav-sq').value)||0, ep: parseFloat(document.getElementById('sav-ep').value)||0, ec: parseFloat(document.getElementById('sav-ec').value)||0 };
+        await setDoc(doc(db, "savings", uid), data);
+        document.getElementById('sav-total').innerText = (data.sq + data.ep + data.ec).toFixed(2) + " CHF";
     };
 
     async function loadSavings(uid) {
         const d = await getDoc(doc(db, "savings", uid));
-        if (d.exists()) {
-            const data = d.data();
-            document.getElementById('sq-val').value = data.sq;
-            document.getElementById('ep-val').value = data.ep;
-            document.getElementById('ec-val').value = data.ec;
-            calcSavingsTotal(data);
+        if(d.exists()) {
+            const v = d.data();
+            document.getElementById('sav-sq').value = v.sq; document.getElementById('sav-ep').value = v.ep; document.getElementById('sav-ec').value = v.ec;
+            document.getElementById('sav-total').innerText = (v.sq + v.ep + v.ec).toFixed(2) + " CHF";
         }
     }
 
-    function calcSavingsTotal(data) {
-        const total = (data.sq || 0) + (data.ep || 0) + (data.ec || 0);
-        document.getElementById('savings-total').innerText = total.toLocaleString('fr-CH', { minimumFractionDigits: 2 }) + " CHF";
-    }
+    // --- ACTIONS ---
+    window.delDoc = async (coll, id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, coll, id)); };
 
-    // --- APP LOGIC ---
-    function init(uid) {
-        const select = document.getElementById('filter-month');
-        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-        select.innerHTML = '<option value="all">Historique</option>';
-        for(let i=0; i<12; i++) {
-            const val = `2026-${String(i+1).padStart(2, '0')}`;
-            select.innerHTML += `<option value="${val}" ${i === new Date().getMonth() ? 'selected' : ''}>${months[i]}</option>`;
-        }
-        select.onchange = render;
-        document.getElementById('f-date').valueAsDate = new Date();
-    }
+    document.getElementById('form-finance').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: document.getElementById('fi-date').value, amt: document.getElementById('fi-amt').value, desc: document.getElementById('fi-desc').value, cat: document.getElementById('fi-cat').value, type: document.querySelector('input[name="ftype"]:checked').value, ts: Date.now() }); e.target.reset(); document.getElementById('fi-date').valueAsDate = new Date(); };
+    document.getElementById('form-vac').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() }); e.target.reset(); };
+    document.getElementById('form-proj').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, deadline: document.getElementById('p-deadline').value, budget: document.getElementById('p-budget').value, ts: Date.now() }); e.target.reset(); };
 
-    function subscribe(uid) {
-        const q = query(collection(db, "transactions"), where("uid", "==", uid));
-        onSnapshot(q, (snap) => {
-            allData = [];
-            snap.forEach(d => allData.push({id: d.id, ...d.data()}));
-            render();
-        });
-    }
-
-    function render() {
-        const filter = document.getElementById('filter-month').value;
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = "";
-        let inc = 0, exp = 0, stats = {};
-
-        const filtered = allData.sort((a,b) => new Date(b.date) - new Date(a.date)).filter(d => filter === 'all' || d.date.startsWith(filter));
-
-        filtered.forEach(t => {
-            const amt = parseFloat(t.amt);
-            if(t.type === 'income') inc += amt; 
-            else { exp += amt; stats[t.cat] = (stats[t.cat] || 0) + amt; }
-
-            tbody.innerHTML += `<tr>
-                <td><small style="color:var(--muted)">${t.date.split('-').reverse().slice(0,2).join('.')}</small></td>
-                <td><b>${t.desc}</b></td>
-                <td style="text-align:right" class="${t.type === 'income' ? 'amt-pos' : 'amt-neg'}">${amt.toFixed(2)}</td>
-                <td style="text-align:right">
-                    <i class="fa-solid fa-pen" onclick="window.edit('${t.id}')" style="cursor:pointer; opacity:0.2; font-size:0.7rem; margin-right:8px"></i>
-                    <i class="fa-solid fa-trash" onclick="window.del('${t.id}')" style="cursor:pointer; opacity:0.2; font-size:0.7rem"></i>
-                </td>
-            </tr>`;
-        });
-
-        document.getElementById('res-inc').innerText = inc.toFixed(2);
-        document.getElementById('res-exp').innerText = exp.toFixed(2);
-        document.getElementById('res-net').innerText = (inc - exp).toFixed(2);
-
-        drawCharts(stats, inc, exp);
-    }
-
-    function drawCharts(stats, inc, exp) {
-        if(!document.getElementById('tab-repartition').classList.contains('hidden')) {
-            const ctxP = document.getElementById('pieChart').getContext('2d');
-            if(pieChart) pieChart.destroy();
-            pieChart = new Chart(ctxP, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(stats),
-                    datasets: [{ data: Object.values(stats), backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'], borderWidth: 0 }]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '75%' }
-            });
-        }
-
-        if(!document.getElementById('tab-comparatif').classList.contains('hidden')) {
-            const ctxB = document.getElementById('barChart').getContext('2d');
-            if(barChart) barChart.destroy();
-            barChart = new Chart(ctxB, {
-                type: 'bar',
-                data: {
-                    labels: ['Flux'],
-                    datasets: [
-                        { label: 'Revenus', data: [inc], backgroundColor: '#10b981', borderRadius: 5 },
-                        { label: 'Dépenses', data: [exp], backgroundColor: '#ef4444', borderRadius: 5 }
-                    ]
-                },
-                options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { font: { size: 10 } } } }, plugins: { legend: { display: false } } }
-            });
-        }
-    }
-
-    // --- FORM ACTIONS ---
-    document.getElementById('t-exp').onclick = () => { document.getElementById('l-exp').style.background = 'white'; document.getElementById('l-inc').style.background = 'none'; };
-    document.getElementById('t-inc').onclick = () => { document.getElementById('l-inc').style.background = 'white'; document.getElementById('l-exp').style.background = 'none'; };
-
-    document.getElementById('entry-form').onsubmit = async (e) => {
-        e.preventDefault();
-        const data = {
-            uid: auth.currentUser.uid,
-            date: document.getElementById('f-date').value,
-            desc: document.getElementById('f-desc').value,
-            amt: document.getElementById('f-amt').value,
-            cat: document.getElementById('f-cat').value,
-            type: document.querySelector('input[name="rtype"]:checked').value,
-            ts: Date.now()
-        };
-        if(editId) await updateDoc(doc(db, "transactions", editId), data);
-        else await addDoc(collection(db, "transactions"), data);
-        window.cancelEdit();
-    };
-
-    window.edit = (id) => {
-        const t = allData.find(d => d.id === id);
-        editId = id;
-        document.getElementById('f-date').value = t.date;
-        document.getElementById('f-desc').value = t.desc;
-        document.getElementById('f-amt').value = t.amt;
-        document.getElementById('f-cat').value = t.cat;
-        document.getElementById(t.type === 'income' ? 't-inc' : 't-exp').click();
-        document.getElementById('form-title').innerText = "Modifier Flux";
-        document.getElementById('submit-btn').innerText = "Mettre à jour";
-        document.getElementById('cancel-edit').classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    window.cancelEdit = () => {
-        editId = null;
-        document.getElementById('entry-form').reset();
-        document.getElementById('form-title').innerText = "Nouveau Flux";
-        document.getElementById('submit-btn').innerText = "Confirmer";
-        document.getElementById('cancel-edit').classList.add('hidden');
-    };
-    document.getElementById('cancel-edit').onclick = window.cancelEdit;
-
-    window.del = async (id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, "transactions", id)); };
+    document.getElementById('fi-date').valueAsDate = new Date();
 </script>
+
 </body>
 </html>
