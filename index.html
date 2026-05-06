@@ -5,314 +5,849 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Finance Synchro | Blue Edition</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Finance Synchro</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --bg: #0f172a; 
-            --card: rgba(30, 41, 59, 0.7); 
-            --accent: #3b82f6; /* Bleu Électrique */
-            --success: #10b981; 
-            --danger: #ef4444; 
-            --text: #f8fafc;
-            --border: rgba(59, 130, 246, 0.2);
+            --bg: #070d1a;
+            --surface: rgba(13, 21, 40, 0.95);
+            --card: rgba(15, 26, 50, 0.75);
+            --card-2: rgba(20, 33, 62, 0.6);
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text: #e2eaf8;
+            --muted: #7c8fac;
+            --faint: #3d4f6a;
+            --border: rgba(59, 130, 246, 0.15);
+            --border-soft: rgba(255, 255, 255, 0.06);
+            --shadow: 0 24px 60px rgba(0,0,0,0.45);
+            --shadow-sm: 0 4px 16px rgba(0,0,0,0.25);
+            --r: 22px;
+            --r-sm: 14px;
+            --r-xs: 10px;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Montserrat', sans-serif; 
-            margin: 0; padding: 20px; 
-            background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent), var(--bg);
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse 80% 50% at top right, rgba(59,130,246,0.13), transparent),
+                radial-gradient(ellipse 60% 40% at bottom left, rgba(16,185,129,0.07), transparent);
             min-height: 100vh;
+            line-height: 1.5;
         }
 
-        .container { max-width: 1100px; margin: auto; }
-        
-        /* LOGIN OVERLAY */
-        #login-overlay { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .login-box { 
-            background: var(--card); padding: 40px; border-radius: 28px; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border);
-            backdrop-filter: blur(10px);
+        .hidden { display: none !important; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+        .num { font-variant-numeric: tabular-nums lining-nums; }
+
+        .glass {
+            background: var(--card);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow);
         }
 
-        /* HEADER */
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0; }
-        h1 span { color: var(--accent); }
+        /* LOGIN */
+        #login-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            padding: 24px;
+            background:
+                radial-gradient(ellipse 80% 50% at top right, rgba(59,130,246,0.15), transparent),
+                var(--bg);
+        }
+        .login-box {
+            width: min(420px, 100%);
+            border-radius: 28px;
+            padding: 36px 32px 32px;
+            border: 1px solid rgba(59,130,246,0.22);
+        }
+        .login-logo {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            display: grid; place-items: center;
+            box-shadow: 0 12px 32px rgba(59,130,246,0.32);
+            margin-bottom: 18px;
+        }
+        .login-logo svg { width: 26px; height: 26px; }
+        .login-box h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem; margin-bottom: 4px; letter-spacing: -0.02em;
+        }
+        .login-box h1 span { color: var(--accent-light); }
+        .login-sub {
+            color: var(--muted); font-size: 0.78rem;
+            letter-spacing: .1em; text-transform: uppercase;
+            margin-bottom: 28px; font-weight: 600;
+        }
+        .field { display: grid; gap: 7px; margin-bottom: 12px; }
+        .field label { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+        .input-wrap { position: relative; }
+        .input-wrap i {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--faint); font-size: 0.85rem; pointer-events: none;
+        }
+        input, select {
+            width: 100%; height: 48px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--border-soft);
+            background: rgba(4, 10, 24, 0.6);
+            color: var(--text); font: inherit; font-size: 0.9rem;
+            outline: none;
+            transition: border-color .18s, box-shadow .18s, background .18s;
+        }
+        .input-wrap input { padding: 0 14px 0 40px; }
+        input:not(.input-wrap input), select { padding: 0 14px; }
+        input:focus, select:focus {
+            border-color: rgba(96,165,250,0.65);
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+            background: rgba(4, 10, 24, 0.8);
+        }
+        .btn {
+            height: 48px; border-radius: var(--r-sm); border: none;
+            display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+            cursor: pointer; font: inherit; font-weight: 700; font-size: 0.88rem;
+            transition: transform .12s, opacity .2s, box-shadow .2s;
+            white-space: nowrap;
+        }
+        .btn:active { transform: translateY(1px); }
+        .btn:disabled { opacity: .55; cursor: not-allowed; }
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+            color: white; box-shadow: 0 10px 28px rgba(59,130,246,0.28); width: 100%;
+        }
+        .btn-primary:hover:not(:disabled) { box-shadow: 0 14px 36px rgba(59,130,246,0.36); }
+        .btn-secondary {
+            background: rgba(30,42,70,0.8); color: var(--text);
+            border: 1px solid var(--border-soft); padding: 0 16px;
+        }
+        .btn-secondary:hover { background: rgba(40,56,95,0.9); }
+        .btn-danger-soft {
+            background: rgba(239,68,68,0.1); color: #fca5a5;
+            border: 1px solid rgba(239,68,68,0.2); padding: 0 16px;
+        }
+        .btn-icon {
+            width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+            background: transparent; color: var(--muted);
+            border: 1px solid transparent; font-size: 0.8rem;
+            transition: color .18s, background .18s, border-color .18s;
+        }
+        .btn-icon:hover { color: var(--text); background: rgba(148,163,184,0.08); border-color: var(--border-soft); }
+        #error-msg {
+            min-height: 20px; font-size: 0.78rem;
+            color: #fca5a5; margin-top: 10px; text-align: center;
+        }
 
-        .month-selector { background: transparent; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent); font-weight: 600; }
-        .month-selector select { background: none; border: none; color: inherit; font-family: inherit; font-weight: 600; outline: none; cursor: pointer; }
+        /* APP */
+        .app-wrap {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto; padding: 22px 0 48px;
+            display: grid; gap: 20px;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 16px; padding: 16px 22px; border-radius: 24px; flex-wrap: wrap;
+        }
+        .topbar-brand { display: flex; align-items: center; gap: 12px; }
+        .topbar-logo {
+            width: 38px; height: 38px; border-radius: 12px;
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            display: grid; place-items: center; flex-shrink: 0;
+        }
+        .topbar-logo svg { width: 20px; height: 20px; }
+        .topbar h1 { font-family: 'Playfair Display', serif; font-size: 1.25rem; letter-spacing: -0.02em; }
+        .topbar h1 span { color: var(--accent-light); }
+        .topbar-right { display: flex; gap: 10px; align-items: center; }
+        .month-sel {
+            height: 40px; padding: 0 12px; border-radius: var(--r-xs);
+            border: 1px solid var(--border); background: rgba(4,10,24,0.5);
+            color: var(--accent-light); font: inherit; font-weight: 700; font-size: 0.82rem;
+        }
 
         /* STATS */
-        .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card); padding: 20px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-        .stat-value { font-size: 1.4rem; font-weight: 700; }
+        .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        .stat-card { padding: 20px 22px; border-radius: 20px; position: relative; overflow: hidden; }
+        .stat-card::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(255,255,255,0.04), transparent 55%);
+            pointer-events: none;
+        }
+        .stat-label {
+            font-size: 0.68rem; font-weight: 700; color: var(--muted);
+            text-transform: uppercase; letter-spacing: .12em; margin-bottom: 9px;
+        }
+        .stat-value {
+            font-size: clamp(1.35rem, 1.1rem + .8vw, 1.85rem);
+            font-weight: 800; letter-spacing: -.03em;
+        }
 
         /* LAYOUT */
-        .dashboard-grid { display: grid; grid-template-columns: 380px 1fr; gap: 25px; align-items: start; }
-        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); }
-        h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 20px; color: var(--accent); }
+        .main-grid { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+        .card { padding: 24px; border-radius: 24px; }
+        .card-title { font-size: 1.05rem; font-weight: 800; letter-spacing: -.02em; margin-bottom: 18px; }
+        .card-title span { color: var(--accent-light); }
+
+        /* TYPE TOGGLE */
+        .type-toggle {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+            background: rgba(4,10,24,0.5); border: 1px solid var(--border-soft);
+            border-radius: 14px; padding: 6px; margin-bottom: 14px;
+        }
+        .type-toggle input { display: none; }
+        .type-toggle label {
+            height: 44px; border-radius: 10px; display: grid; place-items: center;
+            cursor: pointer; font-size: 0.82rem; font-weight: 700;
+            color: var(--muted); transition: .2s; border: 1px solid transparent;
+        }
+        #t-exp:checked + label { background: rgba(239,68,68,.16); color: #fca5a5; border-color: rgba(239,68,68,.22); }
+        #t-inc:checked + label { background: rgba(16,185,129,.14); color: #86efac; border-color: rgba(16,185,129,.22); }
 
         /* FORM */
-        .type-toggle { display: flex; background: rgba(0,0,0,0.3); border-radius: 10px; padding: 4px; margin-bottom: 15px; }
-        .type-toggle input { display: none; }
-        .type-toggle label { flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 8px; font-size: 0.8rem; transition: 0.3s; font-weight: 700; }
-        #t-exp:checked + label { background: var(--danger); color: white; }
-        #t-inc:checked + label { background: var(--success); color: white; }
-
-        input, select, .btn-submit { 
-            width: 100%; padding: 14px; margin-top: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
-            background: #0f172a; color: white; font-family: 'Montserrat', sans-serif;
+        .form-stack { display: grid; gap: 10px; }
+        .form-field { display: grid; gap: 6px; }
+        .form-field label { font-size: 0.78rem; font-weight: 600; color: var(--muted); }
+        .form-field input, .form-field select { height: 46px; border-radius: var(--r-xs); }
+        .form-actions { display: grid; gap: 8px; margin-top: 6px; }
+        .btn-submit-main {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white; box-shadow: 0 8px 22px rgba(59,130,246,0.22); width: 100%;
         }
-        .btn-submit { background: var(--accent); border: none; font-weight: 700; cursor: pointer; margin-top: 20px; }
-        .btn-cancel { background: #334155; margin-top: 5px; font-size: 0.8rem; }
+        .btn-submit-main:hover:not(:disabled) { box-shadow: 0 12px 30px rgba(59,130,246,0.3); }
+        #form-msg { min-height: 22px; font-size: 0.78rem; margin-top: 4px; color: var(--muted); transition: color .2s; }
+        #form-msg.ok { color: #86efac; }
+        #form-msg.err { color: #fca5a5; }
+
+        /* CHART */
+        .chart-box {
+            height: 220px; margin-bottom: 18px; border-radius: 16px;
+            background: rgba(4,10,24,0.3); border: 1px solid var(--border-soft);
+            padding: 8px; position: relative;
+        }
+        .chart-empty {
+            position: absolute; inset: 0; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; color: var(--muted); font-size: 0.82rem;
+        }
+        .chart-empty i { font-size: 1.5rem; color: var(--faint); }
+        .section-head {
+            display: flex; justify-content: space-between; align-items: center;
+            gap: 12px; margin-bottom: 14px; flex-wrap: wrap;
+        }
+        .pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 700;
+            background: rgba(59,130,246,0.1); color: #93c5fd;
+            border: 1px solid rgba(59,130,246,0.18);
+        }
+        .edit-badge {
+            padding: 5px 12px; border-radius: 999px;
+            font-size: 0.72rem; font-weight: 700;
+            background: rgba(245,158,11,0.12); color: #fcd34d;
+            border: 1px solid rgba(245,158,11,0.2);
+            display: flex; align-items: center; gap: 7px;
+        }
 
         /* TABLE */
-        .table-wrapper { margin-top: 10px; overflow-y: auto; max-height: 450px; }
+        .table-shell {
+            border: 1px solid var(--border-soft); border-radius: 16px;
+            overflow: hidden; background: rgba(4,10,24,0.25);
+            max-height: 420px; overflow-y: auto;
+        }
         table { width: 100%; border-collapse: collapse; }
-        td { padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.85rem; }
-        th { text-align: left; padding: 10px; color: var(--accent); font-size: 0.7rem; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        
-        .amt-pos { color: var(--success); font-weight: 700; }
-        .amt-neg { color: var(--danger); font-weight: 700; }
-        .action-btn { background: none; border: none; color: #94a3b8; cursor: pointer; margin-left: 10px; font-size: 0.9rem; transition: 0.2s; }
-        .action-btn:hover { color: var(--accent); }
-        .hidden { display: none !important; }
+        thead th {
+            padding: 12px 14px; text-align: left;
+            font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .09em;
+            color: var(--muted); background: rgba(4,10,24,0.55);
+            border-bottom: 1px solid var(--border-soft);
+            position: sticky; top: 0; z-index: 1;
+        }
+        tbody td { padding: 13px 14px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 0.84rem; vertical-align: middle; }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(148,163,184,0.03); }
+        .td-date { color: var(--muted); font-size: 0.78rem; white-space: nowrap; }
+        .td-desc { font-weight: 700; }
+        .td-cat { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+        .td-amt { font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+        .amt-pos { color: #86efac; }
+        .amt-neg { color: #fca5a5; }
+        .row-acts { display: flex; justify-content: flex-end; gap: 6px; }
+        .empty-state {
+            padding: 32px 20px; text-align: center;
+            display: grid; place-items: center; gap: 8px;
+            color: var(--muted); font-size: 0.84rem;
+        }
+        .empty-state i { font-size: 1.8rem; color: var(--faint); margin-bottom: 4px; }
+        .empty-state p { color: var(--faint); font-size: 0.76rem; max-width: 26ch; margin: 0 auto; }
 
-        @media (max-width: 900px) { .dashboard-grid, .summary-grid { grid-template-columns: 1fr; } }
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: 28px; right: 28px;
+            padding: 13px 18px; border-radius: 14px;
+            background: rgba(15,26,50,0.96); border: 1px solid var(--border-soft);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+            font-size: 0.84rem; font-weight: 600;
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0; transform: translateY(12px);
+            transition: opacity .28s, transform .28s;
+            z-index: 9998; pointer-events: none; max-width: 320px;
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+        #toast.toast-ok { border-color: rgba(16,185,129,.28); }
+        #toast.toast-ok i { color: var(--success); }
+        #toast.toast-err { border-color: rgba(239,68,68,.28); }
+        #toast.toast-err i { color: var(--danger); }
+
+        /* RESPONSIVE */
+        @media (max-width: 960px) { .main-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 700px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .topbar { flex-direction: column; align-items: stretch; }
+            .topbar-right { justify-content: space-between; }
+        }
+        @media (max-width: 440px) { .login-box { padding: 28px 20px 24px; } }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--faint); border-radius: 99px; }
     </style>
 </head>
 <body>
 
-    <!-- Écran de Connexion -->
-    <div id="login-overlay">
-        <div class="login-box">
-            <h1 style="margin-bottom:10px">Le <span>Coffre</span></h1>
-            <p style="color:#94a3b8; font-size: 0.8rem; margin-bottom: 25px;">SÉCURISATION DES FLUX</p>
-            <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Mot de passe">
-            <button class="btn-submit" id="login-btn">Se connecter</button>
-            <p id="error-msg" style="color:var(--danger); font-size:0.75rem; margin-top:15px;"></p>
+<!-- LOGIN -->
+<div id="login-overlay">
+    <div class="login-box glass">
+        <div class="login-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="3"/>
+                <path d="M16 7V5a2 2 0 0 0-4 0v2M12 12v4M10 14h4"/>
+            </svg>
         </div>
+        <h1>Finance <span>Synchro</span></h1>
+        <p class="login-sub">Sécurisation des flux</p>
+
+        <div class="field">
+            <label for="email">Adresse e-mail</label>
+            <div class="input-wrap">
+                <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                <input type="email" id="email" autocomplete="email" placeholder="nom@exemple.com">
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="password">Mot de passe</label>
+            <div class="input-wrap">
+                <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                <input type="password" id="password" autocomplete="current-password" placeholder="••••••••">
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="login-btn" type="button">
+            <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+            Se connecter
+        </button>
+
+        <div id="error-msg" role="alert" aria-live="polite"></div>
     </div>
+</div>
 
-    <!-- Application Principale -->
-    <div id="app-content" class="container hidden">
-        <header>
-            <h1>Finance <span>Synchro</span></h1>
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <div class="month-selector"><select id="filter-month"></select></div>
-                <button id="logout-btn" style="background:none; border:none; color:#94a3b8; cursor:pointer;"><i class="fa-solid fa-power-off"></i></button>
+<!-- APP -->
+<div id="app-content" class="app-wrap hidden">
+
+    <header class="topbar glass">
+        <div class="topbar-brand">
+            <div class="topbar-logo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="3"/>
+                    <path d="M16 7V5a2 2 0 0 0-4 0v2M12 12v4M10 14h4"/>
+                </svg>
             </div>
-        </header>
-
-        <div class="summary-grid">
-            <div class="stat-card"><div class="stat-label">Entrées</div><div id="res-inc" class="stat-value" style="color: var(--success);">+ 0.00</div></div>
-            <div class="stat-card"><div class="stat-label">Sorties</div><div id="res-exp" class="stat-value" style="color: var(--danger);">- 0.00</div></div>
-            <div class="stat-card" style="border: 1px solid var(--accent)"><div class="stat-label">Solde Net</div><div id="res-net" class="stat-value">0.00 CHF</div></div>
+            <div>
+                <h1>Finance <span>Synchro</span></h1>
+                <div style="font-size:.72rem; color:var(--muted); font-weight:600;">Tableau de bord personnel</div>
+            </div>
         </div>
+        <div class="topbar-right">
+            <label for="filter-month" class="sr-only">Filtrer par mois</label>
+            <select id="filter-month" class="month-sel" aria-label="Filtrer par mois"></select>
+            <button id="logout-btn" class="btn btn-secondary" type="button" aria-label="Se déconnecter">
+                <i class="fa-solid fa-power-off" aria-hidden="true"></i>
+            </button>
+        </div>
+    </header>
 
-        <div class="dashboard-grid">
-            <div class="card">
-                <h3 id="form-title">Ajouter un flux</h3>
-                <form id="entry-form">
-                    <div class="type-toggle">
-                        <input type="radio" name="rtype" id="t-exp" value="expense" checked><label for="t-exp">Dépense</label>
-                        <input type="radio" name="rtype" id="t-inc" value="income"><label for="t-inc">Revenu</label>
-                    </div>
-                    <input type="date" id="f-date" required>
-                    <input type="text" id="f-desc" placeholder="Désignation" required>
-                    <input type="number" id="f-amt" step="0.01" placeholder="Montant" required>
-                    <select id="f-cat">
-                        <option value="Logement">🏠 Logement</option>
-                        <option value="Alimentation">🛒 Alimentation</option>
-                        <option value="Transport">🚗 Transport</option>
-                        <option value="Loisirs">🎉 Loisirs</option>
-                        <option value="Santé">🏥 Santé</option>
-                        <option value="Shopping">🛍️ Shopping</option>
-                        <option value="Revenu">💰 Revenus</option>
-                        <option value="Autre">⚙️ Autre</option>
-                    </select>
-                    <button type="submit" class="btn-submit" id="submit-btn">Enregistrer</button>
-                    <button type="button" class="btn-submit btn-cancel hidden" id="cancel-edit">Annuler la modification</button>
-                </form>
-            </div>
+    <section class="stats-row" aria-label="Résumé mensuel">
+        <div class="stat-card glass">
+            <div class="stat-label">Entrées</div>
+            <div id="res-inc" class="stat-value num" style="color:var(--success)">0.00 CHF</div>
+        </div>
+        <div class="stat-card glass">
+            <div class="stat-label">Sorties</div>
+            <div id="res-exp" class="stat-value num" style="color:var(--danger)">0.00 CHF</div>
+        </div>
+        <div class="stat-card glass" style="border-color:rgba(59,130,246,.28)">
+            <div class="stat-label">Solde net</div>
+            <div id="res-net" class="stat-value num">0.00 CHF</div>
+        </div>
+    </section>
 
-            <div class="card">
-                <h3>Répartition & Journal</h3>
-                <div style="height: 200px; margin-bottom: 20px;"><canvas id="myChart"></canvas></div>
-                <div class="table-wrapper">
-                    <table>
-                        <thead><tr><th>Date</th><th>Nom</th><th>Prix</th><th>Action</th></tr></thead>
-                        <tbody id="table-body"></tbody>
-                    </table>
+    <div class="main-grid">
+        <article class="card glass">
+            <div class="section-head" style="margin-bottom:16px;">
+                <div class="card-title" id="form-title" style="margin:0;">Ajouter un <span>flux</span></div>
+                <div id="edit-badge" class="edit-badge hidden">
+                    <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+                    Édition
                 </div>
             </div>
-        </div>
+
+            <form id="entry-form" novalidate>
+                <fieldset style="border:0; padding:0; margin:0 0 2px;">
+                    <legend style="font-size:.78rem; font-weight:700; color:var(--muted); margin-bottom:8px;">Type de flux</legend>
+                    <div class="type-toggle">
+                        <input type="radio" name="rtype" id="t-exp" value="expense" checked>
+                        <label for="t-exp"><i class="fa-solid fa-arrow-trend-down" style="margin-right:6px"></i>Dépense</label>
+                        <input type="radio" name="rtype" id="t-inc" value="income">
+                        <label for="t-inc"><i class="fa-solid fa-arrow-trend-up" style="margin-right:6px"></i>Revenu</label>
+                    </div>
+                </fieldset>
+
+                <div class="form-stack">
+                    <div class="form-field">
+                        <label for="f-date">Date</label>
+                        <input type="date" id="f-date" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-desc">Désignation</label>
+                        <input type="text" id="f-desc" maxlength="80" placeholder="Ex. Loyer, salaire, courses…" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-amt">Montant (CHF)</label>
+                        <input type="number" id="f-amt" inputmode="decimal" min="0.01" step="0.01" placeholder="0.00" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="f-cat">Catégorie</label>
+                        <select id="f-cat">
+                            <option value="Logement">🏠 Logement</option>
+                            <option value="Alimentation">🛒 Alimentation</option>
+                            <option value="Transport">🚗 Transport</option>
+                            <option value="Loisirs">🎉 Loisirs</option>
+                            <option value="Santé">🏥 Santé</option>
+                            <option value="Shopping">🛍️ Shopping</option>
+                            <option value="Revenu">💰 Revenu</option>
+                            <option value="Autre">⚙️ Autre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit-main" id="submit-btn">
+                        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+                        Enregistrer
+                    </button>
+                    <button type="button" class="btn btn-danger-soft hidden" id="cancel-edit">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        Annuler la modification
+                    </button>
+                </div>
+
+                <div id="form-msg" role="status" aria-live="polite"></div>
+            </form>
+        </article>
+
+        <article class="card glass">
+            <div class="section-head">
+                <div>
+                    <div class="card-title" style="margin-bottom:3px;">Répartition & <span>journal</span></div>
+                    <div style="font-size:.74rem; color:var(--muted);">Dépenses par catégorie · Toutes transactions</div>
+                </div>
+                <div id="tx-count" class="pill">0 ligne</div>
+            </div>
+
+            <div class="chart-box">
+                <canvas id="myChart" aria-label="Répartition des dépenses par catégorie"></canvas>
+                <div id="chart-empty" class="chart-empty" aria-hidden="true">
+                    <i class="fa-regular fa-chart-pie"></i>
+                    <span>Aucune dépense à afficher</span>
+                </div>
+            </div>
+
+            <div class="table-shell" role="region" aria-label="Journal des transactions" tabindex="0">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Désignation</th>
+                            <th>Montant</th>
+                            <th style="text-align:right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+                <div id="empty-state" class="empty-state hidden" aria-live="polite">
+                    <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+                    <strong>Aucune transaction</strong>
+                    <p>Ajoute ton premier flux pour commencer le suivi.</p>
+                </div>
+            </div>
+        </article>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<div id="toast" role="status" aria-live="polite">
+    <i id="toast-icon" class="fa-solid fa-circle-check"></i>
+    <span id="toast-msg"></span>
+</div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyAV_k_524LY4pPlEngZ763qeq8viYFLgJk",
-            authDomain: "mybudget-ecb46.firebaseapp.com",
-            projectId: "mybudget-ecb46",
-            storageBucket: "mybudget-ecb46.firebasestorage.app",
-            messagingSenderId: "891853073723",
-            appId: "1:891853073723:web:29ec6bcf063a7fa8e8db1e",
-            measurementId: "G-Q4DFKZLXLG"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import {
+        getFirestore, collection, addDoc, onSnapshot,
+        query, where, deleteDoc, doc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import {
+        getAuth, signInWithEmailAndPassword,
+        onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        let myChart = null;
-        let allData = [];
-        let editModeId = null;
+    const firebaseConfig = {
+        apiKey: "AIzaSyAV_k_524LY4pPlEngZ763qeq8viYFLgJk",
+        authDomain: "mybudget-ecb46.firebaseapp.com",
+        projectId: "mybudget-ecb46",
+        storageBucket: "mybudget-ecb46.firebasestorage.app",
+        messagingSenderId: "891853073723",
+        appId: "1:891853073723:web:29ec6bcf063a7fa8e8db1e",
+        measurementId: "G-Q4DFKZLXLG"
+    };
 
-        document.getElementById('login-btn').onclick = () => {
-            signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value)
-                .catch(err => document.getElementById('error-msg').innerText = "Accès refusé.");
-        };
+    const app  = initializeApp(firebaseConfig);
+    const db   = getFirestore(app);
+    const auth = getAuth(app);
 
-        document.getElementById('logout-btn').onclick = () => signOut(auth);
+    let myChart    = null;
+    let allData    = [];
+    let editModeId = null;
+    let submitting = false;
+    let unsubscribe = null;
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('login-overlay').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                init();
-                subscribe(user.uid);
-            } else {
-                document.getElementById('login-overlay').classList.remove('hidden');
-                document.getElementById('app-content').classList.add('hidden');
-            }
+    const money = new Intl.NumberFormat('fr-CH', { style:'currency', currency:'CHF', minimumFractionDigits:2 });
+    const fmtDate = d => { const [y,m,day] = d.split('-'); return `${day}.${m}`; };
+
+    const PALETTE = [
+        '#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6',
+        '#14b8a6','#f97316','#ec4899','#22c55e','#06b6d4'
+    ];
+
+    let toastTimer = null;
+    function toast(msg, type = 'ok') {
+        const el  = document.getElementById('toast');
+        const ico = document.getElementById('toast-icon');
+        document.getElementById('toast-msg').textContent = msg;
+        el.className = `show toast-${type}`;
+        ico.className = type === 'ok' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { el.className = ''; }, 3200);
+    }
+
+    function setMsg(txt, type = '') {
+        const el = document.getElementById('form-msg');
+        el.textContent = txt;
+        el.className = type;
+    }
+
+    document.getElementById('login-btn').addEventListener('click', async () => {
+        const email    = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const errEl    = document.getElementById('error-msg');
+        const btn      = document.getElementById('login-btn');
+        errEl.textContent = '';
+
+        if (!email || !password) {
+            errEl.textContent = 'Renseigne ton e-mail et ton mot de passe.';
+            return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connexion…';
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (err) {
+            const codes = {
+                'auth/invalid-credential':     'E-mail ou mot de passe incorrect.',
+                'auth/user-not-found':         'Aucun compte avec cet e-mail.',
+                'auth/wrong-password':         'Mot de passe incorrect.',
+                'auth/invalid-email':          'Adresse e-mail invalide.',
+                'auth/too-many-requests':      'Trop de tentatives. Réessaie dans quelques minutes.',
+                'auth/network-request-failed': 'Erreur réseau. Vérifie ta connexion.',
+                'auth/operation-not-allowed':  'Connexion par e-mail non activée dans Firebase.'
+            };
+            errEl.textContent = codes[err.code] || `Erreur : ${err.code}`;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Se connecter';
+        }
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+        await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            document.getElementById('login-overlay').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            initMonthFilter();
+            subscribe(user.uid);
+        } else {
+            document.getElementById('login-overlay').classList.remove('hidden');
+            document.getElementById('app-content').classList.add('hidden');
+            if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+            allData = [];
+        }
+    });
+
+    function currentMonth() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    }
+
+    function initMonthFilter() {
+        rebuildMonthFilter([]);
+        document.getElementById('f-date').valueAsDate = new Date();
+    }
+
+    function rebuildMonthFilter(data) {
+        const select  = document.getElementById('filter-month');
+        const current = select.value || currentMonth();
+        const months  = new Set(data.map(d => d.date?.slice(0,7)).filter(Boolean));
+        months.add(currentMonth());
+        const sorted = [...months].sort().reverse();
+        const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+
+        const frag = document.createDocumentFragment();
+        const allOpt = document.createElement('option');
+        allOpt.value = 'all'; allOpt.textContent = 'Global';
+        frag.appendChild(allOpt);
+
+        sorted.forEach(val => {
+            const [y, m] = val.split('-');
+            const opt = document.createElement('option');
+            opt.value = val;
+            opt.textContent = `${monthNames[Number(m)-1]} ${y}`;
+            frag.appendChild(opt);
         });
 
-        function init() {
-            const select = document.getElementById('filter-month');
-            const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-            select.innerHTML = '<option value="all">Global</option>';
-            for(let i=0; i<12; i++) {
-                const val = `2026-${String(i+1).padStart(2, '0')}`;
-                select.innerHTML += `<option value="${val}" ${i === new Date().getMonth() ? 'selected' : ''}>${months[i]}</option>`;
+        select.innerHTML = '';
+        select.appendChild(frag);
+        select.value = [...select.options].some(o => o.value === current) ? current : currentMonth();
+    }
+
+    document.getElementById('filter-month').addEventListener('change', render);
+
+    function subscribe(uid) {
+        const q = query(collection(db, "transactions"), where("uid","==", uid));
+        unsubscribe = onSnapshot(q, snap => {
+            allData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            rebuildMonthFilter(allData);
+            render();
+        }, err => {
+            toast('Erreur de chargement : ' + err.code, 'err');
+        });
+    }
+
+    function render() {
+        const filter   = document.getElementById('filter-month').value;
+        const filtered = allData
+            .filter(d => filter === 'all' || d.date?.startsWith(filter))
+            .sort((a,b) => new Date(b.date) - new Date(a.date));
+
+        const tbody = document.getElementById('table-body');
+        const frag  = document.createDocumentFragment();
+        let inc = 0, exp = 0;
+        const stats = {};
+
+        filtered.forEach(t => {
+            const amt = parseFloat(t.amt) || 0;
+            if (t.type === 'income') { inc += amt; }
+            else { exp += amt; stats[t.cat] = (stats[t.cat] || 0) + amt; }
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="td-date num">${fmtDate(t.date)}</td>
+                <td>
+                    <div class="td-desc">${escHtml(t.desc)}</div>
+                    <div class="td-cat">${escHtml(t.cat)}</div>
+                </td>
+                <td class="td-amt num ${t.type === 'income' ? 'amt-pos' : 'amt-neg'}">
+                    ${t.type === 'income' ? '+' : '−'} ${money.format(amt)}
+                </td>
+                <td>
+                    <div class="row-acts">
+                        <button class="btn-icon btn-edit" type="button" aria-label="Modifier" data-id="${t.id}">
+                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                        </button>
+                        <button class="btn-icon btn-del" type="button" aria-label="Supprimer" data-id="${t.id}" style="color:#f87171">
+                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </td>`;
+            frag.appendChild(tr);
+        });
+
+        tbody.innerHTML = '';
+        tbody.appendChild(frag);
+        document.getElementById('empty-state').classList.toggle('hidden', filtered.length > 0);
+        document.getElementById('tx-count').textContent = `${filtered.length} ${filtered.length > 1 ? 'lignes' : 'ligne'}`;
+        document.getElementById('res-inc').textContent = money.format(inc);
+        document.getElementById('res-exp').textContent = money.format(exp);
+        const net = inc - exp;
+        const netEl = document.getElementById('res-net');
+        netEl.textContent = money.format(net);
+        netEl.style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
+        draw(stats);
+    }
+
+    function draw(stats) {
+        const emptyEl = document.getElementById('chart-empty');
+        if (myChart) { myChart.destroy(); myChart = null; }
+        if (!Object.keys(stats).length) { emptyEl.style.display = 'flex'; return; }
+        emptyEl.style.display = 'none';
+        myChart = new Chart(document.getElementById('myChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(stats),
+                datasets: [{
+                    data: Object.values(stats),
+                    backgroundColor: Object.keys(stats).map((_,i) => PALETTE[i % PALETTE.length]),
+                    borderWidth: 0, hoverOffset: 8
+                }]
+            },
+            options: {
+                maintainAspectRatio: false, cutout: '72%',
+                plugins: {
+                    legend: { position: 'right', labels: { color: '#7c8fac', font: { size: 11, weight: '600' }, usePointStyle: true, boxWidth: 7, padding: 14 } },
+                    tooltip: { callbacks: { label: ctx => `${ctx.label} : ${money.format(ctx.raw)}` } }
+                }
             }
-            select.onchange = render;
-            document.getElementById('f-date').valueAsDate = new Date();
-        }
+        });
+    }
 
-        function subscribe(uid) {
-            const q = query(collection(db, "transactions"), where("uid", "==", uid));
-            onSnapshot(q, (snap) => {
-                allData = [];
-                snap.forEach(d => allData.push({id: d.id, ...d.data()}));
-                render();
-            });
-        }
+    document.getElementById('entry-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        if (submitting || !auth.currentUser) return;
 
-        function render() {
-            const filter = document.getElementById('filter-month').value;
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = "";
-            let inc = 0, exp = 0, stats = {};
+        const date = document.getElementById('f-date').value;
+        const desc = document.getElementById('f-desc').value.trim();
+        const amt  = parseFloat(document.getElementById('f-amt').value);
+        const cat  = document.getElementById('f-cat').value;
+        const type = document.querySelector('input[name="rtype"]:checked').value;
 
-            allData.sort((a,b) => new Date(b.date) - new Date(a.date)).filter(d => filter === 'all' || d.date.startsWith(filter)).forEach(t => {
-                const amt = parseFloat(t.amt);
-                if(t.type === 'income') inc += amt; 
-                else { exp += amt; stats[t.cat] = (stats[t.cat] || 0) + amt; }
+        if (!date)                             return setMsg('La date est requise.', 'err');
+        if (!desc || desc.length < 2)          return setMsg('La désignation est trop courte.', 'err');
+        if (!Number.isFinite(amt) || amt <= 0) return setMsg('Montant invalide (doit être > 0).', 'err');
 
-                tbody.innerHTML += `<tr>
-                    <td><small>${t.date.split('-').reverse().slice(0,2).join('.')}</small></td>
-                    <td><b>${t.desc}</b></td>
-                    <td class="${t.type === 'income' ? 'amt-pos' : 'amt-neg'}">${amt.toFixed(2)}</td>
-                    <td style="text-align:right">
-                        <button class="action-btn" onclick="window.editItem('${t.id}')"><i class="fa-solid fa-pen"></i></button>
-                        <button class="action-btn" onclick="window.del('${t.id}')"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            });
+        const payload = {
+            uid: auth.currentUser.uid,
+            date, desc,
+            amt: parseFloat(amt.toFixed(2)),
+            cat, type, ts: Date.now()
+        };
 
-            document.getElementById('res-inc').innerText = "+ " + inc.toFixed(2);
-            document.getElementById('res-exp').innerText = "- " + exp.toFixed(2);
-            const net = inc - exp;
-            document.getElementById('res-net').innerText = net.toFixed(2) + " CHF";
-            document.getElementById('res-net').style.color = net >= 0 ? 'var(--success)' : 'var(--danger)';
-            draw(stats);
-        }
-
-        document.getElementById('entry-form').onsubmit = async (e) => {
-            e.preventDefault();
-            const payload = {
-                uid: auth.currentUser.uid,
-                date: document.getElementById('f-date').value,
-                desc: document.getElementById('f-desc').value,
-                amt: document.getElementById('f-amt').value,
-                cat: document.getElementById('f-cat').value,
-                type: document.querySelector('input[name="rtype"]:checked').value,
-                ts: Date.now()
-            };
+        try {
+            submitting = true;
+            document.getElementById('submit-btn').disabled = true;
+            setMsg(editModeId ? 'Mise à jour…' : 'Enregistrement…');
 
             if (editModeId) {
                 await updateDoc(doc(db, "transactions", editModeId), payload);
-                window.resetForm();
+                toast('Transaction mise à jour.', 'ok');
             } else {
                 await addDoc(collection(db, "transactions"), payload);
+                toast('Transaction enregistrée.', 'ok');
             }
-            e.target.reset();
-            document.getElementById('f-date').valueAsDate = new Date();
-        };
+            resetForm();
+        } catch (err) {
+            setMsg('Erreur : ' + (err.code || err.message), 'err');
+            toast("Échec de l'enregistrement.", 'err');
+        } finally {
+            submitting = false;
+            document.getElementById('submit-btn').disabled = false;
+        }
+    });
 
-        window.editItem = (id) => {
-            const item = allData.find(d => d.id === id);
+    document.getElementById('table-body').addEventListener('click', async e => {
+        const editBtn = e.target.closest('.btn-edit');
+        const delBtn  = e.target.closest('.btn-del');
+
+        if (editBtn) {
+            const item = allData.find(d => d.id === editBtn.dataset.id);
             if (!item) return;
-            editModeId = id;
+            editModeId = item.id;
             document.getElementById('f-date').value = item.date;
             document.getElementById('f-desc').value = item.desc;
-            document.getElementById('f-amt').value = item.amt;
-            document.getElementById('f-cat').value = item.cat;
+            document.getElementById('f-amt').value  = item.amt;
+            document.getElementById('f-cat').value  = item.cat;
             document.getElementById(item.type === 'income' ? 't-inc' : 't-exp').checked = true;
-            document.getElementById('submit-btn').innerText = "Mettre à jour";
-            document.getElementById('form-title').innerText = "Modifier le flux";
+            document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-check"></i> Mettre à jour';
+            document.getElementById('form-title').innerHTML = 'Modifier le <span>flux</span>';
             document.getElementById('cancel-edit').classList.remove('hidden');
+            document.getElementById('edit-badge').classList.remove('hidden');
+            setMsg('Mode édition activé.', 'ok');
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        window.resetForm = () => {
-            editModeId = null;
-            document.getElementById('submit-btn').innerText = "Enregistrer";
-            document.getElementById('form-title').innerText = "Ajouter un flux";
-            document.getElementById('cancel-edit').classList.add('hidden');
-            document.getElementById('entry-form').reset();
-            document.getElementById('f-date').valueAsDate = new Date();
-        };
-
-        document.getElementById('cancel-edit').onclick = window.resetForm;
-        window.del = async (id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, "transactions", id)); };
-
-        function draw(stats) {
-            const ctx = document.getElementById('myChart');
-            if(myChart) myChart.destroy();
-            if(Object.keys(stats).length === 0) return;
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: Object.keys(stats),
-                    datasets: [{ data: Object.values(stats), backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'], borderWidth: 0 }]
-                },
-                options: { maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#94a3b8', font: { size: 10 } } } }, cutout: '75%' }
-            });
         }
-    </script>
+
+        if (delBtn && auth.currentUser) {
+            if (!confirm('Supprimer cette transaction ?')) return;
+            try {
+                await deleteDoc(doc(db, "transactions", delBtn.dataset.id));
+                if (editModeId === delBtn.dataset.id) resetForm();
+                toast('Transaction supprimée.', 'ok');
+            } catch (err) {
+                toast('Suppression impossible : ' + err.code, 'err');
+            }
+        }
+    });
+
+    document.getElementById('cancel-edit').addEventListener('click', resetForm);
+
+    function resetForm() {
+        editModeId = null;
+        document.getElementById('entry-form').reset();
+        document.getElementById('f-date').valueAsDate = new Date();
+        document.getElementById('t-exp').checked = true;
+        document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Enregistrer';
+        document.getElementById('submit-btn').disabled = false;
+        document.getElementById('form-title').innerHTML = 'Ajouter un <span>flux</span>';
+        document.getElementById('cancel-edit').classList.add('hidden');
+        document.getElementById('edit-badge').classList.add('hidden');
+        setMsg('');
+    }
+
+    function escHtml(str) {
+        return String(str ?? '')
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+            .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+</script>
 </body>
 </html>
