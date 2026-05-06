@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v8.1 Ultra-Sleek</title>
+    <title>Family Hub | v9.0 Wealth & Estate</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -14,93 +14,86 @@
 
     <style>
         :root {
-            --blue-dark: #0f172a;
-            --blue-mid: #1e40af;
-            --blue-accent: #3b82f6;
+            --blue-dark: #0f172a; --blue-mid: #1e40af; --blue-accent: #3b82f6;
             --bg-gradient: linear-gradient(180deg, #0f172a 0%, #1e3a8a 50%, #3b82f6 100%);
             --glass: rgba(255, 255, 255, 0.95);
-            --accent: #007aff; /* Apple Blue */
-            --success: #34c759; /* Apple Green */
-            --danger: #ff3b30; /* Apple Red */
-            --text-dark: #1d1d1f; /* Apple Text */
-            --muted: #86868b;
-            --r: 20px;
+            --liquid-glass: rgba(255, 255, 255, 0.7);
+            --accent: #007aff; --success: #34c759; --danger: #ff3b30;
+            --text-dark: #1d1d1f; --muted: #86868b; --r: 24px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            color: var(--text-dark);
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            min-height: 100vh;
-            padding-bottom: 50px;
-            letter-spacing: -0.01em;
-            line-height: 1.6;
-        }
-
+        body { font-family: 'Inter', -apple-system, sans-serif; color: var(--text-dark); background: var(--bg-gradient); background-attachment: fixed; min-height: 100vh; padding-bottom: 50px; letter-spacing: -0.01em; }
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; }
 
-        /* --- LOGO CLICKABLE --- */
+        /* --- LOGO / HOME --- */
         .family-logo {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             background: white; width: 75px; height: 75px; border-radius: 22px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.3); margin: 0 auto;
-            cursor: pointer; transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3); margin: 0 auto; cursor: pointer; transition: 0.2s;
         }
-        .family-logo:active { transform: scale(0.92); }
+        .family-logo:active { transform: scale(0.9); }
         .logo-icons { display: flex; gap: 5px; color: var(--blue-dark); font-size: 1rem; }
         .logo-dogs { display: flex; gap: 10px; color: var(--blue-accent); font-size: 0.65rem; margin-top: 4px; }
 
         /* --- AUTH --- */
         #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--bg-gradient); display: flex; align-items: center; justify-content: center; }
-        .login-box { background: white; width: min(380px, 90%); padding: 45px 35px; border-radius: var(--r); text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+        .login-box { background: white; width: min(380px, 90%); padding: 45px; border-radius: var(--r); text-align: center; }
 
         /* --- HEADER --- */
-        .header-main { padding: 50px 20px 40px; text-align: center; color: white; }
+        .header-main { padding: 50px 20px 30px; text-align: center; color: white; }
         .header-main h1 { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 2.2rem; margin-top: 15px; letter-spacing: -0.04em; }
 
         /* --- HUB GRID --- */
-        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 20px; max-width: 900px; margin: 0 auto; }
+        .hub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 20px; max-width: 900px; margin: 0 auto; }
         .hub-card {
-            background: var(--glass); border-radius: 28px; padding: 35px 20px;
+            background: var(--glass); border-radius: 28px; padding: 30px 15px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
-            cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.3);
         }
-        .hub-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
-        .hub-card i { font-size: 2.2rem; color: var(--accent); margin-bottom: 15px; }
-        .hub-card span { font-weight: 700; font-size: 0.9rem; letter-spacing: -0.01em; }
+        .hub-card i { font-size: 1.8rem; color: var(--accent); margin-bottom: 10px; }
+        .hub-card span { font-weight: 700; font-size: 0.85rem; }
 
         /* --- MODULE CONTAINER --- */
-        .container { max-width: 850px; margin: 0 auto; padding: 0 20px; }
-        .card { background: white; border-radius: 28px; padding: 35px; box-shadow: 0 20px 45px rgba(0,0,0,0.25); margin-bottom: 30px; }
-        h2 { font-weight: 700; margin-bottom: 25px; font-size: 1.5rem; color: var(--blue-dark); letter-spacing: -0.03em; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        .card { background: white; border-radius: 28px; padding: 30px; box-shadow: 0 20px 45px rgba(0,0,0,0.2); margin-bottom: 25px; }
+        h2 { font-weight: 700; margin-bottom: 20px; font-size: 1.4rem; color: var(--blue-dark); letter-spacing: -0.02em; }
+        h3 { font-size: 1rem; color: var(--muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- FINANCE NAVIGATION --- */
-        .finance-nav { display: flex; gap: 10px; background: #f2f2f7; padding: 6px; border-radius: 16px; margin-bottom: 30px; }
-        .f-nav-btn { flex: 1; padding: 12px; border: none; border-radius: 12px; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: var(--muted); background: none; transition: 0.2s; }
-        .f-nav-btn.active { background: white; color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        /* --- LIQUID GLASS MODAL --- */
+        #liquid-modal {
+            position: fixed; inset: 0; z-index: 10000; display: none;
+            align-items: center; justify-content: center; padding: 20px;
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            background: rgba(15, 23, 42, 0.4);
+        }
+        .modal-content {
+            background: var(--liquid-glass); width: min(500px, 100%);
+            border-radius: 30px; padding: 35px; border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        /* --- SUB NAV --- */
+        .sub-nav { display: flex; gap: 8px; background: #f2f2f7; padding: 5px; border-radius: 14px; margin-bottom: 25px; }
+        .sub-nav-btn { flex: 1; padding: 10px; border: none; border-radius: 10px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: var(--muted); background: none; }
+        .sub-nav-btn.active { background: white; color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 
         /* --- FORMS --- */
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; font-weight: 600; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #d1d1d6; background: #f5f5f7; font: inherit; outline: none; transition: 0.2s; }
-        input:focus { border-color: var(--accent); background: white; }
-        .btn-action { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--accent); color: white; font-weight: 700; cursor: pointer; font-size: 1rem; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d1d6; background: #f5f5f7; font: inherit; outline: none; }
+        .btn-action { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--accent); color: white; font-weight: 700; cursor: pointer; }
 
         /* --- LISTS --- */
-        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #f2f2f7; }
-        .list-item:last-child { border-bottom: none; }
-        .tag { font-size: 0.7rem; padding: 6px 12px; border-radius: 8px; font-weight: 700; background: #f2f2f7; color: var(--muted); }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f2f2f7; }
+        .tag-pill { background: #f2f2f7; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; color: var(--muted); }
 
-        /* --- TABLES --- */
-        table { width: 100%; border-collapse: collapse; }
-        td { padding: 18px 0; font-size: 0.95rem; }
-        .amt-pos { color: var(--success); font-weight: 700; }
-        .amt-neg { color: var(--danger); font-weight: 700; }
+        /* --- IMMO / CREDITS SPECIFIC --- */
+        .immo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .data-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; }
+        .data-val { font-weight: 700; }
 
-        @media (max-width: 600px) { .hub-grid { grid-template-columns: 1fr; } .card { padding: 25px; } }
+        @media (max-width: 600px) { .hub-grid, .immo-grid, .input-row { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -112,18 +105,26 @@
             <div class="logo-icons"><i class="fa-solid fa-person"></i><i class="fa-solid fa-person-dress"></i></div>
             <div class="logo-dogs"><i class="fa-solid fa-dog"></i><i class="fa-solid fa-dog"></i></div>
         </div>
-        <h1>Family Hub</h1>
-        <p style="color: var(--muted); font-size: 0.75rem; margin-top: 15px; letter-spacing: 1px; font-weight: 600;">COFFRE PRIVÉ</p>
-        <div style="margin-top: 35px;">
+        <h1 style="font-family: 'Playfair Display'; margin-top:20px;">Family Hub</h1>
+        <div style="margin-top: 30px;">
             <input type="email" id="email" placeholder="Email">
-            <input type="password" id="password" placeholder="Mot de passe" style="margin-top:12px;">
-            <button class="btn-action" id="login-btn" style="margin-top: 25px;">Se connecter</button>
+            <input type="password" id="password" placeholder="Mot de passe" style="margin-top:10px;">
+            <button class="btn-action" id="login-btn" style="margin-top: 20px;">Se connecter</button>
         </div>
     </div>
 </div>
 
+<!-- LIQUID MODAL -->
+<div id="liquid-modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2 id="modal-title">Détails</h2>
+        <div id="modal-body" style="margin-top:20px; max-height:400px; overflow-y:auto;"></div>
+        <button class="btn-action" onclick="closeModal()" style="margin-top:25px; background:var(--blue-dark);">Fermer</button>
+    </div>
+</div>
+
 <header class="header-main">
-    <div class="family-logo" id="logo-home" onclick="goHome()">
+    <div class="family-logo" onclick="goHome()">
         <div class="logo-icons"><i class="fa-solid fa-person"></i><i class="fa-solid fa-person-dress"></i></div>
         <div class="logo-dogs"><i class="fa-solid fa-dog"></i><i class="fa-solid fa-dog"></i></div>
     </div>
@@ -132,118 +133,146 @@
 
 <main class="container">
     
-    <!-- HOME HUB -->
+    <!-- HUB GRID -->
     <div id="view-hub" class="hub-grid">
         <div class="hub-card" onclick="openModule('finance')"><i class="fa-solid fa-vault"></i><span>Finance</span></div>
         <div class="hub-card" onclick="openModule('vacances')"><i class="fa-solid fa-plane"></i><span>Vacances</span></div>
         <div class="hub-card" onclick="openModule('projets')"><i class="fa-solid fa-hammer"></i><span>Projets</span></div>
+        <div class="hub-card" onclick="openModule('immobilier')"><i class="fa-solid fa-house-chimney"></i><span>Immobilier</span></div>
+        <div class="hub-card" onclick="openModule('credits')"><i class="fa-solid fa-credit-card"></i><span>Crédits Conso</span></div>
         <div class="hub-card" onclick="openModule('sport')"><i class="fa-solid fa-dumbbell"></i><span>Sport</span></div>
     </div>
 
     <!-- MODULE FINANCE -->
     <div id="view-finance" class="module-view hidden">
-        <div class="card" style="background: var(--blue-dark); color: white; text-align: center;">
-            <small style="opacity: 0.6; font-weight: 700;">SOLDE NET</small>
-            <div id="res-net" class="num" style="font-size: 2.5rem; font-weight: 800; margin: 10px 0;">0.00 CHF</div>
-            <select id="filter-month" class="num" style="width: auto; background: rgba(255,255,255,0.1); color: white; border: none;"></select>
-        </div>
-
-        <div class="finance-nav">
-            <button class="f-nav-btn active" onclick="switchFinanceTab('journal')">Journal</button>
-            <button class="f-nav-btn" id="tab-analyse-btn" onclick="switchFinanceTab('analyse')">Analyse</button>
-            <button class="f-nav-btn" onclick="switchFinanceTab('epargne')">Équilibre</button>
+        <div class="sub-nav">
+            <button class="sub-nav-btn active" onclick="switchFinTab('journal')">Journal</button>
+            <button class="sub-nav-btn" onclick="switchFinTab('analyse')">Analyse</button>
+            <button class="sub-nav-btn" onclick="switchFinTab('equilibre')">Équilibre</button>
+            <button class="sub-nav-btn" onclick="switchFinTab('epargne')">Épargne</button>
         </div>
 
         <div id="fin-journal">
             <div class="card">
                 <h2>Nouvelle Transaction</h2>
                 <form id="form-finance">
-                    <div style="display: flex; gap: 8px; background: #f2f2f7; padding: 6px; border-radius: 14px; margin-bottom: 20px;">
-                        <input type="radio" name="ftype" id="f-exp" value="expense" checked style="display:none"><label for="f-exp" id="l-exp" style="flex:1; text-align:center; padding:12px; cursor:pointer; border-radius:10px; background:white; font-weight:700; font-size:0.8rem;">Dépense</label>
-                        <input type="radio" name="ftype" id="f-inc" value="income" style="display:none"><label for="f-inc" id="l-inc" style="flex:1; text-align:center; padding:12px; cursor:pointer; border-radius:10px; font-weight:700; font-size:0.8rem;">Revenu</label>
+                    <input type="date" id="fi-date" required style="margin-bottom:10px;">
+                    <div class="input-row">
+                        <input type="text" id="fi-desc" placeholder="Nom" required>
+                        <input type="number" id="fi-amt" placeholder="Montant CHF" step="0.01" required>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div class="input-group"><label>Date</label><input type="date" id="fi-date" required></div>
-                        <div class="input-group"><label>Montant CHF</label><input type="number" id="fi-amt" step="0.01" required></div>
-                    </div>
-                    <div class="input-group"><label>Libellé</label><input type="text" id="fi-desc" required></div>
-                    <div class="input-group">
-                        <label>Catégorie</label>
-                        <select id="fi-cat">
-                            <option value="Logement">🏠 Logement</option><option value="Alimentation">🛒 Alimentation</option><option value="Revenu">💰 Revenu</option>
-                        </select>
-                    </div>
+                    <select id="fi-cat" style="margin-bottom:15px;">
+                        <option value="Logement">🏠 Logement</option><option value="Alimentation">🛒 Alimentation</option>
+                        <option value="Restaurant">🍴 Restaurant</option><option value="Transport">🚗 Transport</option>
+                        <option value="Loisirs">🎉 Loisirs</option><option value="Revenu">💰 Revenu</option>
+                    </select>
                     <button type="submit" class="btn-action">Enregistrer</button>
                 </form>
             </div>
-            <div class="card"><h2>Historique</h2><table><tbody id="finance-table"></tbody></table></div>
+            <div class="card"><table><tbody id="table-finance"></tbody></table></div>
         </div>
 
-        <div id="fin-analyse" class="hidden"><div class="card"><h2>Répartition</h2><div style="height:350px;"><canvas id="financeChart"></canvas></div></div></div>
-        
+        <div id="fin-analyse" class="hidden">
+            <div class="card">
+                <h2>Répartition des Dépenses</h2>
+                <p style="font-size:0.8rem; color:var(--muted); margin-bottom:15px;">Cliquez sur une catégorie pour voir le détail.</p>
+                <div style="height:350px;"><canvas id="chartAnalyse"></canvas></div>
+            </div>
+        </div>
+
+        <div id="fin-equilibre" class="hidden">
+            <div class="card">
+                <h2>Comparatif Mensuel</h2>
+                <div style="height:300px;"><canvas id="chartEquilibre"></canvas></div>
+            </div>
+        </div>
+
         <div id="fin-epargne" class="hidden">
             <div class="card">
-                <h2>Soldes Actuels</h2>
-                <div class="list-item"><span>SwissQuote</span><input type="number" id="sav-sq" class="num" onchange="syncSavings()" style="width:140px; padding:8px;"></div>
-                <div class="list-item"><span>Épargne Perso</span><input type="number" id="sav-ep" class="num" onchange="syncSavings()" style="width:140px; padding:8px;"></div>
-                <div class="list-item"><span>Épargne Commune</span><input type="number" id="sav-ec" class="num" onchange="syncSavings()" style="width:140px; padding:8px;"></div>
-                <div style="margin-top:30px; padding:30px; background:var(--blue-dark); color:white; border-radius:20px; text-align:center;">
-                    <small style="opacity:0.6; font-weight:700;">TOTAL ÉPARGNE</small><div id="sav-total" class="num" style="font-size:1.8rem; font-weight:800;">0.00 CHF</div>
+                <h2>Avoirs & Piliers</h2>
+                <div class="list-item"><span>SwissQuote</span><input type="number" id="sav-sq" class="num" onchange="syncSav()" style="width:120px;"></div>
+                <div class="list-item"><span>Épargne Perso</span><input type="number" id="sav-ep" class="num" onchange="syncSav()" style="width:120px;"></div>
+                <div class="list-item"><span>Épargne Commune</span><input type="number" id="sav-ec" class="num" onchange="syncSav()" style="width:120px;"></div>
+                <div class="list-item"><span>2ème Pilier Kévin</span><input type="number" id="sav-2k" class="num" onchange="syncSav()" style="width:120px;"></div>
+                <div class="list-item"><span>2ème Pilier Charlotte</span><input type="number" id="sav-2c" class="num" onchange="syncSav()" style="width:120px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODULE IMMOBILIER -->
+    <div id="view-immobilier" class="module-view hidden">
+        <div class="immo-grid">
+            <div class="card">
+                <h2>Maison Dury</h2>
+                <div class="form-stack" id="immo-dury">
+                    <div class="input-group"><label>Crédit Initial</label><input type="number" data-key="total" onchange="syncImmo('dury', this)"></div>
+                    <div class="input-group"><label>Mensualité</label><input type="number" data-key="mens" onchange="syncImmo('dury', this)"></div>
+                    <div class="input-group"><label>Date de Fin</label><input type="text" data-key="end" placeholder="MM/AAAA" onchange="syncImmo('dury', this)"></div>
+                    <div class="input-group"><label>Restant à rembourser</label><input type="number" data-key="rest" onchange="syncImmo('dury', this)" style="background:#eef2ff; font-weight:800;"></div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Appartement Amiens</h2>
+                <div class="form-stack" id="immo-amiens">
+                    <div class="input-group"><label>Crédit Initial</label><input type="number" data-key="total" onchange="syncImmo('amiens', this)"></div>
+                    <div class="input-group"><label>Mensualité</label><input type="number" data-key="mens" onchange="syncImmo('amiens', this)"></div>
+                    <div class="input-group"><label>Date de Fin</label><input type="text" data-key="end" placeholder="MM/AAAA" onchange="syncImmo('amiens', this)"></div>
+                    <div class="input-group"><label>Restant à rembourser</label><input type="number" data-key="rest" onchange="syncImmo('amiens', this)" style="background:#eef2ff; font-weight:800;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODULE VACANCES -->
-    <div id="view-vacances" class="module-view hidden">
-        <div class="card"><h2>Congés Charlotte</h2><div id="list-vac-charlotte"></div></div>
-        <div class="card"><h2>Congés Kévin</h2><div id="list-vac-kevin"></div></div>
+    <!-- MODULE CREDITS CONSO -->
+    <div id="view-credits" class="module-view hidden">
         <div class="card">
-            <h2>Nouveau Projet Voyage</h2>
-            <form id="form-vac">
-                <select id="v-who"><option value="Charlotte">Charlotte</option><option value="Kévin">Kévin</option></select>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
-                    <input type="date" id="v-start" required><input type="date" id="v-end" required>
+            <h2>Nouveau Crédit</h2>
+            <form id="form-credit">
+                <input type="text" id="cr-name" placeholder="Nom (ex: Voiture, Canapé)" required style="margin-bottom:10px;">
+                <div class="input-row">
+                    <input type="number" id="cr-total" placeholder="Montant Total">
+                    <input type="number" id="cr-mens" placeholder="Mensualité">
                 </div>
-                <input type="text" id="v-desc" placeholder="Destination" style="margin-bottom:15px;">
-                <button type="submit" class="btn-action">Enregistrer</button>
+                <div class="input-row">
+                    <input type="text" id="cr-start" placeholder="Début (MM/AA)">
+                    <input type="text" id="cr-end" placeholder="Échéance (MM/AA)">
+                </div>
+                <input type="number" id="cr-rest" placeholder="Somme restante" required style="margin-bottom:15px;">
+                <button type="submit" class="btn-action">Ajouter le crédit</button>
             </form>
         </div>
+        <div id="list-credits"></div>
     </div>
 
     <!-- MODULE PROJETS -->
     <div id="view-projets" class="module-view hidden">
-        <div class="card"><h2>Projets Actifs</h2><div id="list-projets"></div></div>
         <div class="card">
-            <h2>Lancer un Projet</h2>
+            <h2>Projets Actifs</h2>
+            <div id="list-projets"></div>
+            <div style="margin-top:20px; padding:20px; background:var(--blue-dark); color:white; border-radius:15px; display:flex; justify-content:space-between; align-items:center;">
+                <span>BUDGET TOTAL CUMULÉ</span>
+                <b id="proj-total-val" class="num">0.00 CHF</b>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Nouveau Projet</h2>
             <form id="form-proj">
-                <input type="text" id="p-name" placeholder="Nom du projet" required>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
-                    <input type="date" id="p-deadline" required><input type="number" id="p-budget" placeholder="Budget CHF" required>
-                </div>
-                <button type="submit" class="btn-action">Lancer</button>
+                <input type="text" id="p-name" placeholder="Nom du projet" required style="margin-bottom:10px;">
+                <input type="number" id="p-budget" placeholder="Budget à allouer (CHF)" required style="margin-bottom:15px;">
+                <button type="submit" class="btn-action">Lancer le projet</button>
             </form>
         </div>
     </div>
 
-    <!-- MODULE SPORT -->
-    <div id="view-sport" class="module-view hidden">
-        <div class="card"><h2>Activités</h2><div id="list-sport"></div></div>
-        <div class="card">
-            <h2>Log de Séance</h2>
-            <form id="form-sport">
-                <input type="text" id="s-type" placeholder="Type (Course, Muscu...)" required>
-                <input type="number" id="s-dur" placeholder="Durée (min)" style="margin: 15px 0;">
-                <button type="submit" class="btn-action">Loguer</button>
-            </form>
-        </div>
-    </div>
+    <!-- VACANCES & SPORT -->
+    <div id="view-vacances" class="module-view hidden"><div class="card"><h2>Calendrier Charlotte & Kévin</h2><div id="list-vac"></div></div></div>
+    <div id="view-sport" class="module-view hidden"><div class="card"><h2>Log Sport</h2><div id="list-sport"></div></div></div>
 
 </main>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
@@ -258,148 +287,184 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    let allFinData = [];
-    let finChartInstance;
+    let allFin = [], chartAn, chartEq;
 
-    // --- NAVIGATION ---
-    window.openModule = (mod) => {
+    // --- NAV ---
+    window.openModule = (m) => {
         document.getElementById('view-hub').classList.add('hidden');
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
-        document.getElementById('view-'+mod).classList.remove('hidden');
-        document.getElementById('app-title').innerText = mod.charAt(0).toUpperCase() + mod.slice(1);
-        if(mod === 'finance') renderFinance();
+        document.getElementById('view-'+m).classList.remove('hidden');
+        document.getElementById('app-title').innerText = m.toUpperCase();
     };
-
     window.goHome = () => {
         document.getElementById('view-hub').classList.remove('hidden');
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
         document.getElementById('app-title').innerText = "Family Hub";
     };
-
-    window.switchFinanceTab = (tab) => {
-        ['journal', 'analyse', 'epargne'].forEach(t => document.getElementById('fin-'+t).classList.add('hidden'));
-        document.getElementById('fin-'+tab).classList.remove('hidden');
-        document.querySelectorAll('.f-nav-btn').forEach(b => b.classList.remove('active'));
+    window.switchFinTab = (t) => {
+        ['journal', 'analyse', 'equilibre', 'epargne'].forEach(x => document.getElementById('fin-'+x).classList.add('hidden'));
+        document.getElementById('fin-'+t).classList.remove('hidden');
+        document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
         event.currentTarget.classList.add('active');
-        if(tab === 'analyse') setTimeout(renderChart, 100);
+        if(t === 'analyse') renderChartAnalyse();
+        if(t === 'equilibre') renderChartEquilibre();
     };
 
     // --- AUTH ---
     document.getElementById('login-btn').onclick = () => {
         signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(() => alert("Erreur"));
     };
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            document.getElementById('login-overlay').classList.add('hidden');
-            initData(user.uid);
-        } else {
-            document.getElementById('login-overlay').classList.remove('hidden');
-        }
+    onAuthStateChanged(auth, (u) => {
+        if(u) { document.getElementById('login-overlay').classList.add('hidden'); initData(u.uid); }
+        else { document.getElementById('login-overlay').classList.remove('hidden'); }
     });
 
-    // --- FIREBASE SYNC ---
+    // --- DATA ---
     function initData(uid) {
-        const sel = document.getElementById('filter-month');
-        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
-        sel.innerHTML = '<option value="all">Global</option>';
-        for(let i=0; i<12; i++) {
-            const v = `2026-${String(i+1).padStart(2,'0')}`;
-            sel.innerHTML += `<option value="${v}" ${i === new Date().getMonth() ? 'selected' : ''}>${months[i]}</option>`;
-        }
-        sel.onchange = renderFinance;
-
-        // Syncs
-        onSnapshot(query(collection(db, "transactions"), where("uid", "==", uid)), snap => {
-            allFinData = []; snap.forEach(d => allFinData.push({id: d.id, ...d.data()}));
-            renderFinance();
+        onSnapshot(query(collection(db, "transactions"), where("uid", "==", uid)), s => {
+            allFin = []; s.forEach(d => allFin.push({id: d.id, ...d.data()}));
+            renderFinanceTable();
         });
 
-        onSnapshot(query(collection(db, "vacations"), where("uid", "==", uid)), snap => {
-            let c = "", k = ""; snap.forEach(d => {
-                const v = d.data();
-                const item = `<div class="list-item"><div><b>${v.desc}</b><br><small>${v.start} au ${v.end}</small></div><i class="fa-solid fa-trash" onclick="delD('vacations','${d.id}')" style="opacity:0.2"></i></div>`;
-                if(v.who === "Charlotte") c += item; else k += item;
+        onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), s => {
+            let h = "", total = 0;
+            s.forEach(d => {
+                const p = d.data(); h += `<div class="list-item"><span><b>${p.name}</b></span><b>${p.budget} CHF</b></div>`;
+                total += parseFloat(p.budget);
             });
-            document.getElementById('list-vac-charlotte').innerHTML = c || "Aucun congé.";
-            document.getElementById('list-vac-kevin').innerHTML = k || "Aucun congé.";
+            document.getElementById('list-projets').innerHTML = h;
+            document.getElementById('proj-total-val').innerText = total.toFixed(2) + " CHF";
         });
 
-        onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), snap => {
-            let h = ""; snap.forEach(d => {
-                const p = d.data();
-                h += `<div class="list-item"><div><b>${p.name}</b><br><small>Fin: ${p.deadline}</small></div><div style="text-align:right"><b>${p.budget} CHF</b><br><i class="fa-solid fa-trash" onclick="delD('projects','${d.id}')" style="opacity:0.1; font-size:0.7rem"></i></div></div>`;
+        onSnapshot(query(collection(db, "credits"), where("uid", "==", uid)), s => {
+            let h = "";
+            s.forEach(d => {
+                const c = d.data();
+                h += `<div class="card"><h3>${c.name}</h3><div class="data-row"><span>Mensualité</span><b>${c.mens} CHF</b></div><div class="data-row"><span>Restant</span><b style="color:var(--danger)">${c.rest} CHF</b></div><div style="font-size:0.7rem; color:var(--muted)">Échéance: ${c.end}</div></div>`;
             });
-            document.getElementById('list-projets').innerHTML = h || "Aucun projet.";
-        });
-
-        onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), snap => {
-            let h = ""; snap.forEach(d => {
-                const s = d.data();
-                h += `<div class="list-item"><div><b>${s.type}</b><br><small>${s.dur} min</small></div><i class="fa-solid fa-trash" onclick="delD('sport','${d.id}')" style="opacity:0.2"></i></div>`;
-            });
-            document.getElementById('list-sport').innerHTML = h || "Bougez !";
+            document.getElementById('list-credits').innerHTML = h;
         });
 
         loadSavings(uid);
+        loadImmo(uid);
     }
 
-    // --- RENDER ---
-    function renderFinance() {
-        const filter = document.getElementById('filter-month').value;
-        const tbody = document.getElementById('finance-table');
-        tbody.innerHTML = "";
-        let inc = 0, exp = 0;
-        const filtered = allFinData.filter(d => filter === 'all' || d.date.startsWith(filter)).sort((a,b) => new Date(b.date) - new Date(a.date));
-        filtered.forEach(t => {
-            const amt = parseFloat(t.amt);
-            if(t.type === 'income') inc += amt; else exp += amt;
-            tbody.innerHTML += `<tr><td><small>${t.date.split('-').reverse().slice(0,2).join('.')}</small></td><td><b>${t.desc}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right">${amt.toFixed(2)}</td></tr>`;
+    // --- FINANCE LOGIC ---
+    function renderFinanceTable() {
+        let h = "";
+        allFin.sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0,10).forEach(t => {
+            h += `<tr><td><small>${t.date.split('-').reverse().slice(0,2).join('.')}</small></td><td><b>${t.desc}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right">${t.amt}</td></tr>`;
         });
-        document.getElementById('res-net').innerText = (inc - exp).toFixed(2) + " CHF";
+        document.getElementById('table-finance').innerHTML = h;
     }
 
-    function renderChart() {
+    function renderChartAnalyse() {
         const stats = {};
-        allFinData.forEach(t => {
-            if(t.type === 'expense') stats[t.cat] = (stats[t.cat] || 0) + parseFloat(t.amt);
-        });
-        const ctx = document.getElementById('financeChart').getContext('2d');
-        if(finChartInstance) finChartInstance.destroy();
-        finChartInstance = new Chart(ctx, {
+        allFin.forEach(t => { if(t.type === 'expense') stats[t.cat] = (stats[t.cat] || 0) + parseFloat(t.amt); });
+        const ctx = document.getElementById('chartAnalyse').getContext('2d');
+        if(chartAn) chartAn.destroy();
+        chartAn = new Chart(ctx, {
             type: 'doughnut',
-            data: { labels: Object.keys(stats), datasets: [{ data: Object.values(stats), backgroundColor: ['#007aff', '#34c759', '#ff9500', '#ff3b30', '#5856d6', '#ff2d55'], borderWidth: 0 }] },
-            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } }, cutout: '75%' }
+            data: { labels: Object.keys(stats), datasets: [{ data: Object.values(stats), backgroundColor: ['#007aff', '#34c759', '#ff9500', '#ff3b30', '#af52de', '#5856d6'], borderWidth: 0 }] },
+            options: { 
+                maintainAspectRatio: false, cutout: '75%',
+                onClick: (e, items) => {
+                    if(items.length > 0) {
+                        const idx = items[0].index;
+                        const cat = chartAn.data.labels[idx];
+                        showCategoryModal(cat);
+                    }
+                }
+            }
         });
     }
 
-    // --- UTILS ---
-    window.delD = async (c, id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, c, id)); };
-    window.syncSavings = async () => {
-        const d = { sq: parseFloat(document.getElementById('sav-sq').value)||0, ep: parseFloat(document.getElementById('sav-ep').value)||0, ec: parseFloat(document.getElementById('sav-ec').value)||0 };
+    function renderChartEquilibre() {
+        let inc = 0, exp = 0;
+        allFin.forEach(t => { if(t.type === 'income') inc += parseFloat(t.amt); else exp += parseFloat(t.amt); });
+        const ctx = document.getElementById('chartEquilibre').getContext('2d');
+        if(chartEq) chartEq.destroy();
+        chartEq = new Chart(ctx, {
+            type: 'bar',
+            data: { 
+                labels: ['Revenus', 'Dépenses'], 
+                datasets: [{ 
+                    data: [inc, exp], 
+                    backgroundColor: ['#34c759', '#ff3b30'],
+                    borderRadius: 12
+                }] 
+            },
+            options: { 
+                maintainAspectRatio: false, 
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    // --- MODAL ---
+    window.showCategoryModal = (cat) => {
+        const filtered = allFin.filter(t => t.cat === cat);
+        let h = "";
+        filtered.forEach(t => {
+            h += `<div class="list-item"><span>${t.desc}</span><b>${t.amt} CHF</b></div>`;
+        });
+        document.getElementById('modal-title').innerText = cat;
+        document.getElementById('modal-body').innerHTML = h;
+        document.getElementById('liquid-modal').style.display = 'flex';
+    };
+    window.closeModal = () => document.getElementById('liquid-modal').style.display = 'none';
+
+    // --- SAVINGS & IMMO ---
+    window.syncSav = async () => {
+        const d = { sq: document.getElementById('sav-sq').value, ep: document.getElementById('sav-ep').value, ec: document.getElementById('sav-ec').value, s2k: document.getElementById('sav-2k').value, s2c: document.getElementById('sav-2c').value };
         await setDoc(doc(db, "savings", auth.currentUser.uid), d);
-        document.getElementById('sav-total').innerText = (d.sq + d.ep + d.ec).toFixed(2) + " CHF";
     };
     async function loadSavings(uid) {
         const d = await getDoc(doc(db, "savings", uid));
         if(d.exists()) {
             const v = d.data();
             document.getElementById('sav-sq').value = v.sq; document.getElementById('sav-ep').value = v.ep; document.getElementById('sav-ec').value = v.ec;
-            document.getElementById('sav-total').innerText = (v.sq + v.ep + v.ec).toFixed(2) + " CHF";
+            document.getElementById('sav-2k').value = v.s2k; document.getElementById('sav-2c').value = v.s2c;
         }
     }
 
-    // --- FORM CLICKS ---
-    document.getElementById('l-exp').onclick = () => { document.getElementById('l-exp').style.background = 'white'; document.getElementById('l-inc').style.background = 'none'; };
-    document.getElementById('l-inc').onclick = () => { document.getElementById('l-inc').style.background = 'white'; document.getElementById('l-exp').style.background = 'none'; };
+    window.syncImmo = async (key, el) => {
+        const field = el.dataset.key;
+        await updateDoc(doc(db, "immo", auth.currentUser.uid), { [`${key}.${field}`]: el.value });
+    };
+    async function loadImmo(uid) {
+        const d = await getDoc(doc(db, "immo", uid));
+        if(d.exists()) {
+            const v = d.data();
+            ['dury', 'amiens'].forEach(k => {
+                if(v[k]) Object.keys(v[k]).forEach(f => {
+                    const input = document.querySelector(`#immo-${k} input[data-key="${f}"]`);
+                    if(input) input.value = v[k][f];
+                });
+            });
+        } else { await setDoc(doc(db, "immo", uid), { dury: {}, amiens: {} }); }
+    }
 
     // --- SUBMISSIONS ---
-    const add = async (c, d) => { await addDoc(collection(db, c), { ...d, uid: auth.currentUser.uid, ts: Date.now() }); };
-    document.getElementById('form-finance').onsubmit = e => { e.preventDefault(); add("transactions", { date: document.getElementById('fi-date').value, amt: document.getElementById('fi-amt').value, desc: document.getElementById('fi-desc').value, cat: document.getElementById('fi-cat').value, type: document.querySelector('input[name="ftype"]:checked').value }); e.target.reset(); document.getElementById('fi-date').valueAsDate = new Date(); };
-    document.getElementById('form-vac').onsubmit = e => { e.preventDefault(); add("vacations", { who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value }); e.target.reset(); };
-    document.getElementById('form-proj').onsubmit = e => { e.preventDefault(); add("projects", { name: document.getElementById('p-name').value, deadline: document.getElementById('p-deadline').value, budget: document.getElementById('p-budget').value }); e.target.reset(); };
-    document.getElementById('form-sport').onsubmit = e => { e.preventDefault(); add("sport", { type: document.getElementById('s-type').value, dur: document.getElementById('s-dur').value }); e.target.reset(); };
-</script>
+    document.getElementById('form-finance').onsubmit = async e => {
+        e.preventDefault();
+        const cat = document.getElementById('fi-cat').value;
+        await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: document.getElementById('fi-date').value, desc: document.getElementById('fi-desc').value, amt: document.getElementById('fi-amt').value, cat: cat, type: cat === 'Revenu' ? 'income' : 'expense' });
+        e.target.reset();
+    };
 
+    document.getElementById('form-proj').onsubmit = async e => {
+        e.preventDefault();
+        await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: document.getElementById('p-budget').value });
+        e.target.reset();
+    };
+
+    document.getElementById('form-credit').onsubmit = async e => {
+        e.preventDefault();
+        await addDoc(collection(db, "credits"), { uid: auth.currentUser.uid, name: document.getElementById('cr-name').value, total: document.getElementById('cr-total').value, mens: document.getElementById('cr-mens').value, start: document.getElementById('cr-start').value, end: document.getElementById('cr-end').value, rest: document.getElementById('cr-rest').value });
+        e.target.reset();
+    };
+</script>
 </body>
 </html>
