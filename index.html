@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | Institutional v10.1</title>
+    <title>Family Hub | v0.1.0 Institutional</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; }
 
-        /* --- HEADER NAVIGATION (GOLDMAN SACHS STYLE) --- */
+        /* --- HEADER NAVIGATION --- */
         .gs-header {
             background-color: var(--gs-navy);
             color: white;
@@ -92,9 +92,15 @@
         tr:hover td { background-color: #fafafa; }
         .list-line { display: flex; justify-content: space-between; align-items: center; padding: 16px 8px; border-bottom: 1px solid var(--gs-border); }
 
+        /* --- METRICS BLOCKS --- */
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .metric-tile { background: var(--gs-platinum); padding: 15px; border-radius: 6px; text-align: center; border: 1px solid var(--gs-border); }
+        .metric-tile small { font-size: 0.65rem; font-weight: 700; color: var(--gs-slate); text-transform: uppercase; }
+        .metric-tile p { font-size: 1.15rem; font-weight: 700; color: var(--gs-navy); margin-top: 5px; }
+
         #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--gs-navy); display: flex; align-items: center; justify-content: center; }
         .login-card { background: white; padding: 45px; border-radius: 8px; width: min(400px, 90%); text-align: center; }
-        @media (max-width: 900px) { .gs-header { height: auto; padding: 15px 20px; flex-direction: column; gap: 15px; } .gs-nav-tabs { margin-left: 0; width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; } }
+        @media (max-width: 900px) { .gs-header { height: auto; padding: 15px 20px; flex-direction: column; gap: 15px; } .gs-nav-tabs { margin-left: 0; width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; .metrics-grid { grid-template-columns: 1fr; } } }
     </style>
 </head>
 <body>
@@ -120,11 +126,11 @@
 <header class="gs-header">
     <div class="gs-brand" onclick="goHome()">
         <div class="gs-logo-crest">⚜ II • II</div>
-        <div class="gs-title">Family Synchro</div>
+        <div class="gs-title">Family Synchro <span style="font-size:0.7rem; color:var(--gs-slate)">v0.1.0</span></div>
     </div>
     <nav class="gs-nav-tabs">
         <div class="gs-tab active" id="tab-finance" onclick="switchModule('finance')">Finance</div>
-        <div class="gs-tab" id="tab-fiscal" onclick="switchModule('fiscal')">Fiscalité</div>
+        <div class="gs-tab" id="tab-fiscal" onclick="switchModule('fiscal')">Fiscalité & Prévoyance</div>
         <div class="gs-tab" id="tab-immobilier" onclick="switchModule('immobilier')">Immobilier</div>
         <div class="gs-tab" id="tab-credits" onclick="switchModule('credits')">Crédits Conso</div>
         <div class="gs-tab" id="tab-projets" onclick="switchModule('projets')">Projets</div>
@@ -141,7 +147,7 @@
             <button class="sub-nav-btn active" onclick="switchFinTab('journal')">Journal des flux</button>
             <button class="sub-nav-btn" onclick="switchFinTab('analyse')">Analyse analytique</button>
             <button class="sub-nav-btn" onclick="switchFinTab('equilibre')">Équilibre</button>
-            <button class="sub-nav-btn" onclick="switchFinTab('epargne')">Épargne & Piliers</button>
+            <button class="sub-nav-btn" onclick="switchFinTab('epargne')">Épargne & Fortune</button>
         </nav>
 
         <div id="fin-journal">
@@ -149,7 +155,7 @@
                 <h2>Nouvelle Saisie Directe</h2>
                 <form id="form-finance">
                     <div class="form-row">
-                        <div class="field-group"><label>Date d'échéance</label><input type="date" id="fi-date" required></div>
+                        <div class="field-group"><label>Date</label><input type="date" id="fi-date" required></div>
                         <div class="field-group"><label>Montant net (CHF)</label><input type="number" id="fi-amt" step="0.01" required></div>
                     </div>
                     <div class="form-row">
@@ -197,17 +203,100 @@
 
         <div id="fin-epargne" class="hidden">
             <div class="gs-card">
-                <h2>États de Fortune & Prévoyance</h2>
-                <div class="list-line"><span>SwissQuote Portfolio</span><input type="number" id="sav-sq" class="num sav-input" style="width:160px;"></div>
-                <div class="list-line"><span>Épargne Personnelle</span><input type="number" id="sav-ep" class="num sav-input" style="width:160px;"></div>
-                <div class="list-line"><span>Épargne Commune</span><input type="number" id="sav-ec" class="num sav-input" style="width:160px;"></div>
-                <div class="list-line"><span>Second Pilier Kévin</span><input type="number" id="sav-2k" class="num sav-input" style="width:160px;"></div>
-                <div class="list-line"><span>Second Pilier Charlotte</span><input type="number" id="sav-2c" class="num sav-input" style="width:160px;"></div>
-                <button onclick="syncSav()" class="btn-gs" style="margin-top:25px; width:100%;">Mettre à jour les avoirs</button>
+                <h2>États de Fortune Solide</h2>
+                <div class="list-line"><span>SwissQuote Portfolio</span><input type="number" step="0.01" id="sav-sq" class="num sav-input" style="width:160px;"></div>
+                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num sav-input" style="width:160px;"></div>
+                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num sav-input" style="width:160px;"></div>
+                <button onclick="syncSav()" class="btn-gs" style="margin-top:25px; width:100%;">Mettre à jour les avoirs de fortune</button>
                 
                 <div style="margin-top:30px; padding:25px; background:var(--gs-navy); color:white; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:600; letter-spacing:0.5px;">MASSE PATRIMONIALE GLOBALE</span>
+                    <span style="font-weight:600; letter-spacing:0.5px;">PATRIMOINE LIQUIDE TOTAL DE MAISON</span>
                     <b id="sav-total-global" class="num" style="font-size:1.4rem;">0.00 CHF</b>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-fiscal" class="module-view hidden">
+        <nav class="sub-nav">
+            <button class="sub-nav-btn active" id="f-sub-tax" onclick="switchFiscalSubTab('tax')">Impôts ICC / IFD</button>
+            <button class="sub-nav-btn" id="f-sub-p3" onclick="switchFiscalSubTab('p3')">3ème Pilier Avoirs</button>
+            <button class="sub-nav-btn" id="f-sub-p2" onclick="switchFiscalSubTab('p2')">2ème Pilier Projection</button>
+        </nav>
+
+        <div id="fiscal-tax">
+            <div class="gs-card">
+                <h2>Simulateur Fiscal (VD / Lausanne)</h2>
+                <div class="form-row">
+                    <div class="field-group"><label>Revenu Brut Ménage (CHF)</label><input type="number" id="tax-rev" value="180000" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Fortune Déclarée (CHF)</label><input type="number" id="tax-fort" value="250000" oninput="calculateTax()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label>Régime Constitutionnel</label>
+                        <select id="tax-status" onchange="calculateTax()">
+                            <option value="couple">Mariés / Partenariat (Splitting complet)</option>
+                            <option value="single">Célibataire / Imposition séparée</option>
+                        </select>
+                    </div>
+                    <div class="field-group"><label>Déductions cumulées (3A, Frais pro)</label><input type="number" id="tax-ded" value="18000" oninput="calculateTax()"></div>
+                </div>
+
+                <div style="background:var(--gs-platinum); padding:30px; border-radius:6px; margin-top:25px;">
+                    <div class="list-line"><span>Impôt Fédéral Direct (IFD)</span><b id="tax-res-ifd" class="num">0.00 CHF</b></div>
+                    <div class="list-line"><span>Impôt Cantonal Vaudois</span><b id="tax-res-canton" class="num">0.00 CHF</b></div>
+                    <div class="list-line"><span>Impôt Communal Lausanne (78.5%)</span><b id="tax-res-commune" class="num">0.00 CHF</b></div>
+                    <div class="list-line" style="border-top:1px solid #cbd5e1; margin-top:15px; padding-top:15px;">
+                        <span style="font-weight:700;">CHARGE NETTE ANNUELLE ESTIMÉE</span>
+                        <b id="tax-res-total" class="num" style="color:var(--apple-red); font-size:1.15rem;">0.00 CHF</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="fiscal-p3" class="hidden">
+            <div class="gs-card">
+                <h2>Registre des Cotisations 3ème Pilier</h2>
+                <form id="form-p3">
+                    <div class="form-row">
+                        <div class="field-group"><label>Date de valeur</label><input type="date" id="p3-date" required></div>
+                        <div class="field-group"><label>Montant injecté (CHF)</label><input type="number" step="0.01" id="p3-amt" required></div>
+                    </div>
+                    <button type="submit" class="btn-gs">Inscrire le Versement</button>
+                </form>
+            </div>
+            <div class="gs-card">
+                <h2>Avoirs Totaux Accumulés</h2>
+                <div style="padding:20px; background:var(--gs-navy); color:white; border-radius:6px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                    <span>CAPITAL 3A CONSOLIDÉ</span><b id="p3-total-display" class="num" style="font-size:1.3rem;">0.00 CHF</b>
+                </div>
+                <table><tbody id="table-p3"></tbody></table>
+            </div>
+        </div>
+
+        <div id="fiscal-p2" class="hidden">
+            <div class="gs-card">
+                <h2>Simulateur de Capitalisation 2ème Pilier</h2>
+                <div class="form-row">
+                    <div class="field-group"><label>Avoirs Actuels Kévin</label><input type="number" id="p2-base-k" value="0" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Cotisation Annuelle Fixe Kévin</label><input type="number" id="p2-ann-k" value="0" oninput="runP2Projection()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Avoirs Actuels Charlotte</label><input type="number" id="p2-base-c" value="0" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Cotisation Annuelle Fixe Charlotte</label><input type="number" id="p2-ann-c" value="0" oninput="runP2Projection()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Année cible de projection</label><input type="number" id="p2-target-year" value="2035" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Taux d'intérêt technique LPP (%)</label><input type="number" id="p2-rate" value="1.25" step="0.05" oninput="runP2Projection()"></div>
+                </div>
+                <button onclick="saveP2Config()" class="btn-gs" style="width:100%; margin-bottom:25px;">Figer la Configuration Prévoyance</button>
+
+                <div style="background:var(--gs-platinum); padding:25px; border-radius:6px;">
+                    <div class="list-line"><span>Somme des avoirs à ce jour (2026)</span><b id="p2-total-now" class="num">0.00 CHF</b></div>
+                    <div class="list-line" style="background:var(--gs-navy); color:white; padding:15px; border-radius:4px; margin-top:15px;">
+                        <span id="p2-projection-title">Capital attendu en 2035</span>
+                        <b id="p2-total-projected" class="num" style="color:white; font-size:1.25rem;">0.00 CHF</b>
+                    </div>
                 </div>
             </div>
         </div>
@@ -261,40 +350,6 @@
         <div id="list-credits"></div>
     </div>
 
-    <div id="view-fiscal" class="module-view hidden">
-        <div class="gs-card">
-            <h2>Simulateur Prévoyance & Fiscalité (VD / Lausanne)</h2>
-            <div class="form-row">
-                <div class="field-group"><label>Revenu Brut Ménage (CHF)</label><input type="number" id="tax-rev" value="180000" oninput="calculateTax()"></div>
-                <div class="field-group"><label>Fortune Déclarée (CHF)</label><input type="number" id="tax-fort" value="250000" oninput="calculateTax()"></div>
-            </div>
-            <div class="form-row">
-                <div class="field-group">
-                    <label>Régime Constitutionnel</label>
-                    <select id="tax-status" onchange="calculateTax()">
-                        <option value="couple">Mariés / Partenariat (Splitting complet)</option>
-                        <option value="single">Célibataire / Imposition séparée</option>
-                    </select>
-                </div>
-                <div class="field-group"><label>Déductions cumulées (3A, Frais pro)</label><input type="number" id="tax-ded" value="18000" oninput="calculateTax()"></div>
-            </div>
-
-            <div style="background:var(--gs-platinum); padding:30px; border-radius:6px; margin-top:25px;">
-                <div class="list-line"><span>Impôt Fédéral Direct (IFD)</span><b id="tax-res-ifd" class="num">0.00 CHF</b></div>
-                <div class="list-line"><span>Impôt Cantonal Vaudois</span><b id="tax-res-canton" class="num">0.00 CHF</b></div>
-                <div class="list-line"><span>Impôt Communal Lausanne (78.5%)</span><b id="tax-res-commune" class="num">0.00 CHF</b></div>
-                <div class="list-line" style="border-top:1px solid #cbd5e1; margin-top:15px; padding-top:15px;">
-                    <span style="font-weight:700;">CHARGE NETTE ANNUELLE ESTIMÉE</span>
-                    <b id="tax-res-total" class="num" style="color:var(--apple-red); font-size:1.15rem;">0.00 CHF</b>
-                </div>
-                <div class="list-line" style="background:var(--gs-navy); color:white; padding:15px; border-radius:4px; margin-top:20px;">
-                    <span>Provision Mensuelle Neutre</span>
-                    <b id="tax-res-monthly" class="num" style="font-size:1.3rem; color:white;">0.00 CHF</b>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="view-projets" class="module-view hidden">
         <div class="gs-card">
             <h2>Lignes d'Investissements Capitalisés</h2>
@@ -322,21 +377,38 @@
             <form id="form-vac">
                 <select id="v-who" style="margin-bottom:15px;"><option value="Charlotte">Charlotte</option><option value="Kévin">Kévin</option></select>
                 <div class="form-row"><input type="date" id="v-start" required><input type="date" id="v-end" required></div>
-                <input type="text" id="v-desc" placeholder="Notes additionnelles" style="margin-top:15px; margin-bottom:20px;">
+                <input type="text" id="v-desc" placeholder="Notes..." style="margin-top:15px; margin-bottom:20px;">
                 <button type="submit" class="btn-gs">Figer le créneau</button>
             </form>
         </div>
     </div>
 
     <div id="view-sport" class="module-view hidden">
-        <div class="gs-card"><h2>Registre d'Entraînement</h2><div id="list-sport"></div></div>
         <div class="gs-card">
-            <h2>Log Séance</h2>
+            <h2>Bilan d'Activité Consolidé</h2>
+            <div class="metrics-grid">
+                <div class="metric-tile"><small>Semaine Écoulée (7j)</small><p id="sport-stat-w">0 min · 0 kcal</p></div>
+                <div class="metric-tile"><small>Mois Courant</small><p id="sport-stat-m">0 min · 0 kcal</p></div>
+                <div class="metric-tile"><small>Année Majeure (2026)</small><p id="sport-stat-y">0 min · 0 kcal</p></div>
+            </div>
+        </div>
+        <div class="gs-card">
+            <h2>Log Nouvelle Séance Physique</h2>
             <form id="form-sport">
-                <input type="text" id="s-type" placeholder="Discipline" required style="margin-bottom:15px;">
-                <input type="number" id="s-dur" placeholder="Durée en minutes" required style="margin-bottom:20px;">
-                <button type="submit" class="btn-gs">Loguer</button>
+                <div class="form-row">
+                    <div class="field-group"><label>Date de l'effort</label><input type="date" id="sp-date" required></div>
+                    <div class="field-group"><label>Discipline</label><input type="text" id="sp-type" placeholder="Course, Muscu, Ski..." required></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Durée (minutes)</label><input type="number" id="sp-dur" required></div>
+                    <div class="field-group"><label>Énergie Brûlée (kcal)</label><input type="number" id="sp-kcal" required></div>
+                </div>
+                <button type="submit" class="btn-gs">Inscrire au Registre Sportif</button>
             </form>
+        </div>
+        <div class="gs-card">
+            <h2>Historique et Antériorités</h2>
+            <div id="list-sport"></div>
         </div>
     </div>
 
@@ -359,11 +431,13 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    let allFinData = [], chartAnInstance, chartEqInstance;
+    
+    let allFinData = [], allP3Data = [], allSportData = [];
+    let chartAnInstance, chartEqInstance;
 
-    const sysDate = new Date(2026, 4, 18); // Fixé au 18 Mai 2026
+    const sysDate = new Date(2026, 4, 18); // Fixation légale: 18 Mai 2026
 
-    // --- NAVIGATION DE L'ÉTABLISSEMENT ---
+    // --- SYSTEM NAVIGATION ---
     window.switchModule = (m) => {
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.gs-tab').forEach(t => t.classList.remove('active'));
@@ -381,43 +455,43 @@
         if(t === 'equilibre') setTimeout(renderChartEquilibre, 50);
     };
 
+    window.switchFiscalSubTab = (t) => {
+        ['tax', 'p3', 'p2'].forEach(x => document.getElementById('fiscal-'+x).classList.add('hidden'));
+        document.getElementById('fiscal-'+t).classList.remove('hidden');
+        document.querySelectorAll('#view-fiscal .sub-nav-btn').forEach(b => b.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+    };
+
     window.goHome = () => { document.querySelector('.gs-tab[id="tab-finance"]').click(); };
 
-    // --- SÉCURISATION DES LIENS CLOUD ---
+    // --- SECURITY LIFECYCLE ---
     onAuthStateChanged(auth, (user) => {
         if(user) { document.getElementById('login-overlay').classList.add('hidden'); initPipeline(user.uid); }
         else { document.getElementById('login-overlay').classList.remove('hidden'); }
     });
 
     document.getElementById('login-btn').onclick = () => {
-        signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(() => alert("Accès non partagé."));
+        signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('password').value).catch(() => alert("Denied."));
     };
     document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    // --- MOTEURS FINANCIERS ET D'AMORTISSEMENT ACTUARIELS ---
+    // --- MATHEMATICAL AMORTIZATION ACTUARIAL ENGINE ---
     function computeAmortization(principal, annualRate, durationMonths, startDateStr, payday = null) {
         if (!principal || !durationMonths || !startDateStr) return { mens: 0, rest: 0 };
         const P = parseFloat(principal);
         const R = (parseFloat(annualRate) / 100) / 12;
         const N = parseInt(durationMonths);
-
         const [startM, startY] = startDateStr.split('/').map(Number);
         if (!startM || !startY) return { mens: 0, rest: 0 };
-
         let monthsElapsed = (sysDate.getFullYear() - startY) * 12 + (sysDate.getMonth() - (startM - 1));
-        
-        if (payday && sysDate.getDate() < payday) {
-            monthsElapsed -= 1; 
-        }
-
-        let mens = 0;
+        if (payday && sysDate.getDate() < payday) monthsElapsed -= 1; 
         if (R === 0) {
-            mens = P / N;
+            let mens = P / N;
             if (monthsElapsed <= 0) return { mens, rest: P };
             if (monthsElapsed >= N) return { mens, rest: 0 };
             return { mens, rest: Math.max(0, P * (1 - monthsElapsed / N)) };
         } else {
-            mens = P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+            let mens = P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
             if (monthsElapsed <= 0) return { mens, rest: P };
             if (monthsElapsed >= N) return { mens, rest: 0 };
             const rest = P * (Math.pow(1 + R, N) - Math.pow(1 + R, monthsElapsed)) / (Math.pow(1 + R, N) - 1);
@@ -425,14 +499,13 @@
         }
     }
 
-    // --- INITIALIZATION ENGINE ---
+    // --- PIPELINE INITIALIZATION ---
     function initPipeline(uid) {
         const sel = document.getElementById('filter-month');
         const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         sel.innerHTML = '<option value="all" selected>Vue Historique Globale</option>';
         for(let i=0; i<12; i++) {
-            const v = `2026-${String(i+1).padStart(2,'0')}`;
-            sel.innerHTML += `<option value="${v}">Période de ${mNames[i]} 2026</option>`;
+            sel.innerHTML += `<option value="2026-${String(i+1).padStart(2,'0')}">Période de ${mNames[i]} 2026</option>`;
         }
         sel.onchange = renderFinanceLog;
 
@@ -441,20 +514,36 @@
             renderFinanceLog();
         });
 
+        onSnapshot(query(collection(db, "pillar3"), where("uid", "==", uid)), s => {
+            allP3Data = []; let h = "", tot = 0;
+            s.forEach(d => {
+                const p = d.data(); allP3Data.push(p);
+                tot += parseFloat(p.amt || 0);
+                h += `<div class="list-line"><span>Versement du ${p.date.split('-').reverse().join('.')}</span><b class="num">+ ${parseFloat(p.amt).toFixed(2)} CHF</b></div>`;
+            });
+            document.getElementById('table-p3').innerHTML = h;
+            document.getElementById('p3-total-display').innerText = tot.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        });
+
         onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), s => {
             let h = "", tot = 0; s.forEach(d => { const p = d.data(); h += `<div class="list-line"><span><b>${p.name}</b></span><b class="num">${parseFloat(p.budget).toFixed(2)} CHF</b></div>`; tot += parseFloat(p.budget); });
-            document.getElementById('list-projets').innerHTML = h || "Aucun projet inscrit.";
+            document.getElementById('list-projets').innerHTML = h || "Aucun engagement.";
             document.getElementById('proj-total-val').innerText = tot.toFixed(2) + " CHF";
         });
 
         onSnapshot(query(collection(db, "creditsconso"), where("uid", "==", uid)), s => {
-            let h = "";
+            let h = ""; s.forEach(d => { const c = d.data(); const metrics = computeAmortization(c.total, c.rate, c.dur, c.start, 5); h += `<div class="list-line"><span><b>${c.name}</b><br><small style="color:var(--text-muted)">Échéance: ${c.dur} mois</small></span><div style="text-align:right"><b class="num" style="color:var(--apple-red)">${metrics.rest.toFixed(2)} CHF</b><br><small style="color:var(--text-muted)">Mensualité: ${metrics.mens.toFixed(2)} CHF</small></div><i class="fa-solid fa-trash-can" onclick="delD('creditsconso','${d.id}')" style="opacity:0.2; margin-left:15px; cursor:pointer;"></i></div>`; });
+            document.getElementById('list-credits').innerHTML = h || "Aucun crédit de consommation engagé.";
+        });
+
+        onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
+            allSportData = []; let h = "";
             s.forEach(d => {
-                const c = d.data();
-                const metrics = computeAmortization(c.total, c.rate, c.dur, c.start, 5); // Prélèvement le 5
-                h += `<div class="list-line"><span><b>${c.name}</b><br><small style="color:var(--text-muted)">Échéance: ${c.dur} mois (Effet: ${c.start})</small></span><div style="text-align:right"><b class="num" style="color:var(--apple-red)">${metrics.rest.toFixed(2)} CHF</b><br><small style="color:var(--text-muted)">Mensualité: ${metrics.mens.toFixed(2)} CHF</small></div><i class="fa-solid fa-trash-can" onclick="delD('creditsconso','${d.id}')" style="opacity:0.2; margin-left:15px; cursor:pointer;"></i></div>`;
+                const x = d.data(); allSportData.push({ id: d.id, ...x });
+                h += `<div class="list-line"><span><b>${x.type}</b> — ${x.dur} min (${x.kcal} kcal) <small style="color:var(--text-muted)">${x.date.split('-').reverse().slice(0,2).join('.')}</small></span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`;
             });
-            document.getElementById('list-credits').innerHTML = h || "Aucun crédit de consommation.";
+            document.getElementById('list-sport').innerHTML = h || "Aucun entraînement logué.";
+            renderSportStats();
         });
 
         onSnapshot(query(collection(db, "vacations"), where("uid", "==", uid)), s => {
@@ -463,14 +552,10 @@
             document.getElementById('list-vac-kevin').innerHTML = k || "<p style='color:var(--text-muted)'>Aucune affectation.</p>";
         });
 
-        onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
-            let h = ""; s.forEach(d => { const x = d.data(); h += `<div class="list-line"><span><b>${x.type}</b> — ${x.dur} min</span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; });
-            document.getElementById('list-sport').innerHTML = h || "Aucun log sportif.";
-        });
-
-        loadSavings(uid); loadImmo(uid);
+        loadSavings(uid); loadImmo(uid); loadP2Config(uid);
     }
 
+    // --- FINANCE RENDER LOGS ---
     function renderFinanceLog() {
         const filter = document.getElementById('filter-month').value;
         const tbody = document.getElementById('table-finance');
@@ -519,7 +604,83 @@
     };
     window.closeModal = () => { document.getElementById('liquid-modal').style.display = 'none'; };
 
-    // --- SWISS FISCAL CALCULATION ENGINE ---
+    // --- SPORT METRICS PRODUCER ---
+    function renderSportStats() {
+        let wDur = 0, wKcal = 0;
+        let mDur = 0, mKcal = 0;
+        let yDur = 0, yKcal = 0;
+
+        const cutWeek = new Date(sysDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+        allSportData.forEach(x => {
+            const d = new Date(x.date);
+            const dur = parseFloat(x.dur || 0);
+            const kcal = parseFloat(x.kcal || 0);
+
+            if (d >= cutWeek && d <= sysDate) { wDur += dur; wKcal += kcal; }
+            if (d.getMonth() === sysDate.getMonth() && d.getFullYear() === sysDate.getFullYear()) { mDur += dur; mKcal += kcal; }
+            if (d.getFullYear() === sysDate.getFullYear()) { yDur += dur; yKcal += kcal; }
+        });
+
+        document.getElementById('sport-stat-w').innerText = `${wDur} min · ${wKcal} kcal`;
+        document.getElementById('sport-stat-m').innerText = `${mDur} min · ${mKcal} kcal`;
+        document.getElementById('sport-stat-y').innerText = `${yDur} min · ${yKcal} kcal`;
+    }
+
+    // --- ACTUARIAL PREVOYANCE ENGINE (2ÈME PILIER) ---
+    window.runP2Projection = () => {
+        const baseK = parseFloat(document.getElementById('p2-base-k').value) || 0;
+        const annK = parseFloat(document.getElementById('p2-ann-k').value) || 0;
+        const baseC = parseFloat(document.getElementById('p2-base-c').value) || 0;
+        const annC = parseFloat(document.getElementById('p2-ann-c').value) || 0;
+        const targetY = parseInt(document.getElementById('p2-target-year').value) || 2026;
+        const r = (parseFloat(document.getElementById('p2-rate').value) || 1.25) / 100;
+
+        const totalNow = baseK + baseC;
+        document.getElementById('p2-total-now').innerText = totalNow.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+
+        const horizon = Math.max(0, targetY - 2026);
+        document.getElementById('p2-projection-title').innerText = `Capital attendu en ${targetY} (${horizon} ans de capitalisation)`;
+
+        let projK = baseK * Math.pow(1 + r, horizon);
+        let projC = baseC * Math.pow(1 + r, horizon);
+
+        if (r > 0) {
+            const accumulation = (Math.pow(1 + r, horizon) - 1) / r;
+            projK += annK * accumulation;
+            projC += annC * accumulation;
+        } else {
+            projK += annK * horizon;
+            projC += annC * horizon;
+        }
+
+        const totalProjected = projK + projC;
+        document.getElementById('p2-total-projected').innerText = totalProjected.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+    };
+
+    window.saveP2Config = async () => {
+        await setDoc(doc(db, "prevoyance2", auth.currentUser.uid), {
+            baseK: parseFloat(document.getElementById('p2-base-k').value)||0,
+            annK: parseFloat(document.getElementById('p2-ann-k').value)||0,
+            baseC: parseFloat(document.getElementById('p2-base-c').value)||0,
+            annC: parseFloat(document.getElementById('p2-ann-c').value)||0,
+            targetY: parseInt(document.getElementById('p2-target-year').value)||2035,
+            rate: parseFloat(document.getElementById('p2-rate').value)||1.25
+        });
+    };
+
+    async function loadP2Config(uid) {
+        const d = await getDoc(doc(db, "prevoyance2", uid));
+        if(d.exists()) {
+            const v = d.data();
+            document.getElementById('p2-base-k').value = v.baseK; document.getElementById('p2-ann-k').value = v.annK;
+            document.getElementById('p2-base-c').value = v.baseC; document.getElementById('p2-ann-c').value = v.annC;
+            document.getElementById('p2-target-year').value = v.targetY; document.getElementById('p2-rate').value = v.rate;
+        }
+        runP2Projection();
+    }
+
+    // --- SWISS FISCAL SYSTEM ---
     window.calculateTax = () => {
         const rev = parseFloat(document.getElementById('tax-rev').value) || 0;
         const fort = parseFloat(document.getElementById('tax-fort').value) || 0;
@@ -531,34 +692,29 @@
         const baseTaxable = netIncome / div;
         let baseCantonTax = baseTaxable * 0.082; if(baseTaxable > 60000) baseCantonTax += (baseTaxable - 60000) * 0.035;
         const cantonalFinal = baseCantonTax * div;
-        const communalFinal = cantonalFinal * 0.785;
-        const totalTax = ifd + cantonalFinal + communalFinal;
+        const totalTax = ifd + cantonalFinal + (cantonalFinal * 0.785);
         document.getElementById('tax-res-ifd').innerText = ifd.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-canton').innerText = cantonalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('tax-res-commune').innerText = communalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-commune').innerText = (cantonalFinal * 0.785).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-total').innerText = totalTax.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('tax-res-monthly').innerText = (totalTax / 12).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
 
-    // --- CLOUD CONTROLS AND PERSISTENCE ---
+    // --- IMMOBILIER & FORTUNE DATA ACTIONS ---
     window.syncSav = async () => {
-        const payload = { sq: parseFloat(document.getElementById('sav-sq').value)||0, ep: parseFloat(document.getElementById('sav-ep').value)||0, ec: parseFloat(document.getElementById('sav-ec').value)||0, s2k: parseFloat(document.getElementById('sav-2k').value)||0, s2c: parseFloat(document.getElementById('sav-2c').value)||0 };
-        await setDoc(doc(db, "savings", auth.currentUser.uid), payload);
-        evalTotalFortune(payload);
+        const sq = parseFloat(document.getElementById('sav-sq').value) || 0;
+        const ep = parseFloat(document.getElementById('sav-ep').value) || 0;
+        const ec = parseFloat(document.getElementById('sav-ec').value) || 0;
+        await setDoc(doc(db, "savings", auth.currentUser.uid), { sq, ep, ec });
+        document.getElementById('sav-total-global').innerText = (sq + ep + ec).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
-
-    function evalTotalFortune(v) {
-        const total = (v.sq||0) + (v.ep||0) + (v.ec||0) + (v.s2k||0) + (v.s2c||0);
-        document.getElementById('sav-total-global').innerText = total.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-    }
 
     async function loadSavings(uid) {
         const d = await getDoc(doc(db, "savings", uid));
         if(d.exists()) {
             const v = d.data();
-            document.getElementById('sav-sq').value = v.sq||0; document.getElementById('sav-ep').value = v.ep||0; document.getElementById('sav-ec').value = v.ec||0;
-            document.getElementById('sav-2k').value = v.s2k||0; document.getElementById('sav-2c').value = v.s2c||0;
-            evalTotalFortune(v);
+            const sq = parseFloat(v.sq || 0); const ep = parseFloat(v.ep || 0); const ec = parseFloat(v.ec || 0);
+            document.getElementById('sav-sq').value = sq; document.getElementById('sav-ep').value = ep; document.getElementById('sav-ec').value = ec;
+            document.getElementById('sav-total-global').innerText = (sq + ep + ec).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         }
     }
 
@@ -582,27 +738,23 @@
     async function loadImmo(uid) {
         const d = await getDoc(doc(db, "immo", uid));
         if(d.exists()) {
-            const v = d.data();
-            ['dury', 'amiens'].forEach(k => {
-                if(v[k]) {
-                    document.getElementById(`immo-${k}-total`).value = v[k].total||"";
-                    document.getElementById(`immo-${k}-rate`).value = v[k].rate||"";
-                    document.getElementById(`immo-${k}-dur`).value = v[k].dur||"";
-                    document.getElementById(`immo-${k}-start`).value = v[k].start||"";
-                    evalImmoMetrics(k, v[k]);
-                }
-            });
+            const v = d.data(); ['dury', 'amiens'].forEach(k => { if(v[k]) { document.getElementById(`immo-${k}-total`).value = v[k].total||""; document.getElementById(`immo-${k}-rate`).value = v[k].rate||""; document.getElementById(`immo-${k}-dur`).value = v[k].dur||""; document.getElementById(`immo-${k}-start`).value = v[k].start||""; evalImmoMetrics(k, v[k]); } });
         } else { await setDoc(doc(db, "immo", uid), { dury: {}, amiens: {} }); }
     }
 
-    window.delD = async (c, id) => { if(confirm("Supprimer ?")) await deleteDoc(doc(db, c, id)); };
+    window.delD = async (c, id) => { if(confirm("Archiver la ligne ?")) await deleteDoc(doc(db, c, id)); };
 
-    // --- FORM DIRECT HANDLERS ---
+    // --- FORM CLICKS TAUTOLOGY ---
+    document.getElementById('l-exp').onclick = () => { document.getElementById('l-exp').style.background = 'white'; document.getElementById('l-inc').style.background = 'none'; };
+    document.getElementById('l-inc').onclick = () => { document.getElementById('l-inc').style.background = 'white'; document.getElementById('l-exp').style.background = 'none'; };
+
+    // --- HANDLERS SUBMISSIONS ---
     document.getElementById('form-finance').onsubmit = async e => { e.preventDefault(); const cat = document.getElementById('fi-cat').value; await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: document.getElementById('fi-date').value, desc: document.getElementById('fi-desc').value, amt: document.getElementById('fi-amt').value, cat: cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-proj').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: document.getElementById('p-budget').value, ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-credit').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "creditsconso"), { uid: auth.currentUser.uid, name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value), rate: parseFloat(document.getElementById('cr-rate').value), dur: parseInt(document.getElementById('cr-dur').value), start: document.getElementById('cr-start').value, ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-vac').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() }); e.target.reset(); };
-    document.getElementById('form-sport').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, type: document.getElementById('s-type').value, dur: document.getElementById('s-dur').value, ts: Date.now() }); e.target.reset(); };
+    document.getElementById('form-p3').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "pillar3"), { uid: auth.currentUser.uid, date: document.getElementById('p3-date').value, amt: parseFloat(document.getElementById('p3-amt').value), ts: Date.now() }); e.target.reset(); };
+    document.getElementById('form-sport').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, date: document.getElementById('sp-date').value, type: document.getElementById('sp-type').value, dur: parseFloat(document.getElementById('sp-dur').value), kcal: parseFloat(document.getElementById('sp-kcal').value), ts: Date.now() }); e.target.reset(); };
 </script>
 </body>
 </html>
