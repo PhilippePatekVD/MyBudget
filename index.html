@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.10 Premium Suite</title>
+    <title>Family Hub | v0.1.11 Premium Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- NAVIGATION PRINCIPALE --- */
+        /* --- NAVIGATION --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -83,26 +83,20 @@
         .dp-cell:hover { background-color: rgba(0,0,0,0.04); }
         .dp-cell.selected { background-color: var(--apple-blue); color: white; font-weight: 600; }
 
-        .timeline-picker-container { display: flex; align-items: center; gap: 8px; background: #e8e8ed; padding: 4px 10px; border-radius: 8px; }
-        .timeline-select { background: transparent; border: none; font-family: inherit; font-size: 0.75rem; font-weight: 600; color: var(--apple-dark); outline: none; cursor: pointer; }
-
-        /* --- CARDS & PANELS --- */
+        /* --- LAYOUTS & TILES --- */
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
         .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
         h2 { font-size: 1.35rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
         h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- JAUGE DE COMPLÉTION --- */
         .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
 
-        /* --- SURIMPRESSION MASQUÉE PAR DÉFAUT --- */
         #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
         .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
-        /* --- CONTROLES FORMULAIRE --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -140,8 +134,8 @@
     <div class="login-card">
         <div style="margin: 0 auto 20px; font-weight:700; border: 1px solid var(--apple-dark); padding: 4px 10px; width: fit-content; border-radius:4px;">⚜ II • II</div>
         <h2 style="margin-bottom:30px; letter-spacing: -0.03em;">Family Office</h2>
-        <input type="email" id="email" placeholder="Identifiant">
-        <input type="password" id="password" placeholder="Mot de passe" style="margin-top:12px; margin-bottom:25px;">
+        <input type="email" id="email" placeholder="Identifiant" style="width:100%;">
+        <input type="password" id="password" placeholder="Mot de passe" style="margin-top:12px; margin-bottom:25px; width:100%;">
         <button type="button" class="btn-apple" id="login-btn" style="width:100%;">Ouvrir le Coffre</button>
     </div>
 </div>
@@ -179,16 +173,16 @@
 
         <div id="fin-journal">
             <div class="apple-card">
-                <h2>Synthèse de Période</h2>
+                <h2>Synthèse Financière</h2>
                 <div class="metrics-grid">
-                    <div class="metric-tile"><small>Entrées cumulées</small><p id="res-inc" class="num amt-pos">0.00 CHF</p></div>
-                    <div class="metric-tile"><small>Sorties cumulées</small><p id="res-exp" class="num amt-neg">0.00 CHF</p></div>
-                    <div class="metric-tile"><small>Bilan net</small><p id="res-net" class="num">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Entrées Période</small><p id="res-inc" class="num amt-pos">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Sorties Période</small><p id="res-exp" class="num amt-neg">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Bilan Net</small><p id="res-net" class="num">0.00 CHF</p></div>
                 </div>
             </div>
 
             <div class="apple-card">
-                <h2>Nouvelle Saisie</h2>
+                <h2>Nouvelle Saisie Directe</h2>
                 <form id="form-finance" onsubmit="return false;">
                     <div class="form-row">
                         <div class="field-group">
@@ -201,9 +195,9 @@
                         <div class="field-group"><label>Montant nominal (CHF)</label><input type="number" id="fi-amt" step="0.01" required></div>
                     </div>
                     <div class="form-row">
-                        <div class="field-group"><label>Libellé</label><input type="text" id="fi-desc" required></div>
+                        <div class="field-group"><label>Libellé commercial</label><input type="text" id="fi-desc" required></div>
                         <div class="field-group">
-                            <label>Catégorisation</label>
+                            <label>Allocation Catégorielle</label>
                             <select id="fi-cat">
                                 <option value="Logement">🏠 Logement & Charges</option><option value="Assurances">🛡️ Assurances</option>
                                 <option value="Électricité">⚡ Électricité</option><option value="Internet & Téléphone">📱 Internet / Mobile</option>
@@ -218,7 +212,7 @@
             </div>
             <div class="apple-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-                    <h2>Écritures Récentes</h2>
+                    <h2>Écritures Rapprochées</h2>
                     <select id="filter-month" style="width:auto; padding:6px; font-size:0.8rem;"></select>
                 </div>
                 <table><tbody id="table-finance"></tbody></table>
@@ -228,7 +222,7 @@
         <div id="fin-analyse" class="hidden">
             <div class="apple-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2>Allocation des masses</h2>
+                    <h2>Masses Sectorielles des Dépenses</h2>
                     <div style="display:flex; gap:10px;">
                         <button type="button" class="btn-apple" style="padding:6px 12px;" onclick="navigateAnalysisMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                         <span id="analysis-time-label" style="font-weight:700; align-self:center;">Global</span>
@@ -262,7 +256,7 @@
                 <div class="list-line"><span>Portefeuille Bourse (Yahoo Market Value)</span><b id="conso-bourse-titres" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Avoirs Cumulés Prévoyance 3ème Pilier (3A)</span><b id="conso-p3" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Projection Prévoyance Professionnelle 2ème Pilier LPP</span><b id="conso-p2" class="num">0.00 CHF</b></div>
-                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600;">FORTUNE CONSOLIDÉE NETTE DE LA FAMILLE</span>
                     <b id="conso-total-global" class="num" style="font-size:1.4rem; color:white;">0.00 CHF</b>
                 </div>
@@ -578,10 +572,22 @@
             const res = await fetch('https://open.er-api.com/v6/latest/EUR');
             const data = await res.json();
             if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
-        } catch(e) { console.warn("Forex execution timeout."); }
+        } catch(e) { console.warn("Forex module timeout."); }
     }
 
-    // --- NAVIGATION D'INTERFACE ---
+    // --- BIND CLICKS ON GATEWAY ---
+    document.getElementById('login-btn').onclick = () => {
+        const mail = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value;
+        if(mail && pass) {
+            signInWithEmailAndPassword(auth, mail, pass).catch(() => alert("Accès Refusé."));
+        } else {
+            alert("Veuillez remplir les identifiants.");
+        }
+    };
+    document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+    // --- INTERFACE NAVIGATION ---
     window.switchModule = (m, event) => {
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.apple-tab').forEach(t => t.classList.remove('active'));
@@ -707,7 +713,7 @@
         box.appendChild(script);
     }
 
-    // --- AMORTIZATION CORE ENGINE ---
+    // --- LOAN ACTUARIAL CORE ENGINE ---
     function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
         if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
         const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
@@ -739,7 +745,17 @@
         return { mens, rest: Math.max(0, currentBalance), repaidCap: cumulatedCapital, paidInt: cumulatedInterest, completion: Math.min(100, Math.max(0, comp)) };
     }
 
+    // --- FIREBASE EVENT PIPE STREAMS ---
+    onAuthStateChanged(auth, (user) => {
+        if(user) { 
+            getLiveForexRate(); 
+            document.getElementById('login-overlay').classList.add('hidden'); 
+            initPipeline(user.uid); 
+        } else { document.getElementById('login-overlay').classList.remove('hidden'); }
+    });
+
     function initPipeline(uid) {
+        initCustomDatePicker();
         const sel = document.getElementById('filter-month');
         const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         sel.innerHTML = '<option value="all" selected>Vue Historique Globale</option>';
@@ -995,22 +1011,6 @@
     window.closeModal = () => { document.getElementById('liquid-modal').style.setProperty('display', 'none', 'important'); };
     window.delD = async (c, id) => { if(confirm("Supprimer la ligne ?")) await deleteDoc(doc(db, c, id)); };
 
-    function renderSportStats() {
-        let wDur = 0, wKcal = 0, mDur = 0, mKcal = 0, yDur = 0, yKcal = 0;
-        const cutWeek = new Date(sysDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-        allSportData.forEach(x => {
-            if(!x.date) return; const parts = x.date.split('.'); const d = new Date(parts[2], parts[1]-1, parts[0]);
-            const dur = parseFloat(x.dur || 0); const kcal = parseFloat(x.kcal || 0);
-            if (d >= cutWeek && d <= sysDate) { wDur += dur; wKcal += kcal; }
-            if (d.getMonth() === sysDate.getMonth() && d.getFullYear() === sysDate.getFullYear()) { mDur += dur; mKcal += kcal; }
-            if (d.getFullYear() === sysDate.getFullYear()) { yDur += dur; yKcal += kcal; }
-        });
-        document.getElementById('sport-stat-w').innerText = `${wDur} min · ${wKcal} kcal`;
-        document.getElementById('sport-stat-m').innerText = `${mDur} min · ${mKcal} kcal`;
-        document.getElementById('sport-stat-y').innerText = `${yDur} min · ${yKcal} kcal`;
-    }
-
-    // --- SUBMISSIONS CONTROL ---
     window.submitFinanceForm = async () => {
         const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
         await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
