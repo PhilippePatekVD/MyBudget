@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.1 Institutional</title>
+    <title>Family Hub | v0.1.2 Institutional</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -66,28 +66,27 @@
         .sub-nav-btn.active { color: var(--text-main); }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background-color: var(--text-main); }
 
-        /* --- DESIGN CALENDRIER DES SAISIES MODERNE --- */
+        /* --- STYLING CALENDRIER & INPUTS HIGH-DESIGN --- */
+        input[type="date"] {
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #ffffff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230c192c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'%3E%3C/rect%3E%3Cline x1='16' y1='2' x2='16' y2='6'%3E%3C/line%3E%3Cline x1='8' y1='2' x2='8' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='10' x2='21' y2='10'%3E%3C/line%3E%3C/svg%3E") no-repeat right 12px center;
+            padding-right: 40px;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: auto; height: auto;
+            color: transparent; background: transparent;
+            cursor: pointer;
+        }
+
         .timeline-picker {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #e5e5ea;
-            padding: 4px;
-            border-radius: 8px;
-            border: 1px solid var(--gs-border);
+            display: flex; align-items: center; gap: 8px; background: #e5e5ea; padding: 4px; border-radius: 6px; border: 1px solid var(--gs-border);
         }
         .timeline-select {
-            background: transparent;
-            border: none;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--gs-navy);
-            outline: none;
-            cursor: pointer;
-            padding: 4px 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            background: transparent; border: none; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--gs-navy); outline: none; cursor: pointer; padding: 4px 8px; text-transform: uppercase; letter-spacing: 0.5px;
         }
 
         /* --- LAYOUT CORPS --- */
@@ -150,7 +149,7 @@
 <header class="gs-header">
     <div class="gs-brand" onclick="goHome()">
         <div class="gs-logo-crest">⚜ II • II</div>
-        <div class="gs-title">Family Synchro <span style="font-size:0.7rem; color:var(--gs-slate)">v0.1.1</span></div>
+        <div class="gs-title">Family Synchro <span style="font-size:0.7rem; color:var(--gs-slate)">v0.1.2</span></div>
     </div>
     <nav class="gs-nav-tabs">
         <div class="gs-tab active" id="tab-finance" onclick="switchModule('finance')">Finance</div>
@@ -206,7 +205,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
                     <h2>Écritures Récentes</h2>
                     <div class="timeline-picker">
-                        <i class="fa-solid fa-calendar-day" style="font-size:0.75rem; color:var(--gs-slate); margin-left:4px;"></i>
+                        <i class="fa-solid fa-calendar-day" style="font-size:0.75rem; color:var(--gs-navy); margin-left:4px;"></i>
                         <select id="filter-month" class="timeline-select"></select>
                     </div>
                 </div>
@@ -237,7 +236,7 @@
                 <button onclick="syncSav()" class="btn-gs" style="margin-top:25px; width:100%;">Mettre à jour les avoirs de fortune</button>
                 
                 <div style="margin-top:30px; padding:25px; background:var(--gs-navy); color:white; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-weight:600; letter-spacing:0.5px;">PATRIMOINE LIQUIDE TOTAL DE MAISON</span>
+                    <span style="font-weight:600; letter-spacing:0.5px;">PATRIMOINE CONSOLIDÉ TOTAL</span>
                     <b id="sav-total-global" class="num" style="font-size:1.4rem;">0.00 CHF</b>
                 </div>
             </div>
@@ -352,27 +351,44 @@
         <div class="form-row">
             <div class="gs-card">
                 <h2>Maison Dury</h2>
-                <div class="field-group"><label>Capital Initial Emprunté</label><input type="number" id="immo-dury-total"></div>
+                <div class="field-group"><label>Capital Initial Emprunté</label><input type="number" id="immo-dury-total" value="550000"></div>
                 <div class="form-row">
-                    <div class="field-group"><label>Taux Annuel (%)</label><input type="number" id="immo-dury-rate" step="0.01"></div>
-                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-dury-dur"></div>
+                    <div class="field-group"><label>Taux Annuel (%)</label><input type="number" id="immo-dury-rate" step="0.01" value="3.5"></div>
+                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-dury-dur" value="25"></div>
                 </div>
-                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-dury-start" placeholder="ex: 05/2024"></div>
-                <button onclick="saveImmo('dury')" class="btn-gs" style="width:100%; margin-bottom:20px;">Figer le Financement Dury</button>
-                <div class="list-line"><span>Mensualité Théorique</span><b id="calc-dury-mens" class="num">0.00 CHF</b></div>
-                <div class="list-line" style="background:var(--gs-platinum); padding:12px; font-weight:700;"><span>Capital Restant Actualisé</span><b id="calc-dury-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
+                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-dury-start" value="05/2024"></div>
+                <button onclick="saveImmo('dury')" class="btn-gs" style="width:100%; margin-bottom:25px;">Figer Financement Dury</button>
+                
+                <h3 style="border-bottom: 1px dashed var(--gs-border); padding-bottom: 5px; margin-top: 10px;">Simulateur d'Échéance Future</h3>
+                <div class="field-group" style="margin-top: 10px;">
+                    <label>Entrer une date d'analyse (MM/AAAA)</label>
+                    <input type="text" id="immo-dury-target" placeholder="ex: 12/2030" oninput="triggerDynamicImmo('dury')">
+                </div>
+                <div class="list-line"><span>Mensualité Constante</span><b id="calc-dury-mens" class="num">0.00 CHF</b></div>
+                <div class="list-line" style="background:#f2f2f7;"><span>Capital Restant dû à date cible</span><b id="calc-dury-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
+                <div class="list-line"><span>Total Capital Amorti Cumulé</span><b id="calc-dury-caprep" class="num" style="color:var(--apple-green)">0.00 CHF</b></div>
+                <div class="list-line"><span>Total Intérêts Bancaires Versés</span><b id="calc-dury-intpaid" class="num" style="color:var(--apple-red)">0.00 CHF</b></div>
             </div>
+
             <div class="gs-card">
                 <h2>Appartement Amiens</h2>
-                <div class="field-group"><label>Capital Initial Emprunté</label><input type="number" id="immo-amiens-total"></div>
+                <div class="field-group"><label>Capital Initial Emprunté</label><input type="number" id="immo-amiens-total" value="155949.37"></div>
                 <div class="form-row">
-                    <div class="field-group"><label>Taux Annuel (%)</label><input type="number" id="immo-amiens-rate" step="0.01"></div>
-                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-amiens-dur"></div>
+                    <div class="field-group"><label>Taux Annuel (%)</label><input type="number" id="immo-amiens-rate" step="0.01" value="1.65"></div>
+                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-amiens-dur" value="25"></div>
                 </div>
-                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-amiens-start" placeholder="ex: 11/2022"></div>
-                <button onclick="saveImmo('amiens')" class="btn-gs" style="width:100%; margin-bottom:20px;">Figer le Financement Amiens</button>
-                <div class="list-line"><span>Mensualité Théorique</span><b id="calc-amiens-mens" class="num">0.00 CHF</b></div>
-                <div class="list-line" style="background:var(--gs-platinum); padding:12px; font-weight:700;"><span>Capital Restant Actualisé</span><b id="calc-amiens-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
+                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-amiens-start" value="06/2021"></div>
+                <button onclick="saveImmo('amiens')" class="btn-gs" style="width:100%; margin-bottom:25px;">Figer Financement Amiens</button>
+                
+                <h3 style="border-bottom: 1px dashed var(--gs-border); padding-bottom: 5px; margin-top: 10px;">Simulateur d'Échéance Future</h3>
+                <div class="field-group" style="margin-top: 10px;">
+                    <label>Entrer une date d'analyse (MM/AAAA)</label>
+                    <input type="text" id="immo-amiens-target" placeholder="ex: 06/2031" oninput="triggerDynamicImmo('amiens')">
+                </div>
+                <div class="list-line"><span>Mensualité Constante</span><b id="calc-amiens-mens" class="num">0.00 CHF</b></div>
+                <div class="list-line" style="background:#f2f2f7;"><span>Capital Restant dû à date cible</span><b id="calc-amiens-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
+                <div class="list-line"><span>Total Capital Amorti Cumulé</span><b id="calc-amiens-caprep" class="num" style="color:var(--apple-green)">0.00 CHF</b></div>
+                <div class="list-line"><span>Total Intérêts Bancaires Versés</span><b id="calc-amiens-intpaid" class="num" style="color:var(--apple-red)">0.00 CHF</b></div>
             </div>
         </div>
     </div>
@@ -524,28 +540,44 @@
     };
     document.getElementById('logout-btn').onclick = () => signOut(auth);
 
-    // --- MATHEMATICAL AMORTIZATION ACTUARIAL ENGINE ---
-    function computeAmortization(principal, annualRate, durationMonths, startDateStr, payday = null) {
-        if (!principal || !durationMonths || !startDateStr) return { mens: 0, rest: 0 };
+    // --- MOTEUR ACTUARIEL AVANCÉ DE DÉCOMPTE D'AMORTISSEMENT ---
+    function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr, payday = 5) {
+        if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: principal, repaidCap: 0, paidInt: 0 };
+        
         const P = parseFloat(principal);
         const R = (parseFloat(annualRate) / 100) / 12;
-        const N = parseInt(durationMonths);
+        const N = parseInt(totalMonths);
+        
         const [startM, startY] = startDateStr.split('/').map(Number);
-        if (!startM || !startY) return { mens: 0, rest: 0 };
-        let monthsElapsed = (sysDate.getFullYear() - startY) * 12 + (sysDate.getMonth() - (startM - 1));
-        if (payday && sysDate.getDate() < payday) monthsElapsed -= 1; 
-        if (R === 0) {
-            let mens = P / N;
-            if (monthsElapsed <= 0) return { mens, rest: P };
-            if (monthsElapsed >= N) return { mens, rest: 0 };
-            return { mens, rest: Math.max(0, P * (1 - monthsElapsed / N)) };
-        } else {
-            let mens = P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-            if (monthsElapsed <= 0) return { mens, rest: P };
-            if (monthsElapsed >= N) return { mens, rest: 0 };
-            const rest = P * (Math.pow(1 + R, N) - Math.pow(1 + R, monthsElapsed)) / (Math.pow(1 + R, N) - 1);
-            return { mens, rest: Math.max(0, rest) };
+        const [targetM, targetY] = targetDateStr.split('/').map(Number);
+        if (!startM || !startY || !targetM || !targetY) return { mens: 0, rest: principal, repaidCap: 0, paidInt: 0 };
+
+        let elapsedMonths = (targetY - startY) * 12 + (targetM - startM);
+        if (elapsedMonths < 0) return { mens: 0, rest: P, repaidCap: 0, paidInt: 0 };
+        if (elapsedMonths > N) elapsedMonths = N;
+
+        let mens = R === 0 ? P / N : P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+        
+        let currentBalance = P;
+        let cumulatedInterest = 0;
+        let cumulatedCapital = 0;
+
+        for (let i = 1; i <= elapsedMonths; i++) {
+            let interestForMonth = currentBalance * R;
+            let capitalForMonth = mens - interestForMonth;
+            if (currentBalance < capitalForMonth) capitalForMonth = currentBalance;
+            
+            currentBalance -= capitalForMonth;
+            cumulatedInterest += interestForMonth;
+            cumulatedCapital += capitalForMonth;
         }
+
+        return {
+            mens,
+            rest: Math.max(0, currentBalance),
+            repaidCap: cumulatedCapital,
+            paidInt: cumulatedInterest
+        };
     }
 
     // --- PIPELINE INITIALIZATION ---
@@ -569,9 +601,7 @@
                 const p = d.data(); allP3Data.push(p);
                 const val = parseFloat(p.amt || 0);
                 tot += val;
-                if (p.date && p.date.startsWith("2026")) {
-                    totYear += val;
-                }
+                if (p.date && p.date.startsWith("2026")) totYear += val;
                 h += `<div class="list-line"><span>Versement du ${p.date.split('-').reverse().join('.')}</span><b class="num">+ ${val.toFixed(2)} CHF</b></div>`;
             });
             document.getElementById('table-p3').innerHTML = h;
@@ -588,7 +618,13 @@
         });
 
         onSnapshot(query(collection(db, "creditsconso"), where("uid", "==", uid)), s => {
-            let h = ""; s.forEach(d => { const c = d.data(); const metrics = computeAmortization(c.total, c.rate, c.dur, c.start, 5); h += `<div class="list-line"><span><b>${c.name}</b><br><small style="color:var(--text-muted)">Échéance: ${c.dur} mois</small></span><div style="text-align:right"><b class="num" style="color:var(--apple-red)">${metrics.rest.toFixed(2)} CHF</b><br><small style="color:var(--text-muted)">Mensualité: ${metrics.mens.toFixed(2)} CHF</small></div><i class="fa-solid fa-trash-can" onclick="delD('creditsconso','${d.id}')" style="opacity:0.2; margin-left:15px; cursor:pointer;"></i></div>`; });
+            let h = ""; s.forEach(d => {
+                const c = d.data();
+                // Projeter à date système par défaut pour les crédits conso
+                const todayMMYYYY = `${String(sysDate.getMonth()+1).padStart(2,'0')}/${sysDate.getFullYear()}`;
+                const metrics = evaluateLoanAtTargetDate(c.total, c.rate, c.dur, c.start, todayMMYYYY, 5);
+                h += `<div class="list-line"><span><b>${c.name}</b><br><small style="color:var(--text-muted)">Échéance: ${c.dur} mois</small></span><div style="text-align:right"><b class="num" style="color:var(--apple-red)">${metrics.rest.toFixed(2)} CHF</b><br><small style="color:var(--text-muted)">Mensualité: ${metrics.mens.toFixed(2)} CHF</small></div><i class="fa-solid fa-trash-can" onclick="delD('creditsconso','${d.id}')" style="opacity:0.2; margin-left:15px; cursor:pointer;"></i></div>`;
+            });
             document.getElementById('list-credits').innerHTML = h || "<p style='color:var(--text-muted); padding:10px 0;'>Aucun engagement en cours.</p>";
         });
 
@@ -621,7 +657,7 @@
         filtered.forEach(t => {
             const amt = parseFloat(t.amt);
             if(t.type === 'income') inc += amt; else exp += amt;
-            tbody.innerHTML += `<tr><td style="width:70px; color:var(--text-muted); font-size:0.8rem;">${t.date.split('-').reverse().slice(0,2).join('.')}</td><td><b>${t.desc}</b><br><small style="color:var(--gs-slate); text-transform:uppercase; font-size:0.65rem;">${t.cat}</small></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right;">${t.type==='income'?'+':'-'} ${amt.toFixed(2)}</td></tr>`;
+            tbody.innerHTML += `<tr><td style="width:70px; color:var(--text-muted); font-size:0.8rem;">${t.date.split('-').reverse().slice(0,2).join('.')}</td><td><b>${t.desc}</b><br><small style="color:var(--gs-slate); text-transform:uppercase; font-size:0.65rem;">${t.cat}</small></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'} style="text-align:right;">${t.type==='income'?'+':'-'} ${amt.toFixed(2)}</td></tr>`;
         });
         document.getElementById('res-net').innerText = (inc - exp).toFixed(2) + " CHF";
     }
@@ -694,12 +730,10 @@
         let projK = baseK * Math.pow(1 + r, horizon);
         let projC = baseC * Math.pow(1 + r, horizon);
         if (r > 0) {
-            const accumulation = (Math.pow(1 + r, horizon) - 1) / r;
-            projK += annK * accumulation;
-            projC += annC * accumulation;
+            const b = (Math.pow(1 + r, horizon) - 1) / r;
+            projK += annK * b; projC += annC * b;
         } else {
-            projK += annK * horizon;
-            projC += annC * horizon;
+            projK += annK * horizon; projC += annC * horizon;
         }
         const totalProjected = projK + projC;
         document.getElementById('p2-total-projected').innerText = totalProjected.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
@@ -731,8 +765,6 @@
     window.calculateTax = () => {
         const rev = parseFloat(document.getElementById('tax-rev').value) || 0;
         const status = document.getElementById('tax-status').value;
-
-        // Collecter les déductions individualisées du sous-menu
         const dTravel = parseFloat(document.getElementById('ded-travel').value) || 0;
         const dMeals = parseFloat(document.getElementById('ded-meals').value) || 0;
         const dIns = parseFloat(document.getElementById('ded-insurance').value) || 0;
@@ -748,12 +780,11 @@
         const baseTaxable = netIncome / div;
         let baseCantonTax = baseTaxable * 0.082; if(baseTaxable > 60000) baseCantonTax += (baseTaxable - 60000) * 0.035;
         const cantonalFinal = baseCantonTax * div;
-        const communalFinal = cantonalFinal * 0.785;
-        const totalTax = ifd + cantonalFinal + communalFinal;
+        const totalTax = ifd + cantonalFinal + (cantonalFinal * 0.785);
 
         document.getElementById('tax-res-ifd').innerText = ifd.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-canton').innerText = cantonalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('tax-res-commune').innerText = communalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-commune').innerText = (cantonalFinal * 0.785).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-total').innerText = totalTax.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-monthly').innerText = (totalTax / 12).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
@@ -785,28 +816,50 @@
             start: document.getElementById(`immo-${key}-start`).value
         };
         await updateDoc(doc(db, "immo", auth.currentUser.uid), { [key]: payload });
-        evalImmoMetrics(key, payload);
+        triggerDynamicImmo(key);
     };
 
-    function evalImmoMetrics(key, data) {
-        const metrics = computeAmortization(data.total, data.rate, data.dur * 12, data.start);
+    window.triggerDynamicImmo = (key) => {
+        const total = parseFloat(document.getElementById(`immo-${key}-total`).value) || 0;
+        const rate = parseFloat(document.getElementById(`immo-${key}-rate`).value) || 0;
+        const dur = parseInt(document.getElementById(`immo-${key}-dur`).value) || 0;
+        const start = document.getElementById(`immo-${key}-start`).value;
+        
+        let target = document.getElementById(`immo-${key}-target`).value;
+        if (!target) {
+            target = `${String(sysDate.getMonth()+1).padStart(2,'0')}/${sysDate.getFullYear()}`;
+        }
+
+        const metrics = evaluateLoanAtTargetDate(total, rate, dur * 12, start, target);
+        
         document.getElementById(`calc-${key}-mens`).innerText = metrics.mens.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById(`calc-${key}-rest`).innerText = metrics.rest.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-    }
+        document.getElementById(`calc-${key}-caprep`).innerText = metrics.repaidCap.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById(`calc-${key}-intpaid`).innerText = metrics.paidInt.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+    };
 
     async function loadImmo(uid) {
         const d = await getDoc(doc(db, "immo", uid));
         if(d.exists()) {
-            const v = d.data(); ['dury', 'amiens'].forEach(k => { if(v[k]) { document.getElementById(`immo-${k}-total`).value = v[k].total||""; document.getElementById(`immo-${k}-rate`).value = v[k].rate||""; document.getElementById(`immo-${k}-dur`).value = v[k].dur||""; document.getElementById(`immo-${k}-start`).value = v[k].start||""; evalImmoMetrics(k, v[k]); } });
+            const v = d.data(); 
+            ['dury', 'amiens'].forEach(k => { 
+                if(v[k]) { 
+                    document.getElementById(`immo-${k}-total`).value = v[k].total||""; 
+                    document.getElementById(`immo-${k}-rate`).value = v[k].rate||""; 
+                    document.getElementById(`immo-${k}-dur`).value = v[k].dur||""; 
+                    document.getElementById(`immo-${k}-start`).value = v[k].start||""; 
+                    triggerDynamicImmo(k);
+                } 
+            });
         } else { await setDoc(doc(db, "immo", uid), { dury: {}, amiens: {} }); }
     }
 
-    window.delD = async (c, id) => { if(confirm("Supprimer la ligne de manière définitive ?")) await deleteDoc(doc(db, c, id)); };
+    window.delD = async (c, id) => { if(confirm("Supprimer la ligne ?")) await deleteDoc(doc(db, c, id)); };
 
     document.getElementById('l-exp').onclick = () => { document.getElementById('l-exp').style.background = 'white'; document.getElementById('l-inc').style.background = 'none'; };
     document.getElementById('l-inc').onclick = () => { document.getElementById('l-inc').style.background = 'white'; document.getElementById('l-exp').style.background = 'none'; };
 
-    // --- FORM COMPONENT ROUTINES ---
+    // --- HANDLERS SUBMISSIONS ---
     document.getElementById('form-finance').onsubmit = async e => { e.preventDefault(); const cat = document.getElementById('fi-cat').value; await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: document.getElementById('fi-date').value, desc: document.getElementById('fi-desc').value, amt: document.getElementById('fi-amt').value, cat: cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-proj').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: document.getElementById('p-budget').value, ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-credit').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "creditsconso"), { uid: auth.currentUser.uid, name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value), rate: parseFloat(document.getElementById('cr-rate').value), dur: parseInt(document.getElementById('cr-dur').value), start: document.getElementById('cr-start').value, ts: Date.now() }); e.target.reset(); };
