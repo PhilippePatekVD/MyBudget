@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.0 Institutional</title>
+    <title>Family Hub | v0.1.1 Institutional</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; }
 
-        /* --- HEADER NAVIGATION --- */
+        /* --- HEADER NAVIGATION (GOLDMAN SACHS STYLE) --- */
         .gs-header {
             background-color: var(--gs-navy);
             color: white;
@@ -66,24 +66,48 @@
         .sub-nav-btn.active { color: var(--text-main); }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -11px; left: 0; width: 100%; height: 2px; background-color: var(--text-main); }
 
+        /* --- DESIGN CALENDRIER DES SAISIES MODERNE --- */
+        .timeline-picker {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #e5e5ea;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--gs-border);
+        }
+        .timeline-select {
+            background: transparent;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--gs-navy);
+            outline: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* --- LAYOUT CORPS --- */
         .main-container { max-width: 1200px; margin: 40px auto; padding: 0 30px; }
-        .gs-card { background: white; border: 1px solid var(--gs-border); border-radius: 8px; padding: 35px; margin-bottom: 35px; }
+        .gs-card { background: white; border: 1px solid var(--gs-border); border-radius: 6px; padding: 35px; margin-bottom: 35px; }
         
-        h2 { font-size: 1.3rem; font-weight: 700; color: var(--gs-navy); margin-bottom: 25px; letter-spacing: -0.02em; }
-        h3 { font-size: 0.95rem; font-weight: 700; color: var(--gs-navy); margin-bottom: 15px; }
+        h2 { font-size: 1.25rem; font-weight: 700; color: var(--gs-navy); margin-bottom: 25px; letter-spacing: -0.02em; }
+        h3 { font-size: 0.9rem; font-weight: 700; color: var(--gs-navy); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         /* --- INTERACTION MODAL --- */
         #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); background: rgba(12, 25, 44, 0.3); }
-        .modal-box { background: var(--glass-modal); width: min(550px, 100%); border-radius: 12px; padding: 40px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+        .modal-box { background: var(--glass-modal); width: min(550px, 100%); border-radius: 8px; padding: 40px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
 
         /* --- FORM CONTROLS --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
-        label { display: block; font-size: 0.75rem; font-weight: 700; color: var(--gs-slate); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
-        input, select { width: 100%; padding: 12px 15px; border-radius: 6px; border: 1px solid #d1d1d6; background: #ffffff; font: inherit; color: var(--text-main); outline: none; }
+        label { display: block; font-size: 0.72rem; font-weight: 700; color: var(--gs-slate); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+        input, select { width: 100%; padding: 12px 15px; border-radius: 4px; border: 1px solid #d1d1d6; background: #ffffff; font: inherit; color: var(--text-main); outline: none; }
         input:focus { border-color: var(--gs-navy); }
-        .btn-gs { padding: 14px 24px; background-color: var(--gs-navy); color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer; }
+        .btn-gs { padding: 14px 24px; background-color: var(--gs-navy); color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: background 0.15s; }
         .btn-gs:hover { background-color: #162a47; }
 
         /* --- LISTS & DATAGRIDS --- */
@@ -94,13 +118,13 @@
 
         /* --- METRICS BLOCKS --- */
         .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .metric-tile { background: var(--gs-platinum); padding: 15px; border-radius: 6px; text-align: center; border: 1px solid var(--gs-border); }
+        .metric-tile { background: var(--gs-platinum); padding: 15px; border-radius: 4px; text-align: center; border: 1px solid var(--gs-border); }
         .metric-tile small { font-size: 0.65rem; font-weight: 700; color: var(--gs-slate); text-transform: uppercase; }
-        .metric-tile p { font-size: 1.15rem; font-weight: 700; color: var(--gs-navy); margin-top: 5px; }
+        .metric-tile p { font-size: 1.1rem; font-weight: 700; color: var(--gs-navy); margin-top: 5px; }
 
         #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--gs-navy); display: flex; align-items: center; justify-content: center; }
         .login-card { background: white; padding: 45px; border-radius: 8px; width: min(400px, 90%); text-align: center; }
-        @media (max-width: 900px) { .gs-header { height: auto; padding: 15px 20px; flex-direction: column; gap: 15px; } .gs-nav-tabs { margin-left: 0; width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; .metrics-grid { grid-template-columns: 1fr; } } }
+        @media (max-width: 900px) { .gs-header { height: auto; padding: 15px 20px; flex-direction: column; gap: 15px; } .gs-nav-tabs { margin-left: 0; width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; } .metrics-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -126,7 +150,7 @@
 <header class="gs-header">
     <div class="gs-brand" onclick="goHome()">
         <div class="gs-logo-crest">⚜ II • II</div>
-        <div class="gs-title">Family Synchro <span style="font-size:0.7rem; color:var(--gs-slate)">v0.1.0</span></div>
+        <div class="gs-title">Family Synchro <span style="font-size:0.7rem; color:var(--gs-slate)">v0.1.1</span></div>
     </div>
     <nav class="gs-nav-tabs">
         <div class="gs-tab active" id="tab-finance" onclick="switchModule('finance')">Finance</div>
@@ -181,7 +205,10 @@
             <div class="gs-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
                     <h2>Écritures Récentes</h2>
-                    <select id="filter-month" style="width:auto; padding:6px 12px;"></select>
+                    <div class="timeline-picker">
+                        <i class="fa-solid fa-calendar-day" style="font-size:0.75rem; color:var(--gs-slate); margin-left:4px;"></i>
+                        <select id="filter-month" class="timeline-select"></select>
+                    </div>
                 </div>
                 <table><tbody id="table-finance"></tbody></table>
             </div>
@@ -226,7 +253,7 @@
 
         <div id="fiscal-tax">
             <div class="gs-card">
-                <h2>Simulateur Fiscal (VD / Lausanne)</h2>
+                <h2>Simulateur Fiscal Évolutif (VD / Lausanne)</h2>
                 <div class="form-row">
                     <div class="field-group"><label>Revenu Brut Ménage (CHF)</label><input type="number" id="tax-rev" value="180000" oninput="calculateTax()"></div>
                     <div class="field-group"><label>Fortune Déclarée (CHF)</label><input type="number" id="tax-fort" value="250000" oninput="calculateTax()"></div>
@@ -235,20 +262,38 @@
                     <div class="field-group">
                         <label>Régime Constitutionnel</label>
                         <select id="tax-status" onchange="calculateTax()">
+                            <option value="single" selected>Célibataire / Imposition séparée</option>
                             <option value="couple">Mariés / Partenariat (Splitting complet)</option>
-                            <option value="single">Célibataire / Imposition séparée</option>
                         </select>
                     </div>
-                    <div class="field-group"><label>Déductions cumulées (3A, Frais pro)</label><input type="number" id="tax-ded" value="18000" oninput="calculateTax()"></div>
+                    <div class="field-group" style="visibility: hidden;"><input type="number" id="tax-ded" value="0"></div>
+                </div>
+
+                <h3 style="margin-top:10px; margin-bottom:15px; color:var(--gs-slate); font-size:0.8rem; border-bottom:1px dashed var(--gs-border); padding-bottom:5px;">Sous-Menu Déductions Applicables</h3>
+                <div class="form-row">
+                    <div class="field-group"><label>Frais de Déplacement Professionnel</label><input type="number" id="ded-travel" value="800" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Repas Hors Domicile (Forfait)</label><input type="number" id="ded-meals" value="3200" oninput="calculateTax()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Primes d'Assurances Maladie / Accidents</label><input type="number" id="ded-insurance" value="5000" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Versements Épargne 3A (Auto-Sync)</label><input type="number" id="ded-p3" value="7056" oninput="calculateTax()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Frais d'Entretien Immeubles (Effectifs)</label><input type="number" id="ded-immo" value="0" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Autres déductions fiscales</label><input type="number" id="ded-others" value="0" oninput="calculateTax()"></div>
                 </div>
 
                 <div style="background:var(--gs-platinum); padding:30px; border-radius:6px; margin-top:25px;">
                     <div class="list-line"><span>Impôt Fédéral Direct (IFD)</span><b id="tax-res-ifd" class="num">0.00 CHF</b></div>
                     <div class="list-line"><span>Impôt Cantonal Vaudois</span><b id="tax-res-canton" class="num">0.00 CHF</b></div>
                     <div class="list-line"><span>Impôt Communal Lausanne (78.5%)</span><b id="tax-res-commune" class="num">0.00 CHF</b></div>
-                    <div class="list-line" style="border-top:1px solid #cbd5e1; margin-top:15px; padding-top:15px;">
-                        <span style="font-weight:700;">CHARGE NETTE ANNUELLE ESTIMÉE</span>
+                    <div class="list-line" style="border-top:1px solid #cbd5e1; margin-top:15px; padding-top:15px; font-weight:700;">
+                        <span>CHARGE NETTE ANNUELLE ESTIMÉE</span>
                         <b id="tax-res-total" class="num" style="color:var(--apple-red); font-size:1.15rem;">0.00 CHF</b>
+                    </div>
+                    <div class="list-line" style="background:var(--gs-navy); color:white; padding:15px; border-radius:4px; margin-top:20px; font-weight:700;">
+                        <span>Acompte Mensuel Estimé Conseillé</span>
+                        <b id="tax-res-monthly" class="num" style="color:white; font-size:1.2rem;">0.00 CHF</b>
                     </div>
                 </div>
             </div>
@@ -266,9 +311,10 @@
                 </form>
             </div>
             <div class="gs-card">
-                <h2>Avoirs Totaux Accumulés</h2>
-                <div style="padding:20px; background:var(--gs-navy); color:white; border-radius:6px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>CAPITAL 3A CONSOLIDÉ</span><b id="p3-total-display" class="num" style="font-size:1.3rem;">0.00 CHF</b>
+                <h2>Avoirs Consolidés 3A</h2>
+                <div class="form-row" style="margin-bottom:20px;">
+                    <div class="metric-tile" style="background:var(--gs-navy); color:white;"><small style="color:#9cb0c9">Masse Globale 3A Cumulée</small><p id="p3-total-display" style="color:white; font-size:1.25rem;">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Versements Année Courante (2026)</small><p id="p3-year-display" style="color:var(--apple-blue);">0.00 CHF</p></div>
                 </div>
                 <table><tbody id="table-p3"></tbody></table>
             </div>
@@ -292,9 +338,9 @@
                 <button onclick="saveP2Config()" class="btn-gs" style="width:100%; margin-bottom:25px;">Figer la Configuration Prévoyance</button>
 
                 <div style="background:var(--gs-platinum); padding:25px; border-radius:6px;">
-                    <div class="list-line"><span>Somme des avoirs à ce jour (2026)</span><b id="p2-total-now" class="num">0.00 CHF</b></div>
+                    <div class="list-line"><span>Somme totale des avoirs à ce jour (2026)</span><b id="p2-total-now" class="num">0.00 CHF</b></div>
                     <div class="list-line" style="background:var(--gs-navy); color:white; padding:15px; border-radius:4px; margin-top:15px;">
-                        <span id="p2-projection-title">Capital attendu en 2035</span>
+                        <span id="p2-projection-title">Capital attendu</span>
                         <b id="p2-total-projected" class="num" style="color:white; font-size:1.25rem;">0.00 CHF</b>
                     </div>
                 </div>
@@ -333,7 +379,7 @@
 
     <div id="view-credits" class="module-view hidden">
         <div class="gs-card">
-            <h2>Nouveau Registre de Financement Conso</h2>
+            <h2>Nouveau Financement</h2>
             <form id="form-credit">
                 <div class="field-group"><label>Désignation</label><input type="text" id="cr-name" required placeholder="ex: Financement Automobile"></div>
                 <div class="form-row">
@@ -344,17 +390,20 @@
                     <div class="field-group"><label>Durée Totale (Mois)</label><input type="number" id="cr-dur" required></div>
                     <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="cr-start" required placeholder="ex: 01/2025"></div>
                 </div>
-                <button type="submit" class="btn-gs" style="width:100%;">Valider et Inscrire l'Engagement</button>
+                <button type="submit" class="btn-gs" style="width:100%;">Inscrire l'Engagement contractuel</button>
             </form>
         </div>
-        <div id="list-credits"></div>
+        <div class="gs-card">
+            <h2>Engagements en cours</h2>
+            <div id="list-credits"></div>
+        </div>
     </div>
 
     <div id="view-projets" class="module-view hidden">
         <div class="gs-card">
             <h2>Lignes d'Investissements Capitalisés</h2>
             <div id="list-projets" style="margin-bottom:20px;"></div>
-            <div style="padding:20px; background:var(--gs-navy); color:white; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="padding:20px; background:var(--gs-navy); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                 <span style="font-size:0.85rem; font-weight:500; color:#9cb0c9;">VALEUR TOTALE CUMULÉE</span>
                 <b id="proj-total-val" class="num" style="font-size:1.25rem; color:white;">0.00 CHF</b>
             </div>
@@ -387,9 +436,9 @@
         <div class="gs-card">
             <h2>Bilan d'Activité Consolidé</h2>
             <div class="metrics-grid">
-                <div class="metric-tile"><small>Semaine Écoulée (7j)</small><p id="sport-stat-w">0 min · 0 kcal</p></div>
-                <div class="metric-tile"><small>Mois Courant</small><p id="sport-stat-m">0 min · 0 kcal</p></div>
-                <div class="metric-tile"><small>Année Majeure (2026)</small><p id="sport-stat-y">0 min · 0 kcal</p></div>
+                <div class="metric-tile"><small>Semaine Écoulée (7j)</small><p id="sport-stat-w" class="num">0 min · 0 kcal</p></div>
+                <div class="metric-tile"><small>Mois Courant</small><p id="sport-stat-m" class="num">0 min · 0 kcal</p></div>
+                <div class="metric-tile"><small>Année Majeure (2026)</small><p id="sport-stat-y" class="num">0 min · 0 kcal</p></div>
             </div>
         </div>
         <div class="gs-card">
@@ -505,7 +554,7 @@
         const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         sel.innerHTML = '<option value="all" selected>Vue Historique Globale</option>';
         for(let i=0; i<12; i++) {
-            sel.innerHTML += `<option value="2026-${String(i+1).padStart(2,'0')}">Période de ${mNames[i]} 2026</option>`;
+            sel.innerHTML += `<option value="2026-${String(i+1).padStart(2,'0')}">${mNames[i]} 2026</option>`;
         }
         sel.onchange = renderFinanceLog;
 
@@ -515,25 +564,32 @@
         });
 
         onSnapshot(query(collection(db, "pillar3"), where("uid", "==", uid)), s => {
-            allP3Data = []; let h = "", tot = 0;
+            allP3Data = []; let h = "", tot = 0, totYear = 0;
             s.forEach(d => {
                 const p = d.data(); allP3Data.push(p);
-                tot += parseFloat(p.amt || 0);
-                h += `<div class="list-line"><span>Versement du ${p.date.split('-').reverse().join('.')}</span><b class="num">+ ${parseFloat(p.amt).toFixed(2)} CHF</b></div>`;
+                const val = parseFloat(p.amt || 0);
+                tot += val;
+                if (p.date && p.date.startsWith("2026")) {
+                    totYear += val;
+                }
+                h += `<div class="list-line"><span>Versement du ${p.date.split('-').reverse().join('.')}</span><b class="num">+ ${val.toFixed(2)} CHF</b></div>`;
             });
             document.getElementById('table-p3').innerHTML = h;
             document.getElementById('p3-total-display').innerText = tot.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+            document.getElementById('p3-year-display').innerText = totYear.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+            document.getElementById('ded-p3').value = totYear;
+            calculateTax();
         });
 
         onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), s => {
             let h = "", tot = 0; s.forEach(d => { const p = d.data(); h += `<div class="list-line"><span><b>${p.name}</b></span><b class="num">${parseFloat(p.budget).toFixed(2)} CHF</b></div>`; tot += parseFloat(p.budget); });
-            document.getElementById('list-projets').innerHTML = h || "Aucun engagement.";
+            document.getElementById('list-projets').innerHTML = h || "Aucun projet actif engagé.";
             document.getElementById('proj-total-val').innerText = tot.toFixed(2) + " CHF";
         });
 
         onSnapshot(query(collection(db, "creditsconso"), where("uid", "==", uid)), s => {
             let h = ""; s.forEach(d => { const c = d.data(); const metrics = computeAmortization(c.total, c.rate, c.dur, c.start, 5); h += `<div class="list-line"><span><b>${c.name}</b><br><small style="color:var(--text-muted)">Échéance: ${c.dur} mois</small></span><div style="text-align:right"><b class="num" style="color:var(--apple-red)">${metrics.rest.toFixed(2)} CHF</b><br><small style="color:var(--text-muted)">Mensualité: ${metrics.mens.toFixed(2)} CHF</small></div><i class="fa-solid fa-trash-can" onclick="delD('creditsconso','${d.id}')" style="opacity:0.2; margin-left:15px; cursor:pointer;"></i></div>`; });
-            document.getElementById('list-credits').innerHTML = h || "Aucun crédit de consommation engagé.";
+            document.getElementById('list-credits').innerHTML = h || "<p style='color:var(--text-muted); padding:10px 0;'>Aucun engagement en cours.</p>";
         });
 
         onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
@@ -609,19 +665,15 @@
         let wDur = 0, wKcal = 0;
         let mDur = 0, mKcal = 0;
         let yDur = 0, yKcal = 0;
-
         const cutWeek = new Date(sysDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-
         allSportData.forEach(x => {
             const d = new Date(x.date);
             const dur = parseFloat(x.dur || 0);
             const kcal = parseFloat(x.kcal || 0);
-
             if (d >= cutWeek && d <= sysDate) { wDur += dur; wKcal += kcal; }
             if (d.getMonth() === sysDate.getMonth() && d.getFullYear() === sysDate.getFullYear()) { mDur += dur; mKcal += kcal; }
             if (d.getFullYear() === sysDate.getFullYear()) { yDur += dur; yKcal += kcal; }
         });
-
         document.getElementById('sport-stat-w').innerText = `${wDur} min · ${wKcal} kcal`;
         document.getElementById('sport-stat-m').innerText = `${mDur} min · ${mKcal} kcal`;
         document.getElementById('sport-stat-y').innerText = `${yDur} min · ${yKcal} kcal`;
@@ -635,16 +687,12 @@
         const annC = parseFloat(document.getElementById('p2-ann-c').value) || 0;
         const targetY = parseInt(document.getElementById('p2-target-year').value) || 2026;
         const r = (parseFloat(document.getElementById('p2-rate').value) || 1.25) / 100;
-
         const totalNow = baseK + baseC;
         document.getElementById('p2-total-now').innerText = totalNow.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-
         const horizon = Math.max(0, targetY - 2026);
         document.getElementById('p2-projection-title').innerText = `Capital attendu en ${targetY} (${horizon} ans de capitalisation)`;
-
         let projK = baseK * Math.pow(1 + r, horizon);
         let projC = baseC * Math.pow(1 + r, horizon);
-
         if (r > 0) {
             const accumulation = (Math.pow(1 + r, horizon) - 1) / r;
             projK += annK * accumulation;
@@ -653,7 +701,6 @@
             projK += annK * horizon;
             projC += annC * horizon;
         }
-
         const totalProjected = projK + projC;
         document.getElementById('p2-total-projected').innerText = totalProjected.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
@@ -680,26 +727,38 @@
         runP2Projection();
     }
 
-    // --- SWISS FISCAL SYSTEM ---
+    // --- EXPERT SWISS FISCAL CORE ENGINE ---
     window.calculateTax = () => {
         const rev = parseFloat(document.getElementById('tax-rev').value) || 0;
-        const fort = parseFloat(document.getElementById('tax-fort').value) || 0;
-        const ded = parseFloat(document.getElementById('tax-ded').value) || 0;
         const status = document.getElementById('tax-status').value;
-        const netIncome = Math.max(0, rev - ded);
+
+        // Collecter les déductions individualisées du sous-menu
+        const dTravel = parseFloat(document.getElementById('ded-travel').value) || 0;
+        const dMeals = parseFloat(document.getElementById('ded-meals').value) || 0;
+        const dIns = parseFloat(document.getElementById('ded-insurance').value) || 0;
+        const dP3 = parseFloat(document.getElementById('ded-p3').value) || 0;
+        const dImmo = parseFloat(document.getElementById('ded-immo').value) || 0;
+        const dOthers = parseFloat(document.getElementById('ded-others').value) || 0;
+
+        const combinedDeductions = dTravel + dMeals + dIns + dP3 + dImmo + dOthers;
+        const netIncome = Math.max(0, rev - combinedDeductions);
+
         let ifd = status === 'couple' ? Math.max(0, (netIncome - 30000) * 0.012) : Math.max(0, (netIncome - 14800) * 0.009);
         const div = status === 'couple' ? 2 : 1;
         const baseTaxable = netIncome / div;
         let baseCantonTax = baseTaxable * 0.082; if(baseTaxable > 60000) baseCantonTax += (baseTaxable - 60000) * 0.035;
         const cantonalFinal = baseCantonTax * div;
-        const totalTax = ifd + cantonalFinal + (cantonalFinal * 0.785);
+        const communalFinal = cantonalFinal * 0.785;
+        const totalTax = ifd + cantonalFinal + communalFinal;
+
         document.getElementById('tax-res-ifd').innerText = ifd.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-canton').innerText = cantonalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('tax-res-commune').innerText = (cantonalFinal * 0.785).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-commune').innerText = communalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         document.getElementById('tax-res-total').innerText = totalTax.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-monthly').innerText = (totalTax / 12).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
 
-    // --- IMMOBILIER & FORTUNE DATA ACTIONS ---
+    // --- DATA MUTATIONS & SYNCHRONIZATIONS ---
     window.syncSav = async () => {
         const sq = parseFloat(document.getElementById('sav-sq').value) || 0;
         const ep = parseFloat(document.getElementById('sav-ep').value) || 0;
@@ -742,13 +801,12 @@
         } else { await setDoc(doc(db, "immo", uid), { dury: {}, amiens: {} }); }
     }
 
-    window.delD = async (c, id) => { if(confirm("Archiver la ligne ?")) await deleteDoc(doc(db, c, id)); };
+    window.delD = async (c, id) => { if(confirm("Supprimer la ligne de manière définitive ?")) await deleteDoc(doc(db, c, id)); };
 
-    // --- FORM CLICKS TAUTOLOGY ---
     document.getElementById('l-exp').onclick = () => { document.getElementById('l-exp').style.background = 'white'; document.getElementById('l-inc').style.background = 'none'; };
     document.getElementById('l-inc').onclick = () => { document.getElementById('l-inc').style.background = 'white'; document.getElementById('l-exp').style.background = 'none'; };
 
-    // --- HANDLERS SUBMISSIONS ---
+    // --- FORM COMPONENT ROUTINES ---
     document.getElementById('form-finance').onsubmit = async e => { e.preventDefault(); const cat = document.getElementById('fi-cat').value; await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: document.getElementById('fi-date').value, desc: document.getElementById('fi-desc').value, amt: document.getElementById('fi-amt').value, cat: cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-proj').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: document.getElementById('p-budget').value, ts: Date.now() }); e.target.reset(); };
     document.getElementById('form-credit').onsubmit = async e => { e.preventDefault(); await addDoc(collection(db, "creditsconso"), { uid: auth.currentUser.uid, name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value), rate: parseFloat(document.getElementById('cr-rate').value), dur: parseInt(document.getElementById('cr-dur').value), start: document.getElementById('cr-start').value, ts: Date.now() }); e.target.reset(); };
