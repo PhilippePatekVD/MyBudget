@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.8 Analytics Suite</title>
+    <title>Family Hub | v0.1.8 Premium Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- NAVBAR --- */
+        /* --- NAVIGATION PRINCIPALE SYSTEME --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -66,13 +66,13 @@
         .sub-nav-btn.active { color: var(--apple-dark); font-weight: 600; }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: var(--apple-dark); }
 
-        /* --- DATEPICKER STYLING --- */
+        /* --- DATEPICKER --- */
         .calendar-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; cursor: pointer; }
         .calendar-icon-trigger { position: absolute; right: 15px; color: var(--apple-dark); z-index: 10; pointer-events: none; }
         
         #gs-custom-datepicker {
             position: absolute; background: var(--glass-modal); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--apple-border); border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); width: 280px;
+            border: 1px solid var(--apple-border); border-radius: 6px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); width: 280px;
             padding: 16px; z-index: 2000; display: none;
         }
         .dp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
@@ -86,29 +86,29 @@
         .timeline-picker-container { display: flex; align-items: center; gap: 8px; background: #e8e8ed; padding: 4px 10px; border-radius: 8px; }
         .timeline-select { background: transparent; border: none; font-family: inherit; font-size: 0.75rem; font-weight: 600; color: var(--apple-dark); outline: none; cursor: pointer; }
 
-        /* --- BLOCKS & CARDS --- */
+        /* --- CARDS & BLOCKS --- */
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
-        .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 12px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
+        .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
-        h2 { font-size: 1.35rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
+        h2 { font-size: 1.25rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
         h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- PROGRESS BARS --- */
+        /* --- JAUGE DE COMPLÉTION --- */
         .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
 
-        /* --- OVERLAY MODAL --- */
+        /* --- POPUP EFFET VERRE (MASQUÉ STRICT PAR DÉFAUT) --- */
         #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
-        .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 14px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
-        .advisory-box { padding: 20px; border-radius: 8px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
+        .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
-        /* --- INPUT SYSTEMS --- */
+        /* --- SYSTEME FORMULAIRE --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px 14px; border-radius: 6px; border: 1px solid var(--apple-border); background: var(--apple-gray); color: var(--apple-dark); font: inherit; font-size: 0.9rem; outline: none; }
+        input, select { width: 100%; padding: 12px 14px; border-radius: 4px; border: 1px solid var(--apple-border); background: var(--apple-gray); color: var(--apple-dark); font: inherit; font-size: 0.9rem; outline: none; }
         input:focus { border-color: var(--apple-blue); background-color: #ffffff; }
-        .btn-apple { padding: 12px 22px; background-color: var(--apple-blue); color: white; border: none; border-radius: 6px; font-weight: 500; font-size: 0.85rem; cursor: pointer; }
+        .btn-apple { padding: 12px 22px; background-color: var(--apple-blue); color: white; border: none; border-radius: 4px; font-weight: 500; font-size: 0.85rem; cursor: pointer; }
         
         table { width: 100%; border-collapse: collapse; }
         td { padding: 14px 8px; border-bottom: 1px solid var(--apple-gray); font-size: 0.9rem; }
@@ -117,12 +117,12 @@
         .amt-neg { color: var(--apple-red); font-weight: 600; }
 
         .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .metric-tile { background: var(--apple-gray); padding: 20px; border-radius: 8px; text-align: center; border: 1px solid var(--apple-border); }
+        .metric-tile { background: var(--apple-gray); padding: 20px; border-radius: 4px; text-align: center; border: 1px solid var(--apple-border); }
         .metric-tile small { font-size: 0.65rem; font-weight: 700; color: var(--apple-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .metric-tile p { font-size: 1.15rem; font-weight: 700; color: var(--apple-dark); margin-top: 6px; }
 
         #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--apple-dark); display: flex; align-items: center; justify-content: center; }
-        .login-card { background: white; padding: 50px 40px; border-radius: 12px; width: min(380px, 90%); text-align: center; }
+        .login-card { background: white; padding: 50px 40px; border-radius: 8px; width: min(380px, 90%); text-align: center; }
         @media (max-width: 900px) { .apple-nav { height: auto; padding: 12px 20px; flex-direction: column; gap: 12px; } .apple-tabs { width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -235,11 +235,11 @@
         <div id="fin-epargne" class="hidden">
             <div class="apple-card">
                 <h2>Avoirs Disponibles Liquides</h2>
-                <div class="list-line"><span>SwissQuote Private Cash</span><input type="number" step="0.01" id="sav-sq" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
-                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
-                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                <div class="list-line"><span>SwissQuote Private Cash</span><input type="number" step="0.01" id="sav-sq" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
+                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
+                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
                 
-                <div style="margin-top:30px; padding:25px; background:var(--apple-gray); border:1px solid var(--apple-border); border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:30px; padding:25px; background:var(--apple-gray); border:1px solid var(--apple-border); border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600; letter-spacing:0.5px; font-size:0.85rem; color:var(--apple-muted);">SOMME TOTALE ÉPARGNE LIQUIDE</span>
                     <b id="sav-total-global" class="num" style="font-size:1.3rem;">0.00 CHF</b>
                 </div>
@@ -248,12 +248,12 @@
 
         <div id="fin-consolidation" class="hidden">
             <div class="apple-card">
-                <h2>Consolidation Patrimoniale Globale (Fortune Totale 2026)</h2>
+                <h2>Consolidation Patrimoniale Globale</h2>
                 <div class="list-line"><span>Avoirs Épargne Liquide</span><b id="conso-liquid" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Portefeuille Bourse (Yahoo Market Value)</span><b id="conso-bourse-titres" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Avoirs Cumulés Prévoyance 3ème Pilier (3A)</span><b id="conso-p3" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Projection Prévoyance Professionnelle 2ème Pilier LPP</span><b id="conso-p2" class="num">0.00 CHF</b></div>
-                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600;">FORTUNE CONSOLIDÉE NETTE DE LA FAMILLE</span>
                     <b id="conso-total-global" class="num" style="font-size:1.4rem; color:white;">0.00 CHF</b>
                 </div>
@@ -266,7 +266,7 @@
     <div id="view-bourse" class="module-view hidden">
         <div class="form-row">
             <div class="apple-card">
-                <h2 id="bourse-title-node">Saisie Ligne Asset</h2>
+                <h2 id="bourse-form-title">Saisie Ligne Asset</h2>
                 <form id="form-bourse" onsubmit="return false;">
                     <div class="field-group"><label>Ticker Instrument</label><input type="text" id="stock-ticker" placeholder="Ex: VWRA, SEMI, NVDA" required></div>
                     <div class="form-row">
@@ -372,7 +372,7 @@
     <div id="view-calendrier" class="module-view hidden">
         <div class="form-row">
             <div class="apple-card">
-                <h2>Nouvelle Échéance Stratégique</h2>
+                <h2>Nouvelle Échéance Stratégione</h2>
                 <form id="form-calendar" onsubmit="return false;">
                     <div class="field-group">
                         <label>Date cible</label>
@@ -501,8 +501,22 @@
     </div>
 
     <div id="view-projets" class="module-view hidden">
-        <div class="apple-card"><h2>Lignes d'Investissements</h2><div id="list-projets" style="margin-bottom:20px;"></div><div style="padding:20px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;"><span style="font-size:0.85rem;">BUDGET TOTAL HARMONISÉ</span><b id="proj-total-val" class="num" style="color:white;">0.00 CHF</b></div></div>
-        <div class="apple-card"><h2>Nouveau Projet</h2><form id="form-proj" onsubmit="return false;"><input type="text" id="p-name" placeholder="Intitulé du projet" required style="margin-bottom:15px;"><input type="number" id="p-budget" placeholder="Allocation CHF" required style="margin-bottom:20px;"><button type="button" onclick="submitProjectForm()" class="btn-apple">Inscrire le Projet</button></form></div>
+        <div class="apple-card">
+            <h2>Lignes d'Investissements</h2>
+            <div id="list-projets" style="margin-bottom:20px;"></div>
+            <div style="padding:20px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.85rem; color:white;">BUDGET TOTAL HARMONISÉ</span>
+                <b id="proj-total-val" class="num" style="color:white;">0.00 CHF</b>
+            </div>
+        </div>
+        <div class="apple-card">
+            <h2>Nouveau Projet</h2>
+            <form id="form-proj" onsubmit="return false;">
+                <input type="text" id="p-name" placeholder="Intitulé du projet" required style="margin-bottom:15px;">
+                <input type="number" id="p-budget" placeholder="Allocation CHF" required style="margin-bottom:20px;">
+                <button type="button" onclick="submitProjectForm()" class="btn-apple">Inscrire le Projet</button>
+            </form>
+        </div>
     </div>
 
     <div id="view-vacances" class="module-view hidden">
@@ -554,7 +568,7 @@
     let analysisCurrentIndex = 0, uniqueMonthsList = [];
     let totalLiquidsCalculated = 0;
 
-    const sysDate = new Date(2026, 4, 18); // 18 Mai 2026
+    const sysDate = new Date(2026, 4, 18);
 
     async function getLiveForexRate() {
         try {
@@ -599,7 +613,7 @@
 
     window.goHome = () => { document.querySelector('.apple-tab[id="tab-finance"]').click(); };
 
-    // --- CUSTOM DATEPICKER CORE RECONSTRUCTED ENGINE ---
+    // --- CUSTOM DATEPICKER ENGINE ---
     let currentDpInput = null;
     let dpCurrentMonth = sysDate.getMonth();
     let dpCurrentYear = sysDate.getFullYear();
@@ -708,7 +722,7 @@
         reader.readAsText(file);
     };
 
-    // --- LIFE CYCLE OVERWATCH ---
+    // --- LIFE CYCLE PIPELINE CONTROL ---
     onAuthStateChanged(auth, async (user) => {
         if(user) { 
             await getLiveForexRate(); 
@@ -717,7 +731,7 @@
         } else { document.getElementById('login-overlay').classList.remove('hidden'); }
     });
 
-    // --- AMORTIZATION CORE ENGINE ---
+    // --- AMORTIZATION ENGINE ---
     function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
         if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
         const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
@@ -750,7 +764,6 @@
     }
 
     function initPipeline(uid) {
-        initCustomDatePicker();
         const sel = document.getElementById('filter-month');
         const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
         sel.innerHTML = '<option value="all" selected>Vue Historique Globale</option>';
@@ -897,7 +910,7 @@
         const line = allStocks.find(x => x.id === id); if(!line) return;
         editStockId = id; document.getElementById('stock-ticker').value = line.ticker;
         document.getElementById('stock-qty').value = line.qty; document.getElementById('stock-prm').value = line.prm;
-        document.getElementById('stock-live').value = line.live; document.getElementById('bourse-title-node').innerText = "Ajuster la position";
+        document.getElementById('stock-live').value = line.live; document.getElementById('bourse-form-title').innerText = "Ajuster la position";
     };
 
     window.editCredit = (id) => {
@@ -1016,7 +1029,7 @@
         document.getElementById('sport-stat-y').innerText = `${yDur} min · ${yKcal} kcal`;
     }
 
-    // --- SECURE BUTTON OVERRIDES ---
+    // --- SUBMISSIONS CONTROL ---
     window.submitFinanceForm = async () => {
         const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
         await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
@@ -1055,6 +1068,11 @@
     window.submitVacationForm = async () => {
         await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() });
         document.getElementById('form-vac').reset();
+    };
+
+    window.submitSportForm = async () => {
+        await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, date: document.getElementById('sp-date').value, type: document.getElementById('sp-type').value, dur: parseFloat(document.getElementById('sp-dur').value)||0, kcal: parseFloat(document.getElementById('sp-kcal').value)||0, ts: Date.now() });
+        document.getElementById('form-sport').reset();
     };
 </script>
 </body>
