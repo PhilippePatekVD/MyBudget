@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.11 Premium Suite</title>
+    <title>Family Hub | v0.1.11 Analytics Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- NAVIGATION --- */
+        /* --- APPLE NAVBAR --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -66,7 +66,7 @@
         .sub-nav-btn.active { color: var(--apple-dark); font-weight: 600; }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: var(--apple-dark); }
 
-        /* --- DATEPICKER --- */
+        /* --- CUSTOM DATEPICKER --- */
         .calendar-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; cursor: pointer; }
         .calendar-icon-trigger { position: absolute; right: 15px; color: var(--apple-dark); z-index: 10; pointer-events: none; }
         
@@ -83,7 +83,10 @@
         .dp-cell:hover { background-color: rgba(0,0,0,0.04); }
         .dp-cell.selected { background-color: var(--apple-blue); color: white; font-weight: 600; }
 
-        /* --- LAYOUTS & TILES --- */
+        .timeline-picker-container { display: flex; align-items: center; gap: 8px; background: #e8e8ed; padding: 4px 10px; border-radius: 8px; }
+        .timeline-select { background: transparent; border: none; font-family: inherit; font-size: 0.75rem; font-weight: 600; color: var(--apple-dark); outline: none; cursor: pointer; }
+
+        /* --- CARDS & PANELS --- */
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
         .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
@@ -97,6 +100,7 @@
         .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
+        /* --- CONTROLES FORMULAIRE --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -143,7 +147,7 @@
 <header class="apple-nav">
     <div class="apple-brand" onclick="goHome()">
         <div class="apple-crest">Hub</div>
-        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.10</span></div>
+        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.11</span></div>
     </div>
     <nav class="apple-tabs">
         <div class="apple-tab active" id="tab-finance" onclick="switchModule('finance', event)">Finance</div>
@@ -152,8 +156,6 @@
         <div class="apple-tab" id="tab-immobilier" onclick="switchModule('immobilier', event)">Immobilier</div>
         <div class="apple-tab" id="tab-credits" onclick="switchModule('credits', event)">Crédits Conso</div>
         <div class="apple-tab" id="tab-projets" onclick="switchModule('projets', event)">Projets</div>
-        <div class="apple-tab" id="tab-calendrier" onclick="switchModule('calendrier', event)">Calendrier</div>
-        <div class="apple-tab" id="tab-vacances" onclick="switchModule('vacances', event)">Vacances</div>
         <div class="apple-tab" id="tab-sport" onclick="sportModuleActivation(event)">Sport</div>
     </nav>
     <button type="button" id="logout-btn" style="background:none; border:none; color:#cccccc; cursor:pointer;"><i class="fa-solid fa-power-off"></i></button>
@@ -212,7 +214,7 @@
             </div>
             <div class="apple-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
-                    <h2>Écritures Rapprochées</h2>
+                    <h2>Écritures Récentes</h2>
                     <select id="filter-month" style="width:auto; padding:6px; font-size:0.8rem;"></select>
                 </div>
                 <table><tbody id="table-finance"></tbody></table>
@@ -222,7 +224,7 @@
         <div id="fin-analyse" class="hidden">
             <div class="apple-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h2>Masses Sectorielles des Dépenses</h2>
+                    <h2>Allocation des masses</h2>
                     <div style="display:flex; gap:10px;">
                         <button type="button" class="btn-apple" style="padding:6px 12px;" onclick="navigateAnalysisMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
                         <span id="analysis-time-label" style="font-weight:700; align-self:center;">Global</span>
@@ -293,29 +295,26 @@
 
     <div id="view-credits" class="module-view hidden">
         <div class="apple-card">
-            <h2>Nouveau Financement Contractuel</h2>
+            <h2 id="credit-form-title">Nouveau Financement Contractuel</h2>
             <form id="form-credit" onsubmit="return false;">
                 <input type="text" id="cr-name" placeholder="Nom de l'engagement" required style="margin-bottom:15px;">
                 <div class="form-row">
-                    <input type="number" id="cr-total" placeholder="Capital emprunté" required>
-                    <select id="cr-ccy"><option value="CHF" selected>CHF (fr.)</option><option value="EUR">EUR (€)</option></select>
+                    <div class="field-group"><label>Capital emprunté nominal</label><input type="number" id="cr-total" required></div>
+                    <div class="field-group"><label>Mensualité fixée</label><input type="number" id="cr-mens" step="0.01" required></div>
                 </div>
                 <div class="form-row">
-                    <input type="number" id="cr-rate" step="0.01" placeholder="Taux Annuel Nominal (%)" required>
-                    <input type="number" id="cr-dur" placeholder="Durée Globale (Mois)" required>
+                    <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="cr-start" placeholder="ex: 05/2024" required></div>
+                    <div class="field-group"><label>Date de fin d'engagement (MM/AAAA)</label><input type="text" id="cr-end" placeholder="ex: 05/2028" required></div>
                 </div>
-                <div class="field-group" style="margin-top:15px;">
-                    <label>Date de première échéance</label>
-                    <div class="calendar-input-wrapper" id="trigger-cr-start">
-                        <input type="text" id="cr-start" readonly placeholder="JJ.MM.AAAA" required>
-                        <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
-                    </div>
+                <div class="field-group">
+                    <label>Devise contractuelle</label>
+                    <select id="cr-ccy"><option value="CHF" selected>CHF (fr.)</option><option value="EUR">EUR (€)</option></select>
                 </div>
                 <button type="button" id="btn-submit-credit" onclick="submitCreditForm()" class="btn-apple" style="width:100%;">Inscrire l'Engagement</button>
             </form>
         </div>
         <div class="apple-card">
-            <h2>Engagements en cours & Rapprochement de complétion</h2>
+            <h2>Engagements actifs & Complétion temporelle</h2>
             <div id="list-credits"></div>
         </div>
     </div>
@@ -335,8 +334,8 @@
                 <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-dury-start" value="05/2024"></div>
                 <button type="button" onclick="saveImmo('dury')" class="btn-apple" style="width:100%; margin-bottom:25px;">Figer Financement Dury</button>
                 
-                <h3 style="border-bottom:1px dashed var(--apple-border); padding-bottom:5px;">Simulateur d'Amortissement Dynamique</h3>
-                <div class="field-group" style="margin-top:15px;"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-dury-target" placeholder="ex: 12/2030" oninput="triggerDynamicImmo('dury')"></div>
+                <h3>Simulateur d'Amortissement Dynamique</h3>
+                <div class="field-group"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-dury-target" placeholder="ex: 12/2030" oninput="triggerDynamicImmo('dury')"></div>
                 <div class="list-line"><span>Mensualité Contractuelle</span><b id="calc-dury-mens" class="num">0.00</b></div>
                 <div class="list-line" style="background:#e8e8ed; padding:8px 12px; border-radius:4px;"><span>Encours Restant dû (Converti en CHF)</span><b id="calc-dury-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
                 <div class="list-line"><span>Capital Amorti</span><b id="calc-dury-caprep" class="num">0.00</b></div>
@@ -356,34 +355,13 @@
                 <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-amiens-start" value="06/2021"></div>
                 <button type="button" onclick="saveImmo('amiens')" class="btn-apple" style="width:100%; margin-bottom:25px;">Figer Financement Amiens</button>
                 
-                <h3 style="border-bottom:1px dashed var(--apple-border); padding-bottom:5px;">Simulateur d'Amortissement Dynamique</h3>
-                <div class="field-group" style="margin-top:15px;"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-amiens-target" placeholder="ex: 06/2031" oninput="triggerDynamicImmo('amiens')"></div>
+                <h3>Simulateur d'Amortissement Dynamique</h3>
+                <div class="field-group"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-amiens-target" placeholder="ex: 06/2031" oninput="triggerDynamicImmo('amiens')"></div>
                 <div class="list-line"><span>Mensualité Contractuelle</span><b id="calc-amiens-mens" class="num">0.00</b></div>
                 <div class="list-line" style="background:#e8e8ed; padding:8px 12px; border-radius:4px;"><span>Encours Restant dû (Converti en CHF)</span><b id="calc-amiens-rest" class="num" style="color:var(--apple-blue)">0.00 CHF</b></div>
                 <div class="list-line"><span>Capital Amorti</span><b id="calc-amiens-caprep" class="num">0.00</b></div>
                 <div class="list-line"><span>Intérêts Versés</span><b id="calc-amiens-intpaid" class="num" style="color:var(--apple-red)">0.00</b></div>
             </div>
-        </div>
-    </div>
-
-    <div id="view-calendrier" class="module-view hidden">
-        <div class="form-row">
-            <div class="apple-card">
-                <h2>Nouvelle Échéance Stratégique</h2>
-                <form id="form-calendar" onsubmit="return false;">
-                    <div class="field-group">
-                        <label>Date cible</label>
-                        <div class="calendar-input-wrapper" id="trigger-cal-date">
-                            <input type="text" id="cal-date" readonly placeholder="JJ.MM.AAAA" required>
-                            <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
-                        </div>
-                    </div>
-                    <div class="field-group"><label>Intitulé de l'échéance</label><input type="text" id="cal-title" required></div>
-                    <div class="field-group"><label>Notes annexes</label><input type="text" id="cal-desc"></div>
-                    <button type="button" onclick="submitCalendarEvent()" class="btn-apple">Inscrire l'Échéance</button>
-                </form>
-            </div>
-            <div class="apple-card"><h2>Registre Chronologique des Échéances</h2><div id="list-calendar-events"></div></div>
         </div>
     </div>
 
@@ -516,29 +494,6 @@
         </div>
     </div>
 
-    <div id="view-vacances" class="module-view hidden">
-        <div class="apple-card"><h2>Congés Charlotte</h2><div id="list-vac-charlotte"></div></div>
-        <div class="apple-card"><h2>Congés Kévin</h2><div id="list-vac-kevin"></div></div>
-        <div class="apple-card">
-            <h2>Planification Temporelle</h2>
-            <form id="form-vac" onsubmit="return false;">
-                <select id="v-who" style="margin-bottom:15px;"><option value="Charlotte">Charlotte</option><option value="Kévin">Kévin</option></select>
-                <div class="form-row">
-                    <div class="calendar-input-wrapper" id="trigger-v-start"><input type="text" id="v-start" readonly placeholder="Début (JJ.MM.AAAA)" required><i class="fa-solid fa-calendar-days calendar-icon-trigger"></i></div>
-                    <div class="calendar-input-wrapper" id="trigger-v-end"><input type="text" id="v-end" readonly placeholder="Fin (JJ.MM.AAAA)" required><i class="fa-solid fa-calendar-days calendar-icon-trigger"></i></div>
-                </div>
-                <input type="text" id="v-desc" placeholder="Notes..." style="margin-top:15px; margin-bottom:20px;">
-                <button type="button" onclick="submitVacationForm()" class="btn-apple">Figer le Créneau</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="view-sport" class="module-view hidden">
-        <div class="apple-card"><div class="metrics-grid"><div class="metric-tile"><small>Semaine Glissante</small><p id="sport-stat-w" class="num">0 min · 0 kcal</p></div><div class="metric-tile"><small>Mois Calendaire</small><p id="sport-stat-m" class="num">0 min · 0 kcal</p></div><div class="metric-tile"><small>Cumulé Annuel</small><p id="sport-stat-y" class="num">0 min · 0 kcal</p></div></div></div>
-        <div class="apple-card"><h2>Log Séance</h2><form id="form-sport" onsubmit="return false;"><div class="form-row"><div class="calendar-input-wrapper" id="trigger-sp-date"><input type="text" id="sp-date" readonly placeholder="JJ.MM.AAAA" required><i class="fa-solid fa-calendar-days calendar-icon-trigger"></i></div><input type="text" id="sp-type" placeholder="Discipline" required></div><div class="form-row"><input type="number" id="sp-dur" placeholder="Durée (min)" required><input type="number" id="sp-kcal" placeholder="Énergie (kcal)" required></div><button type="button" onclick="submitSportForm()" class="btn-apple">Inscrire</button></form></div>
-        <div class="apple-card"><h2>Historique Physique</h2><div id="list-sport"></div></div>
-    </div>
-
 </main>
 
 <script type="module">
@@ -572,17 +527,17 @@
             const res = await fetch('https://open.er-api.com/v6/latest/EUR');
             const data = await res.json();
             if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
-        } catch(e) { console.warn("Forex module timeout."); }
+        } catch(e) { console.warn("Forex fallback processing active."); }
     }
 
-    // --- BIND CLICKS ON GATEWAY ---
+    // --- ACCES GATEWAY DISPATCHER ---
     document.getElementById('login-btn').onclick = () => {
         const mail = document.getElementById('email').value.trim();
         const pass = document.getElementById('password').value;
         if(mail && pass) {
-            signInWithEmailAndPassword(auth, mail, pass).catch(() => alert("Accès Refusé."));
+            signInWithEmailAndPassword(auth, mail, pass).catch(() => alert("Identifiants non valides."));
         } else {
-            alert("Veuillez remplir les identifiants.");
+            alert("Veuillez renseigner le compte.");
         }
     };
     document.getElementById('logout-btn').onclick = () => signOut(auth);
@@ -632,10 +587,7 @@
             { wrapper: 'trigger-fi-date', input: 'fi-date' },
             { wrapper: 'trigger-cr-start', input: 'cr-start' },
             { wrapper: 'trigger-p3-date', input: 'p3-date' },
-            { wrapper: 'trigger-v-start', input: 'v-start' },
-            { wrapper: 'trigger-v-end', input: 'v-end' },
-            { wrapper: 'trigger-sp-date', input: 'sp-date' },
-            { wrapper: 'trigger-cal-date', input: 'cal-date' }
+            { wrapper: 'trigger-sp-date', input: 'sp-date' }
         ];
 
         triggers.forEach(t => {
@@ -713,45 +665,59 @@
         box.appendChild(script);
     }
 
-    // --- LOAN ACTUARIAL CORE ENGINE ---
-    function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
-        if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
-        const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
-        
-        let startM = 1, startY = 2026;
-        if(startDateStr.includes('.')) {
-            const p = startDateStr.split('.'); if(p.length === 3) { startM = parseInt(p[1]); startY = parseInt(p[2]); }
-        } else if(startDateStr.includes('/')) {
-            const p = startDateStr.split('/'); if(p.length === 2) { startM = parseInt(p[0]); startY = parseInt(p[1]); }
-        }
-
-        let targetM = 5, targetY = 2026;
-        if(targetDateStr.includes('/')) {
-            const p = targetDateStr.split('/'); if(p.length === 2) { targetM = parseInt(p[0]); targetY = parseInt(p[1]); }
-        } else if(targetDateStr.includes('.')) {
-            const p = targetDateStr.split('.'); if(p.length === 3) { targetM = parseInt(p[1]); targetY = parseInt(p[2]); }
-        }
-        
-        let elapsedMonths = (targetY - startY) * 12 + (targetM - startM);
-        if (elapsedMonths < 0) return { mens: 0, rest: P, repaidCap: 0, paidInt: 0, completion: 0 }; if (elapsedMonths > N) elapsedMonths = N;
-        let mens = R === 0 ? P / N : P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-        let currentBalance = P; let cumulatedInterest = 0; let cumulatedCapital = 0;
-        for (let i = 1; i <= elapsedMonths; i++) {
-            let interestForMonth = currentBalance * R; let capitalForMonth = mens - interestForMonth;
-            if (currentBalance < capitalForMonth) capitalForMonth = currentBalance;
-            currentBalance -= capitalForMonth; cumulatedInterest += interestForMonth; cumulatedCapital += capitalForMonth;
-        }
-        let comp = P > 0 ? (cumulatedCapital / P) * 100 : 0;
-        return { mens, rest: Math.max(0, currentBalance), repaidCap: cumulatedCapital, paidInt: cumulatedInterest, completion: Math.min(100, Math.max(0, comp)) };
+    // --- TIMELINE COMPLETION COMPLET CALCULATOR ---
+    function calculateCreditCompletion(startStr, endStr) {
+        if(!startStr || !endStr) return { completion: 0, elapsed: 0, totalMonths: 1 };
+        try {
+            const [startM, startY] = startStr.split('/').map(Number);
+            const [endM, endY] = endStr.split('/').map(Number);
+            if(!startM || !startY || !endM || !endY) return { completion: 0, elapsed: 0, totalMonths: 1 };
+            
+            const totalMonths = (endY - startY) * 12 + (endM - startM);
+            let elapsed = (sysDate.getFullYear() - startY) * 12 + (sysDate.getMonth() - (startM - 1));
+            
+            if(elapsed < 0) elapsed = 0;
+            if(elapsed > totalMonths) elapsed = totalMonths;
+            
+            const completion = totalMonths > 0 ? (elapsed / totalMonths) * 100 : 0;
+            return { completion, elapsed, totalMonths };
+        } catch(e) { return { completion: 0, elapsed: 0, totalMonths: 1 }; }
     }
 
-    // --- FIREBASE EVENT PIPE STREAMS ---
+    function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
+        if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
+        try {
+            const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
+            let startM = 1, startY = 2026;
+            if(startDateStr.includes('.')) {
+                const p = startDateStr.split('.'); if(p.length === 3) { startM = parseInt(p[1]); startY = parseInt(p[2]); }
+            } else if(startDateStr.includes('/')) {
+                const p = startDateStr.split('/'); if(p.length === 2) { startM = parseInt(p[0]); startY = parseInt(p[1]); }
+            }
+            let targetM = 5, targetY = 2026;
+            if(targetDateStr.includes('/')) {
+                const p = targetDateStr.split('/'); if(p.length === 2) { targetM = parseInt(p[0]); targetY = parseInt(p[1]); }
+            } else if(targetDateStr.includes('.')) {
+                const p = targetDateStr.split('.'); if(p.length === 3) { targetM = parseInt(p[1]); targetY = parseInt(p[2]); }
+            }
+            let elapsedMonths = (targetY - startY) * 12 + (targetM - startM);
+            if (elapsedMonths < 0) return { mens: 0, rest: P, repaidCap: 0, paidInt: 0, completion: 0 }; if (elapsedMonths > N) elapsedMonths = N;
+            let mens = R === 0 ? P / N : P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+            let currentBalance = P; let cumulatedInterest = 0; let cumulatedCapital = 0;
+            for (let i = 1; i <= elapsedMonths; i++) {
+                let interestForMonth = currentBalance * R; let capitalForMonth = mens - interestForMonth;
+                if (currentBalance < capitalForMonth) capitalForMonth = currentBalance;
+                currentBalance -= capitalForMonth; cumulatedInterest += interestForMonth; cumulatedCapital += capitalForMonth;
+            }
+            let comp = P > 0 ? (cumulatedCapital / P) * 100 : 0;
+            return { mens, rest: Math.max(0, currentBalance), repaidCap: cumulatedCapital, paidInt: cumulatedInterest, completion: Math.min(100, Math.max(0, comp)) };
+        } catch(e) { return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 }; }
+    }
+
+    // --- SECURE REALTIME SNAPSHOT HANDLERS (ROOT DRIVEN) ---
     onAuthStateChanged(auth, (user) => {
-        if(user) { 
-            getLiveForexRate(); 
-            document.getElementById('login-overlay').classList.add('hidden'); 
-            initPipeline(user.uid); 
-        } else { document.getElementById('login-overlay').classList.remove('hidden'); }
+        if(user) { getLiveForexRate(); document.getElementById('login-overlay').classList.add('hidden'); initPipeline(user.uid); }
+        else { document.getElementById('login-overlay').classList.remove('hidden'); }
     });
 
     function initPipeline(uid) {
@@ -762,88 +728,102 @@
         for(let i=0; i<12; i++) { sel.innerHTML += `<option value="2026-${String(i+1).padStart(2,'0')}">${mNames[i]} 2026</option>`; }
         sel.onchange = renderFinanceLog;
 
-        onSnapshot(query(collection(db, "transactions"), where("uid", "==", uid)), s => {
-            allFinData = []; s.forEach(d => allFinData.push({id: d.id, ...d.data()})); renderFinanceLog();
-        });
-
-        onSnapshot(query(collection(db, "bourse"), where("uid", "==", uid)), s => {
-            allStocks = []; let h = "", totalVal = 0;
-            s.forEach(d => {
-                const b = d.data(); allStocks.push({ id: d.id, ...b });
-                const qty = parseFloat(b.qty || 0); const prm = parseFloat(b.prm || 0); const live = parseFloat(b.live || 0);
-                const currentVal = qty * live; const totalCost = qty * prm; const gainLoss = currentVal - totalCost;
-                totalVal += currentVal;
-                h += `<div class="list-line"><span><b>${b.ticker}</b><br><small style="color:var(--apple-muted)">${qty} parts @ PRM ${prm.toFixed(2)}</small></span><div style="text-align:right"><b class="num">${currentVal.toFixed(2)} CHF</b><br><small class="num" style="color:${gainLoss >= 0 ? 'var(--apple-green)' : 'var(--apple-red)'}">${gainLoss >= 0 ? '+' : ''}${gainLoss.toFixed(2)} CHF</small></div><div><i class="fa-solid fa-pen" onclick="editStock('${d.id}')" style="opacity:0.4; cursor:pointer; margin-right:12px;"></i><i class="fa-solid fa-trash-can" onclick="delD('bourse','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div></div>`;
+        try {
+            onSnapshot(query(collection(db, "transactions"), where("uid", "==", uid)), s => {
+                allFinData = []; s.forEach(d => { if(d.exists()) allFinData.push({id: d.id, ...d.data()}); }); renderFinanceLog();
             });
-            document.getElementById('portfolio-assets-list').innerHTML = h || "<p style='color:var(--apple-muted); padding:10px 0;'>Aucune ligne active.</p>";
-            document.getElementById('portfolio-total-val').innerText = totalVal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-            consolidateTotalAssets();
-        });
+        } catch(e) { console.error(e); }
 
-        onSnapshot(query(collection(db, "calendar_events"), where("uid", "==", uid)), s => {
-            let html = ""; s.forEach(d => { const ev = d.data(); html += `<div class="list-line"><span><b>${ev.date}</b> — <b>${ev.title}</b><br><small>${ev.desc || ''}</small></span><i class="fa-solid fa-trash-can" onclick="delD('calendar_events','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; });
-            document.getElementById('list-calendar-events').innerHTML = html || "Aucune échéance.";
-        });
-
-        onSnapshot(query(collection(db, "creditsconso"), where("uid", "==", uid)), s => {
-            allCredits = []; let h = "";
-            s.forEach(d => {
-                const c = d.data(); allCredits.push({ id: d.id, ...c });
-                const currentMMYYYY = `${String(sysDate.getMonth()+1).padStart(2,'0')}/${sysDate.getFullYear()}`;
-                const m = evaluateLoanAtTargetDate(c.total, c.rate, c.dur, c.start, currentMMYYYY);
-                let labelCcy = c.ccy || "CHF"; let displayRest = m.rest.toFixed(2) + " " + labelCcy;
-                if(labelCcy === "EUR") displayRest += ` (${(m.rest * eurToChfRate).toFixed(2)} CHF)`;
-
-                h += `<div class="list-line" style="flex-direction:column; align-items:stretch; padding:18px 0; border-bottom:1px solid var(--apple-border);">
-                    <div style="display:flex; justify-content:space-between; font-weight:700;"><span>${c.name} (${labelCcy})</span><span style="color:var(--apple-blue)">${displayRest}</span></div>
-                    <div class="progress-container"><div class="progress-bar" style="width: ${m.completion}%"></div></div>
-                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--apple-muted);">
-                        <span>Complété à ${m.completion.toFixed(1)}%</span>
-                        <span>Mensualité: ${m.mens.toFixed(2)} ${labelCcy}</span>
-                        <span style="cursor:pointer; color:var(--apple-blue);" onclick="window.editCredit('${d.id}')"><i class="fa-solid fa-pen"></i> Modifier</span>
-                    </div>
-                </div>`;
+        try {
+            onSnapshot(query(collection(db, "bourse"), where("uid", "==", uid)), s => {
+                allStocks = []; let h = "", totalVal = 0;
+                s.forEach(d => {
+                    const b = d.data(); allStocks.push({ id: d.id, ...b });
+                    const qty = parseFloat(b.qty || 0); const prm = parseFloat(b.prm || 0); const live = parseFloat(b.live || 0);
+                    const currentVal = qty * live; const totalCost = qty * prm; const gainLoss = currentVal - totalCost;
+                    totalVal += currentVal;
+                    h += `<div class="list-line"><span><b>${b.ticker}</b><br><small style="color:var(--apple-muted)">${qty} parts @ PRM ${prm.toFixed(2)}</small></span><div style="text-align:right"><b class="num">${currentVal.toFixed(2)} CHF</b><br><small class="num" style="color:${gainLoss >= 0 ? 'var(--apple-green)' : 'var(--apple-red)'}">${gainLoss >= 0 ? '+' : ''}${gainLoss.toFixed(2)} CHF</small></div><div><i class="fa-solid fa-pen" onclick="editStock('${d.id}')" style="opacity:0.4; cursor:pointer; margin-right:12px;"></i><i class="fa-solid fa-trash-can" onclick="delD('bourse','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div></div>`;
+                });
+                document.getElementById('portfolio-assets-list').innerHTML = h || "<p style='color:var(--apple-muted); padding:10px 0;'>Aucune ligne active.</p>";
+                document.getElementById('portfolio-total-val').innerText = totalVal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+                consolidateTotalAssets();
             });
-            document.getElementById('list-credits').innerHTML = h || "Aucun engagement de consommation.";
-        });
+        } catch(e) { console.error(e); }
 
-        onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), s => {
-            let h = "", tot = 0; s.forEach(d => { const p = d.data(); h += `<div class="list-line"><span><b>${p.name}</b></span><b class="num">${parseFloat(p.budget).toFixed(2)} CHF</b></div>`; tot += parseFloat(p.budget); });
-            document.getElementById('list-projets').innerHTML = h || "Aucun projet actif engagé.";
-            document.getElementById('proj-total-val').innerText = tot.toFixed(2) + " CHF";
-        });
+        try {
+            onSnapshot(query(collection(db, "creditsconso"), where("uid", "==", uid)), s => {
+                allCredits = []; let h = "";
+                s.forEach(d => {
+                    const c = d.data(); allCredits.push({ id: d.id, ...c });
+                    const timeMetrics = calculateCreditCompletion(c.start, c.end);
+                    const totalCap = parseFloat(c.total) || 0; const mensVal = parseFloat(c.mens) || 0;
+                    const labelCcy = c.ccy || "CHF";
+                    
+                    const paidCapTheoretical = Math.min(totalCap, timeMetrics.elapsed * mensVal);
+                    const remainingCapTheoretical = Math.max(0, totalCap - paidCapTheoretical);
+                    let displayRest = remainingCapTheoretical.toFixed(2) + " " + labelCcy;
+                    if(labelCcy === "EUR") displayRest += ` (${(remainingCapTheoretical * eurToChfRate).toFixed(2)} CHF)`;
 
-        onSnapshot(query(collection(db, "pillar3"), where("uid", "==", uid)), s => {
-            allP3Data = []; s.forEach(d => allP3Data.push(d.data())); consolidateTotalAssets();
-        });
+                    h += `<div class="list-line" style="flex-direction:column; align-items:stretch; padding:18px 0; border-bottom:1px solid var(--apple-border);">
+                        <div style="display:flex; justify-content:space-between; font-weight:700;"><span>${c.name} (${labelCcy})</span><span style="color:var(--apple-blue)">${displayRest}</span></div>
+                        <div class="progress-container"><div class="progress-bar" style="width: ${timeMetrics.completion}%"></div></div>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--apple-muted);">
+                            <span>Complété à ${timeMetrics.completion.toFixed(1)}%</span>
+                            <span>Mensualité: ${mensVal.toFixed(2)} ${labelCcy} · Amorti: ${paidCapTheoretical.toFixed(0)}</span>
+                            <span style="cursor:pointer; color:var(--apple-blue);" onclick="window.editCredit('${d.id}')"><i class="fa-solid fa-pen"></i> Modifier</span>
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('list-credits').innerHTML = h || "Aucun engagement de consommation.";
+            });
+        } catch(e) { console.error(e); }
 
-        onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
-            allSportData = []; let h = ""; s.forEach(d => { const x = d.data(); allSportData.push({ id: d.id, ...x }); h += `<div class="list-line"><span><b>${x.type}</b> — ${x.dur} min (${x.kcal} kcal)</span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; });
-            document.getElementById('list-sport').innerHTML = h || "Aucun log entraînement."; renderSportStats();
-        });
+        try {
+            onSnapshot(query(collection(db, "projects"), where("uid", "==", uid)), s => {
+                let h = "", tot = 0; s.forEach(d => { const p = d.data(); h += `<div class="list-line"><span><b>${p.name}</b></span><b class="num">${parseFloat(p.budget).toFixed(2)} CHF</b></div>`; tot += parseFloat(p.budget); });
+                document.getElementById('list-projets').innerHTML = h || "Aucun projet actif engagé.";
+                document.getElementById('proj-total-val').innerText = tot.toFixed(2) + " CHF";
+            });
+        } catch(e) { console.error(e); }
 
-        onSnapshot(query(collection(db, "vacations"), where("uid", "==", uid)), s => {
-            let c = "", k = ""; s.forEach(d => { const v = d.data(); const item = `<div class="list-line"><span><b>${v.desc}</b> (Du ${v.start} au ${v.end})</span><i class="fa-solid fa-trash-can" onclick="delD('vacations','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; if(v.who === "Charlotte") c += item; else k += item; });
-            document.getElementById('list-vac-charlotte').innerHTML = c || "Aucune affectation."; document.getElementById('list-vac-kevin').innerHTML = k || "Aucune affectation.";
-        });
+        try {
+            onSnapshot(query(collection(db, "pillar3"), where("uid", "==", uid)), s => {
+                allP3Data = []; s.forEach(d => allP3Data.push(d.data())); consolidateTotalAssets();
+            });
+        } catch(e) { console.error(e); }
+
+        try {
+            onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
+                allSportData = []; let h = ""; s.forEach(d => { const x = d.data(); allSportData.push({ id: d.id, ...x }); h += `<div class="list-line"><span><b>${x.type}</b> — ${x.dur} min (${x.kcal} kcal)</span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; });
+                document.getElementById('list-sport').innerHTML = h || "Aucun log d'entraînement."; renderSportStats();
+            });
+        } catch(e) { console.error(e); }
 
         loadSavings(uid); loadImmo(uid); loadP2Config(uid);
     }
 
     function renderFinanceLog() {
-        const filter = document.getElementById('filter-month').value;
-        const tbody = document.getElementById('table-finance'); tbody.innerHTML = ""; let inc = 0; let exp = 0;
-        const filtered = allFinData.filter(d => filter === 'all' || d.date.startsWith(filter.slice(0,7))).sort((a,b) => new Date(b.date) - new Date(a.date));
-        filtered.forEach(t => {
-            const amt = parseFloat(t.amt); if(t.type === 'income') inc += amt; else exp += amt;
-            tbody.innerHTML += `<tr><td style="width:70px; color:var(--apple-muted); font-size:0.8rem;">${t.date.split('-').reverse().slice(0,2).join('.')}</td><td><b>${t.desc}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right;">${amt.toFixed(2)}</td></tr>`;
-        });
-        document.getElementById('res-inc').innerText = inc.toFixed(2) + " CHF";
-        document.getElementById('res-exp').innerText = exp.toFixed(2) + " CHF";
-        document.getElementById('res-net').innerText = (inc - exp).toFixed(2) + " CHF";
+        if(!allFinData) return;
+        const filter = document.getElementById('filter-month')?.value || 'all';
+        const tbody = document.getElementById('table-finance'); if(!tbody) return;
+        tbody.innerHTML = ""; let inc = 0; let exp = 0;
         
-        const netEl = document.getElementById('res-net');
-        if((inc - exp) >= 0) { netEl.className = "num amt-pos"; } else { netEl.className = "num amt-neg"; }
+        const filtered = allFinData.filter(d => {
+            if(!d.date) return false;
+            return filter === 'all' || d.date.startsWith(filter.slice(0,7));
+        }).sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+        filtered.forEach(t => {
+            const amt = parseFloat(t.amt) || 0; if(t.type === 'income') inc += amt; else exp += amt;
+            const displayDate = t.date ? t.date.split('-').reverse().slice(0,2).join('.') : '';
+            tbody.innerHTML += `<tr><td style="width:70px; color:var(--apple-muted); font-size:0.8rem;">${displayDate}</td><td><b>${t.desc || ''}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right;">${amt.toFixed(2)}</td></tr>`;
+        });
+        if(document.getElementById('res-inc')) document.getElementById('res-inc').innerText = inc.toFixed(2) + " CHF";
+        if(document.getElementById('res-exp')) document.getElementById('res-exp').innerText = exp.toFixed(2) + " CHF";
+        if(document.getElementById('res-net')) {
+            const net = inc - exp; document.getElementById('res-net').innerText = net.toFixed(2) + " CHF";
+            document.getElementById('res-net').className = "num " + (net >= 0 ? "amt-pos" : "amt-neg");
+        }
     }
 
     function compileAnalysisMonths() {
@@ -881,17 +861,17 @@
 
     window.consolidateTotalAssets = () => {
         let p3Tot = 0; allP3Data.forEach(x => p3Tot += parseFloat(x.amt || 0));
-        let p2Now = parseFloat(document.getElementById('p2-total-now').innerText) || 0;
+        let p2Now = parseFloat(document.getElementById('p2-total-now')?.innerText) || 0;
         let stocksTotalValueCalculated = 0;
         allStocks.forEach(b => { stocksTotalValueCalculated += (parseFloat(b.qty || 0) * parseFloat(b.live || 0)); });
 
-        document.getElementById('conso-liquid').innerText = totalLiquidsCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('conso-bourse-titres').innerText = stocksTotalValueCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('conso-p3').innerText = p3Tot.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        document.getElementById('conso-p2').innerText = p2Now.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-liquid')) document.getElementById('conso-liquid').innerText = totalLiquidsCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-bourse-titres')) document.getElementById('conso-bourse-titres').innerText = stocksTotalValueCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-p3')) document.getElementById('conso-p3').innerText = p3Tot.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-p2')) document.getElementById('conso-p2').innerText = p2Now.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
         
         let netGlobalHubValue = totalLiquidsCalculated + stocksTotalValueCalculated + p3Tot + p2Now;
-        document.getElementById('conso-total-global').innerText = netGlobalHubValue.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-total-global')) document.getElementById('conso-total-global').innerText = netGlobalHubValue.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
 
     window.runAdvisoryOptimizationDiagnostic = () => {
@@ -913,8 +893,9 @@
     window.editCredit = (id) => {
         const c = allCredits.find(x => x.id === id); if(!c) return;
         editCreditId = id; document.getElementById('cr-name').value = c.name;
-        document.getElementById('cr-total').value = c.total; document.getElementById('cr-rate').value = c.rate;
-        document.getElementById('cr-dur').value = c.dur; document.getElementById('cr-start').value = c.start;
+        document.getElementById('cr-total').value = c.total; document.getElementById('cr-mens').value = c.mens;
+        document.getElementById('cr-dur').value = c.dur || ""; document.getElementById('cr-start').value = c.start;
+        document.getElementById('cr-end').value = c.end || "";
         document.getElementById('cr-ccy').value = c.ccy || "CHF"; document.getElementById('credit-form-title').innerText = "Modifier l'Engagement";
     };
 
@@ -966,11 +947,11 @@
         const baseK = parseFloat(document.getElementById('p2-base-k').value) || 0; const annK = parseFloat(document.getElementById('p2-ann-k').value) || 0;
         const baseC = parseFloat(document.getElementById('p2-base-c').value) || 0; const annC = parseFloat(document.getElementById('p2-ann-c').value) || 0;
         const targetY = parseInt(document.getElementById('p2-target-year').value) || 2026; const r = (parseFloat(document.getElementById('p2-rate').value) || 1.25) / 100;
-        const totalNow = baseK + baseC; document.getElementById('p2-total-now').innerText = totalNow.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
-        const horizon = Math.max(0, targetY - 2026); document.getElementById('p2-projection-title').innerText = `Capital attendu en ${targetY}`;
+        const totalNow = baseK + baseC; if(document.getElementById('p2-total-now')) document.getElementById('p2-total-now').innerText = totalNow.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        const horizon = Math.max(0, targetY - 2026); if(document.getElementById('p2-projection-title')) document.getElementById('p2-projection-title').innerText = `Capital attendu en ${targetY}`;
         let projK = baseK * Math.pow(1 + r, horizon); let projC = baseC * Math.pow(1 + r, horizon);
         if (r > 0) { const b = (Math.pow(1 + r, horizon) - 1) / r; projK += annK * b; projC += annC * b; } else { projK += annK * horizon; projC += annC * horizon; }
-        document.getElementById('p2-total-projected').innerText = (projK + projC).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('p2-total-projected')) document.getElementById('p2-total-projected').innerText = (projK + projC).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
     };
 
     window.saveP2Config = async () => {
@@ -1011,6 +992,7 @@
     window.closeModal = () => { document.getElementById('liquid-modal').style.setProperty('display', 'none', 'important'); };
     window.delD = async (c, id) => { if(confirm("Supprimer la ligne ?")) await deleteDoc(doc(db, c, id)); };
 
+    // --- BUTTON HANDLERS ---
     window.submitFinanceForm = async () => {
         const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
         await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
@@ -1025,15 +1007,10 @@
     };
 
     window.submitCreditForm = async () => {
-        const p = { name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value)||0, rate: parseFloat(document.getElementById('cr-rate').value)||0, dur: parseInt(document.getElementById('cr-dur').value)||0, start: document.getElementById('cr-start').value, ccy: document.getElementById('cr-ccy').value };
+        const p = { name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value)||0, mens: parseFloat(document.getElementById('cr-mens').value)||0, dur: parseInt(document.getElementById('cr-dur').value)||48, start: document.getElementById('cr-start').value, end: document.getElementById('cr-end').value, ccy: document.getElementById('cr-ccy').value };
         if(editCreditId) { await setDoc(doc(db, "creditsconso", editCreditId), { ...p, uid: auth.currentUser.uid }); editCreditId = null; document.getElementById('credit-form-title').innerText = "Nouveau Financement Contractuel"; }
         else { await addDoc(collection(db, "creditsconso"), { ...p, uid: auth.currentUser.uid, ts: Date.now() }); }
         document.getElementById('form-credit').reset();
-    };
-
-    window.submitCalendarEvent = async () => {
-        await addDoc(collection(db, "calendar_events"), { uid: auth.currentUser.uid, date: document.getElementById('cal-date').value, title: document.getElementById('cal-title').value, desc: document.getElementById('cal-desc').value, ts: Date.now() });
-        document.getElementById('form-calendar').reset();
     };
 
     window.submitP3Form = async () => {
@@ -1046,9 +1023,9 @@
         document.getElementById('form-proj').reset();
     };
 
-    window.submitVacationForm = async () => {
-        await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() });
-        document.getElementById('form-vac').reset();
+    window.submitSportForm = async () => {
+        await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, date: document.getElementById('sp-date').value, type: document.getElementById('sp-type').value, dur: parseFloat(document.getElementById('sp-dur').value)||0, kcal: parseFloat(document.getElementById('sp-kcal').value)||0, ts: Date.now() });
+        document.getElementById('form-sport').reset();
     };
 </script>
 </body>
