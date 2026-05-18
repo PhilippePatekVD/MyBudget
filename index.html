@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.8 Premium Suite</title>
+    <title>Family Hub | v0.1.9 Institutional Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- NAVIGATION PRINCIPALE SYSTEME --- */
+        /* --- APPLE DESIGN BAR NAVIGATION --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -60,13 +60,13 @@
         .apple-tab:hover { color: white; }
         .apple-tab.active { color: white; font-weight: 600; }
 
-        /* --- SUB NAVIGATION --- */
+        /* --- SUB NAVIGATION TAB INTERNE --- */
         .sub-nav { display: flex; gap: 30px; border-bottom: 1px solid var(--apple-border); margin-bottom: 30px; padding-bottom: 8px; }
         .sub-nav-btn { background: none; border: none; font: inherit; font-size: 0.85rem; font-weight: 500; color: var(--apple-muted); cursor: pointer; position: relative; padding-bottom: 8px; }
         .sub-nav-btn.active { color: var(--apple-dark); font-weight: 600; }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: var(--apple-dark); }
 
-        /* --- DATEPICKER --- */
+        /* --- DATEPICKER COMPOSANT --- */
         .calendar-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; cursor: pointer; }
         .calendar-icon-trigger { position: absolute; right: 15px; color: var(--apple-dark); z-index: 10; pointer-events: none; }
         
@@ -86,23 +86,23 @@
         .timeline-picker-container { display: flex; align-items: center; gap: 8px; background: #e8e8ed; padding: 4px 10px; border-radius: 8px; }
         .timeline-select { background: transparent; border: none; font-family: inherit; font-size: 0.75rem; font-weight: 600; color: var(--apple-dark); outline: none; cursor: pointer; }
 
-        /* --- CARDS & BLOCKS --- */
+        /* --- CARDS & PANELS --- */
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
         .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
         h2 { font-size: 1.25rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
         h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- JAUGE DE COMPLÉTION --- */
+        /* --- PROGRESS BAR COMPREHENSIVE --- */
         .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
 
-        /* --- POPUP EFFET VERRE (MASQUÉ STRICT PAR DÉFAUT) --- */
-        #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
+        /* --- SURIMPRESSION (LIQUID GLASS VERROUILLE FERME PAR DEFAUT) --- */
+        #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
         .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
-        /* --- SYSTEME FORMULAIRE --- */
+        /* --- CONTROLES FORMULAIRES --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -128,7 +128,7 @@
 </head>
 <body>
 
-<div id="liquid-modal">
+<div id="liquid-modal" onclick="closeModal()">
     <div class="modal-box" onclick="event.stopPropagation()">
         <h2 id="modal-title" style="border-bottom:1px solid var(--apple-border); padding-bottom:12px; font-size:1.2rem;">Détails Analytiques</h2>
         <div id="modal-body" style="margin-top:20px; max-height:350px; overflow-y:auto;"></div>
@@ -140,8 +140,8 @@
     <div class="login-card">
         <div style="margin: 0 auto 20px; font-weight:700; border: 1px solid var(--apple-dark); padding: 4px 10px; width: fit-content; border-radius:4px;">⚜ II • II</div>
         <h2 style="margin-bottom:30px; letter-spacing: -0.03em;">Family Office</h2>
-        <input type="email" id="email" placeholder="Identifiant" style="margin-bottom:12px;">
-        <input type="password" id="password" placeholder="Mot de passe" style="margin-bottom:25px;">
+        <input type="email" id="email" placeholder="Identifiant">
+        <input type="password" id="password" placeholder="Mot de passe" style="margin-top:12px; margin-bottom:25px;">
         <button type="button" class="btn-apple" id="login-btn" style="width:100%;">Ouvrir le Coffre</button>
     </div>
 </div>
@@ -149,7 +149,7 @@
 <header class="apple-nav">
     <div class="apple-brand" onclick="goHome()">
         <div class="apple-crest">Hub</div>
-        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.8</span></div>
+        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.9</span></div>
     </div>
     <nav class="apple-tabs">
         <div class="apple-tab active" id="tab-finance" onclick="switchModule('finance', event)">Finance</div>
@@ -179,7 +179,7 @@
 
         <div id="fin-journal">
             <div class="apple-card">
-                <h2>Nouvelle Saisie</h2>
+                <h2>Nouvelle Saisie Directe</h2>
                 <form id="form-finance" onsubmit="return false;">
                     <div class="form-row">
                         <div class="field-group">
@@ -235,9 +235,9 @@
         <div id="fin-epargne" class="hidden">
             <div class="apple-card">
                 <h2>Avoirs Disponibles Liquides</h2>
-                <div class="list-line"><span>SwissQuote Private Cash</span><input type="number" step="0.01" id="sav-sq" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
-                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
-                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num" oninput="syncSav()" style="width:150px; padding:6px;"></div>
+                <div class="list-line"><span>SwissQuote Private Cash</span><input type="number" step="0.01" id="sav-sq" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
                 
                 <div style="margin-top:30px; padding:25px; background:var(--apple-gray); border:1px solid var(--apple-border); border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600; letter-spacing:0.5px; font-size:0.85rem; color:var(--apple-muted);">SOMME TOTALE ÉPARGNE LIQUIDE</span>
@@ -253,7 +253,7 @@
                 <div class="list-line"><span>Portefeuille Bourse (Yahoo Market Value)</span><b id="conso-bourse-titres" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Avoirs Cumulés Prévoyance 3ème Pilier (3A)</span><b id="conso-p3" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Projection Prévoyance Professionnelle 2ème Pilier LPP</span><b id="conso-p2" class="num">0.00 CHF</b></div>
-                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600;">FORTUNE CONSOLIDÉE NETTE DE LA FAMILLE</span>
                     <b id="conso-total-global" class="num" style="font-size:1.4rem; color:white;">0.00 CHF</b>
                 </div>
@@ -276,12 +276,6 @@
                     <div class="field-group"><label>Cours Réel du Marché</label><input type="number" id="stock-live" step="0.01" required></div>
                     <button type="button" id="btn-submit-bourse" onclick="submitStockPosition()" class="btn-apple" style="width:100%;">Figer la ligne</button>
                 </form>
-
-                <div style="margin-top:30px; padding:20px; border:1px dashed var(--apple-border); border-radius:8px; background-color: var(--apple-gray);">
-                    <h3 style="margin-bottom:10px;"><i class="fa-solid fa-file-csv"></i> Portefeuille Yahoo Finance CSV</h3>
-                    <input type="file" id="yahoo-csv-file" accept=".csv" style="display:none;" onchange="handleYahooCSVImport(this)">
-                    <button type="button" class="btn-apple btn-apple-secondary" onclick="document.getElementById('yahoo-csv-file').click()" style="width:100%;">Charger un fichier d'export Yahoo</button>
-                </div>
 
                 <h3 style="margin-top:35px; border-bottom:1px solid var(--apple-gray); padding-bottom:5px;">Valorisation Réelle</h3>
                 <div id="portfolio-assets-list"></div>
@@ -372,7 +366,7 @@
     <div id="view-calendrier" class="module-view hidden">
         <div class="form-row">
             <div class="apple-card">
-                <h2>Nouvelle Échéance Stratégione</h2>
+                <h2>Nouvelle Échéance Stratégique</h2>
                 <form id="form-calendar" onsubmit="return false;">
                     <div class="field-group">
                         <label>Date cible</label>
@@ -465,7 +459,7 @@
             <div class="apple-card">
                 <h2>Avoirs Consolidés Prévoyance 3A</h2>
                 <div class="form-row" style="margin-bottom:25px;">
-                    <div class="metric-tile" style="background:var(--apple-dark); color:white;"><small style="color:var(--apple-muted);">Masse Historique Cumulée 3A</small><p id="p3-total-display" style="color:white; font-size:1.3rem;">0.00 CHF</p></div>
+                    <div class="metric-tile" style="background:var(--apple-dark); color:white;"><small style="color holiday:#9cb0c9">Masse Historique Cumulée 3A</small><p id="p3-total-display" style="color:white; font-size:1.3rem;">0.00 CHF</p></div>
                     <div class="metric-tile"><small>Versements Année Civile (2026)</small><p id="p3-year-display" style="color:var(--apple-blue);">0.00 CHF</p></div>
                 </div>
                 <table><tbody id="table-p3"></tbody></table>
@@ -505,7 +499,7 @@
             <h2>Lignes d'Investissements</h2>
             <div id="list-projets" style="margin-bottom:20px;"></div>
             <div style="padding:20px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
-                <span style="font-size:0.85rem; color:white;">BUDGET TOTAL HARMONISÉ</span>
+                <span style="font-size:0.85rem;">BUDGET TOTAL HARMONISÉ</span>
                 <b id="proj-total-val" class="num" style="color:white;">0.00 CHF</b>
             </div>
         </div>
@@ -575,10 +569,10 @@
             const res = await fetch('https://open.er-api.com/v6/latest/EUR');
             const data = await res.json();
             if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
-        } catch(e) { console.warn("Forex standard loop timeout."); }
+        } catch(e) { console.warn("Forex core loop fallback initialized."); }
     }
 
-    // --- NAVIGATION LOGIC ---
+    // --- NAVIGATION DRIVERS ---
     window.switchModule = (m, event) => {
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.apple-tab').forEach(t => t.classList.remove('active'));
@@ -613,7 +607,7 @@
 
     window.goHome = () => { document.querySelector('.apple-tab[id="tab-finance"]').click(); };
 
-    // --- CUSTOM DATEPICKER ENGINE ---
+    // --- CUSTOM DATEPICKER PIPELINE ---
     let currentDpInput = null;
     let dpCurrentMonth = sysDate.getMonth();
     let dpCurrentYear = sysDate.getFullYear();
@@ -704,34 +698,7 @@
         box.appendChild(script);
     }
 
-    window.handleYahooCSVImport = (input) => {
-        const file = input.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            const lines = e.target.result.split('\n');
-            for(let i = 1; i < lines.length; i++) {
-                const cols = lines[i].split(',');
-                if(cols.length >= 4) {
-                    const ticker = cols[0].replace(/"/g, '').trim().toUpperCase();
-                    const qty = parseFloat(cols[1]) || 0; const prm = parseFloat(cols[2]) || 0; const live = parseFloat(cols[3]) || prm;
-                    if(ticker) await addDoc(collection(db, "bourse"), { uid: auth.currentUser.uid, ticker, qty, prm, live, ts: Date.now() });
-                }
-            }
-            alert("Portefeuille importé.");
-        };
-        reader.readAsText(file);
-    };
-
-    // --- LIFE CYCLE PIPELINE CONTROL ---
-    onAuthStateChanged(auth, async (user) => {
-        if(user) { 
-            await getLiveForexRate(); 
-            document.getElementById('login-overlay').classList.add('hidden'); 
-            initPipeline(user.uid); 
-        } else { document.getElementById('login-overlay').classList.remove('hidden'); }
-    });
-
-    // --- AMORTIZATION ENGINE ---
+    // --- ACTUARIAL AMORTIZATION ENGINE ---
     function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
         if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
         const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
@@ -1068,11 +1035,6 @@
     window.submitVacationForm = async () => {
         await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() });
         document.getElementById('form-vac').reset();
-    };
-
-    window.submitSportForm = async () => {
-        await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, date: document.getElementById('sp-date').value, type: document.getElementById('sp-type').value, dur: parseFloat(document.getElementById('sp-dur').value)||0, kcal: parseFloat(document.getElementById('sp-kcal').value)||0, ts: Date.now() });
-        document.getElementById('form-sport').reset();
     };
 </script>
 </body>
