@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.9 Institutional Suite</title>
+    <title>Family Hub | v0.1.9 Premium Suite</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- APPLE DESIGN BAR NAVIGATION --- */
+        /* --- NAVIGATION PRINCIPALE --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -60,13 +60,13 @@
         .apple-tab:hover { color: white; }
         .apple-tab.active { color: white; font-weight: 600; }
 
-        /* --- SUB NAVIGATION TAB INTERNE --- */
+        /* --- SUB NAVIGATION --- */
         .sub-nav { display: flex; gap: 30px; border-bottom: 1px solid var(--apple-border); margin-bottom: 30px; padding-bottom: 8px; }
         .sub-nav-btn { background: none; border: none; font: inherit; font-size: 0.85rem; font-weight: 500; color: var(--apple-muted); cursor: pointer; position: relative; padding-bottom: 8px; }
         .sub-nav-btn.active { color: var(--apple-dark); font-weight: 600; }
         .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: var(--apple-dark); }
 
-        /* --- DATEPICKER COMPOSANT --- */
+        /* --- DATEPICKER --- */
         .calendar-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; cursor: pointer; }
         .calendar-icon-trigger { position: absolute; right: 15px; color: var(--apple-dark); z-index: 10; pointer-events: none; }
         
@@ -90,19 +90,19 @@
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
         .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
-        h2 { font-size: 1.25rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
+        h2 { font-size: 1.35rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
         h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* --- PROGRESS BAR COMPREHENSIVE --- */
+        /* --- JAUGE DE COMPLÉTION --- */
         .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
         .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
 
-        /* --- SURIMPRESSION (LIQUID GLASS VERROUILLE FERME PAR DEFAUT) --- */
-        #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
+        /* --- POPUP VERRE INTERACTIF (MASQUÉ STRICT PAR DÉFAUT) --- */
+        #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
         .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
-        /* --- CONTROLES FORMULAIRES --- */
+        /* --- SYSTEME FORMULAIRE --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -179,7 +179,7 @@
 
         <div id="fin-journal">
             <div class="apple-card">
-                <h2>Nouvelle Saisie Directe</h2>
+                <h2>Nouvelle Saisie</h2>
                 <form id="form-finance" onsubmit="return false;">
                     <div class="form-row">
                         <div class="field-group">
@@ -253,7 +253,7 @@
                 <div class="list-line"><span>Portefeuille Bourse (Yahoo Market Value)</span><b id="conso-bourse-titres" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Avoirs Cumulés Prévoyance 3ème Pilier (3A)</span><b id="conso-p3" class="num">0.00 CHF</b></div>
                 <div class="list-line"><span>Projection Prévoyance Professionnelle 2ème Pilier LPP</span><b id="conso-p2" class="num">0.00 CHF</b></div>
-                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600;">FORTUNE CONSOLIDÉE NETTE DE LA FAMILLE</span>
                     <b id="conso-total-global" class="num" style="font-size:1.4rem; color:white;">0.00 CHF</b>
                 </div>
@@ -290,7 +290,7 @@
 
     <div id="view-credits" class="module-view hidden">
         <div class="apple-card">
-            <h2 id="credit-form-title">Nouveau Financement Contractuel</h2>
+            <h2>Nouveau Financement Contractuel</h2>
             <form id="form-credit" onsubmit="return false;">
                 <input type="text" id="cr-name" placeholder="Nom de l'engagement" required style="margin-bottom:15px;">
                 <div class="form-row">
@@ -459,7 +459,7 @@
             <div class="apple-card">
                 <h2>Avoirs Consolidés Prévoyance 3A</h2>
                 <div class="form-row" style="margin-bottom:25px;">
-                    <div class="metric-tile" style="background:var(--apple-dark); color:white;"><small style="color holiday:#9cb0c9">Masse Historique Cumulée 3A</small><p id="p3-total-display" style="color:white; font-size:1.3rem;">0.00 CHF</p></div>
+                    <div class="metric-tile" style="background:var(--apple-dark); color:white;"><small style="color:#9cb0c9">Masse Historique Cumulée 3A</small><p id="p3-total-display" style="color:white; font-size:1.3rem;">0.00 CHF</p></div>
                     <div class="metric-tile"><small>Versements Année Civile (2026)</small><p id="p3-year-display" style="color:var(--apple-blue);">0.00 CHF</p></div>
                 </div>
                 <table><tbody id="table-p3"></tbody></table>
@@ -569,10 +569,10 @@
             const res = await fetch('https://open.er-api.com/v6/latest/EUR');
             const data = await res.json();
             if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
-        } catch(e) { console.warn("Forex core loop fallback initialized."); }
+        } catch(e) { console.warn("Forex execution timeout."); }
     }
 
-    // --- NAVIGATION DRIVERS ---
+    // --- NAVIGATION D'INTERFACE ---
     window.switchModule = (m, event) => {
         document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
         document.querySelectorAll('.apple-tab').forEach(t => t.classList.remove('active'));
@@ -698,7 +698,7 @@
         box.appendChild(script);
     }
 
-    // --- ACTUARIAL AMORTIZATION ENGINE ---
+    // --- AMORTIZATION PIPELINE ENGINE ---
     function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
         if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
         const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
@@ -980,62 +980,6 @@
 
     window.closeModal = () => { document.getElementById('liquid-modal').style.setProperty('display', 'none', 'important'); };
     window.delD = async (c, id) => { if(confirm("Supprimer la ligne ?")) await deleteDoc(doc(db, c, id)); };
-
-    function renderSportStats() {
-        let wDur = 0, wKcal = 0, mDur = 0, mKcal = 0, yDur = 0, yKcal = 0;
-        const cutWeek = new Date(sysDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-        allSportData.forEach(x => {
-            if(!x.date) return; const parts = x.date.split('.'); const d = new Date(parts[2], parts[1]-1, parts[0]);
-            const dur = parseFloat(x.dur || 0); const kcal = parseFloat(x.kcal || 0);
-            if (d >= cutWeek && d <= sysDate) { wDur += dur; wKcal += kcal; }
-            if (d.getMonth() === sysDate.getMonth() && d.getFullYear() === sysDate.getFullYear()) { mDur += dur; mKcal += kcal; }
-            if (d.getFullYear() === sysDate.getFullYear()) { yDur += dur; yKcal += kcal; }
-        });
-        document.getElementById('sport-stat-w').innerText = `${wDur} min · ${wKcal} kcal`;
-        document.getElementById('sport-stat-m').innerText = `${mDur} min · ${mKcal} kcal`;
-        document.getElementById('sport-stat-y').innerText = `${yDur} min · ${yKcal} kcal`;
-    }
-
-    // --- SUBMISSIONS CONTROL ---
-    window.submitFinanceForm = async () => {
-        const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
-        await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
-        document.getElementById('form-finance').reset();
-    };
-
-    window.submitStockPosition = async () => {
-        const p = { ticker: document.getElementById('stock-ticker').value.toUpperCase(), qty: parseFloat(document.getElementById('stock-qty').value)||0, prm: parseFloat(document.getElementById('stock-prm').value)||0, live: parseFloat(document.getElementById('stock-live').value)||0 };
-        if(editStockId) { await setDoc(doc(db, "bourse", editStockId), { ...p, uid: auth.currentUser.uid }); editStockId = null; document.getElementById('bourse-form-title').innerText = "Saisie Position Boursière"; }
-        else { await addDoc(collection(db, "bourse"), { ...p, uid: auth.currentUser.uid, ts: Date.now() }); }
-        document.getElementById('form-bourse').reset();
-    };
-
-    window.submitCreditForm = async () => {
-        const p = { name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value)||0, rate: parseFloat(document.getElementById('cr-rate').value)||0, dur: parseInt(document.getElementById('cr-dur').value)||0, start: document.getElementById('cr-start').value, ccy: document.getElementById('cr-ccy').value };
-        if(editCreditId) { await setDoc(doc(db, "creditsconso", editCreditId), { ...p, uid: auth.currentUser.uid }); editCreditId = null; document.getElementById('credit-form-title').innerText = "Nouveau Financement Contractuel"; }
-        else { await addDoc(collection(db, "creditsconso"), { ...p, uid: auth.currentUser.uid, ts: Date.now() }); }
-        document.getElementById('form-credit').reset();
-    };
-
-    window.submitCalendarEvent = async () => {
-        await addDoc(collection(db, "calendar_events"), { uid: auth.currentUser.uid, date: document.getElementById('cal-date').value, title: document.getElementById('cal-title').value, desc: document.getElementById('cal-desc').value, ts: Date.now() });
-        document.getElementById('form-calendar').reset();
-    };
-
-    window.submitP3Form = async () => {
-        await addDoc(collection(db, "pillar3"), { uid: auth.currentUser.uid, date: document.getElementById('p3-date').value, amt: parseFloat(document.getElementById('p3-amt').value)||0, ts: Date.now() });
-        document.getElementById('form-p3').reset();
-    };
-
-    window.submitProjectForm = async () => {
-        await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: parseFloat(document.getElementById('p-budget').value)||0, ts: Date.now() });
-        document.getElementById('form-proj').reset();
-    };
-
-    window.submitVacationForm = async () => {
-        await addDoc(collection(db, "vacations"), { uid: auth.currentUser.uid, who: document.getElementById('v-who').value, start: document.getElementById('v-start').value, end: document.getElementById('v-end').value, desc: document.getElementById('v-desc').value, ts: Date.now() });
-        document.getElementById('form-vac').reset();
-    };
 </script>
 </body>
 </html>
