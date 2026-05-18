@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Family Hub | v0.1.11 Analytics Suite</title>
+    <title>Family Hub | v0.1.12 Apple Edition</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
         .hidden { display: none !important; }
         .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
 
-        /* --- APPLE NAVBAR --- */
+        /* --- APPLE DESIGN BAR NAVIGATION --- */
         .apple-nav {
             background-color: var(--glass-header);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -83,24 +83,21 @@
         .dp-cell:hover { background-color: rgba(0,0,0,0.04); }
         .dp-cell.selected { background-color: var(--apple-blue); color: white; font-weight: 600; }
 
-        .timeline-picker-container { display: flex; align-items: center; gap: 8px; background: #e8e8ed; padding: 4px 10px; border-radius: 8px; }
-        .timeline-select { background: transparent; border: none; font-family: inherit; font-size: 0.75rem; font-weight: 600; color: var(--apple-dark); outline: none; cursor: pointer; }
+        /* --- COMPLETION JAUGE --- */
+        .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
 
-        /* --- CARDS & PANELS --- */
+        /* --- LAYOUT CORES --- */
         .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
         .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
         
         h2 { font-size: 1.35rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
         h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
-        .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
-
         #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
         .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
         .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
 
-        /* --- CONTROLES FORMULAIRE --- */
         .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
         .field-group { margin-bottom: 20px; }
         label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
@@ -147,7 +144,7 @@
 <header class="apple-nav">
     <div class="apple-brand" onclick="goHome()">
         <div class="apple-crest">Hub</div>
-        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.11</span></div>
+        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.12</span></div>
     </div>
     <nav class="apple-tabs">
         <div class="apple-tab active" id="tab-finance" onclick="switchModule('finance', event)">Finance</div>
@@ -184,7 +181,7 @@
             </div>
 
             <div class="apple-card">
-                <h2>Nouvelle Saisie Directe</h2>
+                <h2>Nouvelle Saisie</h2>
                 <form id="form-finance" onsubmit="return false;">
                     <div class="form-row">
                         <div class="field-group">
@@ -295,7 +292,7 @@
 
     <div id="view-credits" class="module-view hidden">
         <div class="apple-card">
-            <h2 id="credit-form-title">Nouveau Financement Contractuel</h2>
+            <h2>Nouveau Financement Contractuel</h2>
             <form id="form-credit" onsubmit="return false;">
                 <input type="text" id="cr-name" placeholder="Nom de l'engagement" required style="margin-bottom:15px;">
                 <div class="form-row">
@@ -527,17 +524,17 @@
             const res = await fetch('https://open.er-api.com/v6/latest/EUR');
             const data = await res.json();
             if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
-        } catch(e) { console.warn("Forex fallback processing active."); }
+        } catch(e) { console.warn("Forex standard runtime fallback."); }
     }
 
-    // --- ACCES GATEWAY DISPATCHER ---
+    // --- ACCES TRIGGER BOOTSTRAP ---
     document.getElementById('login-btn').onclick = () => {
         const mail = document.getElementById('email').value.trim();
         const pass = document.getElementById('password').value;
         if(mail && pass) {
-            signInWithEmailAndPassword(auth, mail, pass).catch(() => alert("Identifiants non valides."));
+            signInWithEmailAndPassword(auth, mail, pass).catch(() => alert("Identifiants refusés."));
         } else {
-            alert("Veuillez renseigner le compte.");
+            alert("Renseignez le formulaire d'ouverture.");
         }
     };
     document.getElementById('logout-btn').onclick = () => signOut(auth);
@@ -665,7 +662,7 @@
         box.appendChild(script);
     }
 
-    // --- TIMELINE COMPLETION COMPLET CALCULATOR ---
+    // --- TIMELINE CALCULATOR ---
     function calculateCreditCompletion(startStr, endStr) {
         if(!startStr || !endStr) return { completion: 0, elapsed: 0, totalMonths: 1 };
         try {
@@ -676,9 +673,7 @@
             const totalMonths = (endY - startY) * 12 + (endM - startM);
             let elapsed = (sysDate.getFullYear() - startY) * 12 + (sysDate.getMonth() - (startM - 1));
             
-            if(elapsed < 0) elapsed = 0;
-            if(elapsed > totalMonths) elapsed = totalMonths;
-            
+            if(elapsed < 0) elapsed = 0; if(elapsed > totalMonths) elapsed = totalMonths;
             const completion = totalMonths > 0 ? (elapsed / totalMonths) * 100 : 0;
             return { completion, elapsed, totalMonths };
         } catch(e) { return { completion: 0, elapsed: 0, totalMonths: 1 }; }
@@ -714,7 +709,7 @@
         } catch(e) { return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 }; }
     }
 
-    // --- SECURE REALTIME SNAPSHOT HANDLERS (ROOT DRIVEN) ---
+    // --- ASYNC PIPELINE OVERWATCH (ROOT CONTEXT) ---
     onAuthStateChanged(auth, (user) => {
         if(user) { getLiveForexRate(); document.getElementById('login-overlay').classList.add('hidden'); initPipeline(user.uid); }
         else { document.getElementById('login-overlay').classList.remove('hidden'); }
@@ -795,7 +790,7 @@
         try {
             onSnapshot(query(collection(db, "sport"), where("uid", "==", uid)), s => {
                 allSportData = []; let h = ""; s.forEach(d => { const x = d.data(); allSportData.push({ id: d.id, ...x }); h += `<div class="list-line"><span><b>${x.type}</b> — ${x.dur} min (${x.kcal} kcal)</span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; });
-                document.getElementById('list-sport').innerHTML = h || "Aucun log d'entraînement."; renderSportStats();
+                document.getElementById('list-sport').innerHTML = h || "Aucun log entraînement."; renderSportStats();
             });
         } catch(e) { console.error(e); }
 
@@ -992,7 +987,7 @@
     window.closeModal = () => { document.getElementById('liquid-modal').style.setProperty('display', 'none', 'important'); };
     window.delD = async (c, id) => { if(confirm("Supprimer la ligne ?")) await deleteDoc(doc(db, c, id)); };
 
-    // --- BUTTON HANDLERS ---
+    // --- SUBMISSIONS CONTROL ---
     window.submitFinanceForm = async () => {
         const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
         await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
