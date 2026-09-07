@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Family Hub | v0.1.15 Apple Edition</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --apple-dark: #1d1d1f;
+            --apple-gray: #f5f5f7;
+            --apple-muted: #86868b;
+            --apple-border: #d2d2d7;
+            --apple-blue: #0071e3;
+            --apple-green: #34c759;
+            --apple-red: #ff3b30;
+            --glass-header: rgba(29, 29, 31, 0.92);
+            --glass-modal: rgba(255, 255, 255, 0.95);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--apple-dark);
+            background-color: var(--apple-gray);
+            min-height: 100vh;
+            letter-spacing: -0.022em;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hidden { display: none !important; }
+        .num { font-variant-numeric: tabular-nums lining-nums; font-weight: 600; }
+
+        .apple-nav {
+            background-color: var(--glass-header);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            position: sticky; top: 0; z-index: 999;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 40px; height: 50px;
+        }
+        .apple-brand { display: flex; align-items: center; gap: 10px; cursor: pointer; color: white; }
+        .apple-crest { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px; border: 1px solid rgba(255,255,255,0.4); padding: 2px 6px; border-radius: 4px; }
+        .apple-title { font-size: 0.85rem; font-weight: 500; }
+
+        .apple-tabs { display: flex; height: 100%; align-items: center; gap: 24px; }
+        .apple-tab {
+            color: #cccccc; text-decoration: none; font-size: 0.75rem; font-weight: 400;
+            cursor: pointer; transition: color 0.2s; height: 100%; display: flex; align-items: center;
+        }
+        .apple-tab:hover { color: white; }
+        .apple-tab.active { color: white; font-weight: 600; }
+
+        .sub-nav { display: flex; gap: 30px; border-bottom: 1px solid var(--apple-border); margin-bottom: 30px; padding-bottom: 8px; }
+        .sub-nav-btn { background: none; border: none; font: inherit; font-size: 0.85rem; font-weight: 500; color: var(--apple-muted); cursor: pointer; position: relative; padding-bottom: 8px; }
+        .sub-nav-btn.active { color: var(--apple-dark); font-weight: 600; }
+        .sub-nav-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background-color: var(--apple-dark); }
+
+        .calendar-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; cursor: pointer; }
+        .calendar-icon-trigger { position: absolute; right: 15px; color: var(--apple-dark); z-index: 10; pointer-events: none; }
+        
+        #gs-custom-datepicker {
+            position: absolute; background: var(--glass-modal); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--apple-border); border-radius: 6px; box-shadow: 0 15px 40px rgba(0,0,0,0.06); width: 280px;
+            padding: 16px; z-index: 2000; display: none;
+        }
+        .dp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+        .dp-header button { background: none; border: none; cursor: pointer; color: var(--apple-dark); }
+        .dp-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; font-size: 0.75rem; }
+        .dp-label { font-weight: 600; color: var(--apple-muted); padding-bottom: 4px; }
+        .dp-cell { padding: 6px; cursor: pointer; border-radius: 4px; color: var(--apple-dark); }
+        .dp-cell:hover { background-color: rgba(0,0,0,0.04); }
+        .dp-cell.selected { background-color: var(--apple-blue); color: white; font-weight: 600; }
+
+        .progress-container { width: 100%; background: #e8e8ed; height: 6px; border-radius: 3px; margin: 10px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background-color: var(--apple-blue); transition: width 0.3s ease; }
+
+        .main-container { max-width: 1150px; margin: 40px auto; padding: 0 24px; }
+        .apple-card { background: #ffffff; border: 1px solid var(--apple-border); border-radius: 6px; padding: 35px; margin-bottom: 30px; box-shadow: 0 1px 2px rgba(0,0,0,0.01); }
+        
+        h2 { font-size: 1.35rem; font-weight: 700; color: var(--apple-dark); margin-bottom: 25px; letter-spacing: -0.025em; }
+        h3 { font-size: 0.85rem; font-weight: 700; color: var(--apple-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        #liquid-modal { position: fixed; inset: 0; z-index: 10000; display: none !important; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); background: rgba(0, 0, 0, 0.15); }
+        .modal-box { background: var(--glass-modal); width: min(520px, 100%); border-radius: 6px; padding: 40px; border: 1px solid var(--apple-border); box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+        .advisory-box { padding: 20px; border-radius: 6px; background: var(--apple-gray); border-left: 4px solid var(--apple-blue); margin-bottom: 15px; }
+
+        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 20px; }
+        .field-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.7rem; font-weight: 600; color: var(--apple-muted); margin-bottom: 6px; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px 14px; border-radius: 4px; border: 1px solid var(--apple-border); background: var(--apple-gray); color: var(--apple-dark); font: inherit; font-size: 0.9rem; outline: none; }
+        input:focus { border-color: var(--apple-blue); background-color: #ffffff; }
+        .btn-apple { padding: 12px 22px; background-color: var(--apple-blue); color: white; border: none; border-radius: 4px; font-weight: 500; font-size: 0.85rem; cursor: pointer; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 14px 8px; border-bottom: 1px solid var(--apple-gray); font-size: 0.9rem; }
+        .list-line { display: flex; justify-content: space-between; align-items: center; padding: 14px 8px; border-bottom: 1px solid var(--apple-gray); font-size: 0.9rem; }
+        .amt-pos { color: var(--apple-green); font-weight: 600; }
+        .amt-neg { color: var(--apple-red); font-weight: 600; }
+
+        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .metric-tile { background: var(--apple-gray); padding: 20px; border-radius: 4px; text-align: center; border: 1px solid var(--apple-border); }
+        .metric-tile small { font-size: 0.65rem; font-weight: 700; color: var(--apple-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric-tile p { font-size: 1.15rem; font-weight: 700; color: var(--apple-dark); margin-top: 6px; }
+
+        #login-overlay { position: fixed; inset: 0; z-index: 9999; background: var(--apple-dark); display: flex; align-items: center; justify-content: center; }
+        .login-card { background: white; padding: 50px 40px; border-radius: 8px; width: min(380px, 90%); text-align: center; }
+        @media (max-width: 900px) { .apple-nav { height: auto; padding: 12px 20px; flex-direction: column; gap: 12px; } .apple-tabs { width: 100%; overflow-x: auto; white-space: nowrap; } .form-row { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div id="liquid-modal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+        <h2 id="modal-title" style="border-bottom:1px solid var(--apple-border); padding-bottom:12px; font-size:1.2rem;">Détails Analytiques</h2>
+        <div id="modal-body" style="margin-top:20px; max-height:350px; overflow-y:auto;"></div>
+        <button type="button" class="btn-apple" onclick="closeModal()" style="margin-top:25px; width:100%; background:var(--apple-dark);">Fermer</button>
+    </div>
+</div>
+
+<div id="gs-custom-datepicker">
+    <div class="dp-header">
+        <button type="button" id="dp-prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+        <span id="dp-month-year-label"></span>
+        <button type="button" id="dp-next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+    <div class="dp-grid" id="dp-grid-body"></div>
+</div>
+
+<div id="login-overlay">
+    <div class="login-card">
+        <div style="margin: 0 auto 20px; font-weight:700; border: 1px solid var(--apple-dark); padding: 4px 10px; width: fit-content; border-radius:4px;">⚜ II • II</div>
+        <h2 style="margin-bottom:30px; letter-spacing: -0.03em;">Family Office</h2>
+        <input type="email" id="email" placeholder="Identifiant" style="width:100%;">
+        <input type="password" id="password" placeholder="Mot de passe" style="margin-top:12px; margin-bottom:25px; width:100%;">
+        <button type="button" class="btn-apple" id="login-btn" style="width:100%;">Ouvrir le Coffre</button>
+    </div>
+</div>
+
+<header class="apple-nav">
+    <div class="apple-brand" onclick="goHome()">
+        <div class="apple-crest">Hub</div>
+        <div class="apple-title">Family Synchro <span style="font-size:0.7rem; color:var(--apple-muted);">v0.1.15</span></div>
+    </div>
+    <nav class="apple-tabs">
+        <div class="apple-tab active" id="tab-finance" onclick="switchModule('finance', event)">Finance</div>
+        <div class="apple-tab" id="tab-bourse" onclick="switchModule('bourse', event)">Bourse</div>
+        <div class="apple-tab" id="tab-fiscal" onclick="switchModule('fiscal', event)">Fiscalité & Prévoyance</div>
+        <div class="apple-tab" id="tab-immobilier" onclick="switchModule('immobilier', event)">Immobilier</div>
+        <div class="apple-tab" id="tab-credits" onclick="switchModule('credits', event)">Crédits Conso</div>
+        <div class="apple-tab" id="tab-projets" onclick="switchModule('projets', event)">Projets</div>
+        <div class="apple-tab" id="tab-sport" onclick="sportModuleActivation(event)">Sport</div>
+    </nav>
+    <button type="button" id="logout-btn" style="background:none; border:none; color:#cccccc; cursor:pointer;"><i class="fa-solid fa-power-off"></i></button>
+</header>
+
+<main class="main-container">
+
+    <div id="view-finance" class="module-view">
+        <nav class="sub-nav">
+            <button type="button" class="sub-nav-btn active" onclick="switchFinTab('journal', event)">Journal des flux</button>
+            <button type="button" class="sub-nav-btn" onclick="switchFinTab('analyse', event)">Analyse analytique</button>
+            <button type="button" class="sub-nav-btn" onclick="switchFinTab('equilibre', event)">Équilibre</button>
+            <button type="button" class="sub-nav-btn" onclick="switchFinTab('epargne', event)">Épargne liquide</button>
+            <button type="button" class="sub-nav-btn" onclick="switchFinTab('consolidation', event)">Fortune Globale</button>
+            <button type="button" class="sub-nav-btn" onclick="switchFinTab('advisory', event)">Advisory Optimizer</button>
+        </nav>
+
+        <div id="fin-journal">
+            <div class="apple-card">
+                <h2>Synthèse Financière</h2>
+                <div class="metrics-grid">
+                    <div class="metric-tile"><small>Entrées Période</small><p id="res-inc" class="num amt-pos">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Sorties Période</small><p id="res-exp" class="num amt-neg">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Bilan Net</small><p id="res-net" class="num">0.00 CHF</p></div>
+                </div>
+            </div>
+
+            <div class="apple-card">
+                <h2>Nouvelle Saisie</h2>
+                <form id="form-finance" onsubmit="return false;">
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label>Date d'effet</label>
+                            <div class="calendar-input-wrapper" id="trigger-fi-date">
+                                <input type="text" id="fi-date" readonly placeholder="JJ.MM.AAAA" required>
+                                <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
+                            </div>
+                        </div>
+                        <div class="field-group"><label>Montant nominal (CHF)</label><input type="number" id="fi-amt" step="0.01" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="field-group"><label>Libellé commercial</label><input type="text" id="fi-desc" required></div>
+                        <div class="field-group">
+                            <label>Allocation Catégorielle</label>
+                            <select id="fi-cat">
+                                <option value="Logement">🏠 Logement & Charges</option><option value="Assurances">🛡️ Assurances</option>
+                                <option value="Électricité">⚡ Électricité</option><option value="Internet & Téléphone">📱 Internet / Mobile</option>
+                                <option value="Alimentation">🛒 Alimentation</option><option value="Restaurant">🍴 Restaurant</option>
+                                <option value="Transport">🚗 Transport</option><option value="Recharge voiture">🔋 Recharge voiture</option>
+                                <option value="Loisirs">🎉 Loisirs</option><option value="Revenu">💰 Revenu</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="button" onclick="submitFinanceForm()" class="btn-apple">Sécuriser le flux</button>
+                </form>
+            </div>
+            <div class="apple-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                    <h2>Écritures Récentes</h2>
+                    <select id="filter-month" style="width:auto; padding:6px; font-size:0.8rem;"></select>
+                </div>
+                <table><tbody id="table-finance"></tbody></table>
+            </div>
+        </div>
+
+        <div id="fin-analyse" class="hidden">
+            <div class="apple-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h2>Allocation des masses</h2>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" class="btn-apple" style="padding:6px 12px;" onclick="navigateAnalysisMonth(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+                        <span id="analysis-time-label" style="font-weight:700; align-self:center;">Global</span>
+                        <button type="button" class="btn-apple" style="padding:6px 12px;" onclick="navigateAnalysisMonth(1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div style="height:360px;"><canvas id="chartAnalyse"></canvas></div>
+            </div>
+        </div>
+
+        <div id="fin-equilibre" class="hidden"><div class="apple-card"><h2>Rapprochement Équilibre</h2><div style="height:320px;"><canvas id="chartEquilibre"></canvas></div></div></div>
+
+        <div id="fin-epargne" class="hidden">
+            <div class="apple-card">
+                <h2>Avoirs Disponibles Liquides</h2>
+                <div class="list-line"><span>SwissQuote (Liquidités en attente uniquement)</span><input type="number" step="0.01" id="sav-sq" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                <div class="list-line"><span>Épargne Personnelle</span><input type="number" step="0.01" id="sav-ep" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                <div class="list-line"><span>Épargne Commune</span><input type="number" step="0.01" id="sav-ec" class="num" oninput="syncSav()" style="width:150px; padding:6px; border-radius:4px; border:1px solid var(--apple-border);"></div>
+                
+                <div style="margin-top:30px; padding:25px; background:var(--apple-gray); border:1px solid var(--apple-border); border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:600; letter-spacing:0.5px; font-size:0.85rem; color:var(--apple-muted);">SOMME TOTALE ÉPARGNE LIQUIDE</span>
+                    <b id="sav-total-global" class="num" style="font-size:1.3rem;">0.00 CHF</b>
+                </div>
+            </div>
+        </div>
+
+        <div id="fin-consolidation" class="hidden">
+            <div class="apple-card">
+                <h2>Consolidation Patrimoniale Globale</h2>
+                <div class="list-line"><span>Avoirs Épargne Liquide</span><b id="conso-liquid" class="num">0.00 CHF</b></div>
+                <div class="list-line"><span>Portefeuille Bourse (Valeur Renseignée Saisie)</span><b id="conso-bourse-titres" class="num">0.00 CHF</b></div>
+                <div class="list-line"><span>Avoirs Cumulés Prévoyance 3ème Pilier (3A)</span><b id="conso-p3" class="num">0.00 CHF</b></div>
+                <div class="list-line"><span>Projection Prévoyance Professionnelle 2ème Pilier LPP</span><b id="conso-p2" class="num">0.00 CHF</b></div>
+                <div style="margin-top:30px; padding:25px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-weight:600;">FORTUNE CONSOLIDÉE NETTE DE LA FAMILLE</span>
+                    <b id="conso-total-global" class="num" style="font-size:1.4rem; color:white;">0.00 CHF</b>
+                </div>
+            </div>
+        </div>
+
+        <div id="fin-advisory" class="hidden"><div class="apple-card"><h2>Audit & Optimisation Budgétaire</h2><div id="advisory-diagnostic-nodes" style="display:grid; gap:20px;"></div></div></div>
+    </div>
+
+    <div id="view-bourse" class="module-view hidden">
+        <div class="form-row">
+            <div class="apple-card">
+                <h2 id="bourse-form-title">Saisie Ligne Asset</h2>
+                <form id="form-bourse" onsubmit="return false;">
+                    <div class="field-group"><label>Ticker Instrument (Ex: SIX:VWRA)</label><input type="text" id="stock-ticker" required></div>
+                    <div class="form-row">
+                        <div class="field-group"><label>Quantité</label><input type="number" id="stock-qty" step="0.0001" required></div>
+                        <div class="field-group"><label>Prix d'Achat Moyen (PRM)</label><input type="number" id="stock-prm" step="0.01" required></div>
+                    </div>
+                    <div class="field-group"><label>Cours Réel du Marché (MàJ manuelle)</label><input type="number" id="stock-live" step="0.01" required></div>
+                    <button type="button" id="btn-submit-bourse" onclick="submitStockPosition()" class="btn-apple" style="width:100%;">Figer la ligne</button>
+                </form>
+
+                <h3 style="margin-top:35px; border-bottom:1px solid var(--apple-gray); padding-bottom:5px;">Valorisation Réelle</h3>
+                <div id="portfolio-assets-list"></div>
+                <div style="margin-top:20px; padding:20px; background:var(--apple-dark); color:white; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="color:var(--apple-muted)">TOTAL MARCHÉ ACTIONS</span>
+                    <b id="portfolio-total-val" class="num" style="color:white;">0.00 CHF</b>
+                </div>
+            </div>
+            <div>
+                <div class="apple-card">
+                    <h2>Watchlist Custom TradingView</h2>
+                    <div style="display:flex; gap:10px; margin-bottom:15px;">
+                        <input type="text" id="custom-tv-ticker" placeholder="Ajouter un Ticker (ex: SIX:NVDA)" style="flex-grow:1;">
+                        <button type="button" class="btn-apple" onclick="addCustomWatchlist()">Ajouter</button>
+                    </div>
+                    <div id="custom-watchlist-list" style="margin-bottom:25px;"></div>
+                    <div style="height:500px;" id="tv-widget-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-credits" class="module-view hidden">
+        <div class="apple-card">
+            <h2>Nouveau Financement Contractuel</h2>
+            <form id="form-credit" onsubmit="return false;">
+                <input type="text" id="cr-name" placeholder="Nom de l'engagement" required style="margin-bottom:15px;">
+                <div class="form-row">
+                    <div class="field-group"><label>Capital emprunté nominal</label><input type="number" id="cr-total" required></div>
+                    <div class="field-group"><label>Mensualité fixée</label><input type="number" id="cr-mens" step="0.01" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label>Date d'effet</label>
+                        <div class="calendar-input-wrapper" id="trigger-cr-start">
+                            <input type="text" id="cr-start" readonly placeholder="JJ.MM.AAAA" required>
+                            <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
+                        </div>
+                    </div>
+                    <div class="field-group"><label>Date de fin d'engagement (MM/AAAA ou JJ.MM.AAAA)</label><input type="text" id="cr-end" placeholder="ex: 05.2028" required></div>
+                </div>
+                <div class="field-group">
+                    <label>Devise contractuelle</label>
+                    <select id="cr-ccy"><option value="CHF" selected>CHF (fr.)</option><option value="EUR">EUR (€)</option></select>
+                </div>
+                <button type="button" id="btn-submit-credit" onclick="submitCreditForm()" class="btn-apple" style="width:100%;">Inscrire l'Engagement</button>
+            </form>
+        </div>
+        <div class="apple-card">
+            <h2>Engagements actifs & Complétion temporelle</h2>
+            <div id="list-credits"></div>
+        </div>
+    </div>
+
+    <div id="view-immobilier" class="module-view hidden">
+        <div class="form-row">
+            <div class="apple-card">
+                <h2>Maison Dury</h2>
+                <div class="form-row">
+                    <div class="field-group"><label>Capital Emprunté</label><input type="number" id="immo-dury-total" value="550000"></div>
+                    <div class="field-group"><label>Devise d'Origine</label><select id="immo-dury-ccy" onchange="triggerDynamicImmo('dury')"><option value="EUR" selected>EUR (€)</option><option value="CHF">CHF (fr.)</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Taux Fixe (%)</label><input type="number" id="immo-dury-rate" step="0.01" value="3.5"></div>
+                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-dury-dur" value="25"></div>
+                </div>
+                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-dury-start" value="05/2024"></div>
+                <button type="button" onclick="saveImmo('dury')" class="btn-apple" style="width:100%; margin-bottom:25px;">Figer Financement Dury</button>
+                
+                <h3>Simulateur d'Amortissement Dynamique</h3>
+                <div class="field-group"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-dury-target" placeholder="ex: 12/2030" oninput="triggerDynamicImmo('dury')"></div>
+                <div class="list-line"><span>Mensualité Contractuelle</span><b id="calc-dury-mens" class="num">0.00</b></div>
+                <div class="list-line" style="background:#e8e8ed; padding:8px 12px; border-radius:4px;"><span>Encours Restant dû</span><b id="calc-dury-rest" class="num" style="color:var(--apple-blue)">0.00</b></div>
+                <div class="list-line"><span>Capital Amorti</span><b id="calc-dury-caprep" class="num">0.00</b></div>
+                <div class="list-line"><span>Intérêts Versés</span><b id="calc-dury-intpaid" class="num" style="color:var(--apple-red)">0.00</b></div>
+            </div>
+
+            <div class="apple-card">
+                <h2>Appartement Amiens</h2>
+                <div class="form-row">
+                    <div class="field-group"><label>Capital Emprunté</label><input type="number" id="immo-amiens-total" value="155949.37"></div>
+                    <div class="field-group"><label>Devise d'Origine</label><select id="immo-amiens-ccy" onchange="triggerDynamicImmo('amiens')"><option value="EUR" selected>EUR (€)</option><option value="CHF">CHF (fr.)</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Taux Fixe (%)</label><input type="number" id="immo-amiens-rate" step="0.01" value="1.65"></div>
+                    <div class="field-group"><label>Durée (Années)</label><input type="number" id="immo-amiens-dur" value="25"></div>
+                </div>
+                <div class="field-group"><label>Date d'effet (MM/AAAA)</label><input type="text" id="immo-amiens-start" value="06/2021"></div>
+                <button type="button" onclick="saveImmo('amiens')" class="btn-apple" style="width:100%; margin-bottom:25px;">Figer Financement Amiens</button>
+                
+                <h3>Simulateur d'Amortissement Dynamique</h3>
+                <div class="field-group"><label>Date d'analyse de dette (MM/AAAA)</label><input type="text" id="immo-amiens-target" placeholder="ex: 06/2031" oninput="triggerDynamicImmo('amiens')"></div>
+                <div class="list-line"><span>Mensualité Contractuelle</span><b id="calc-amiens-mens" class="num">0.00</b></div>
+                <div class="list-line" style="background:#e8e8ed; padding:8px 12px; border-radius:4px;"><span>Encours Restant dû</span><b id="calc-amiens-rest" class="num" style="color:var(--apple-blue)">0.00</b></div>
+                <div class="list-line"><span>Capital Amorti</span><b id="calc-amiens-caprep" class="num">0.00</b></div>
+                <div class="list-line"><span>Intérêts Versés</span><b id="calc-amiens-intpaid" class="num" style="color:var(--apple-red)">0.00</b></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-fiscal" class="module-view hidden">
+        <nav class="sub-nav">
+            <button type="button" class="sub-nav-btn active" id="f-sub-tax" onclick="switchFiscalSubTab('tax', event)">Impôts ICC / IFD</button>
+            <button type="button" class="sub-nav-btn" id="f-sub-p3" onclick="switchFiscalSubTab('p3', event)">3ème Pilier Avoirs</button>
+            <button type="button" class="sub-nav-btn" id="f-sub-p2" onclick="switchFiscalSubTab('p2', event)">2ème Pilier Projection</button>
+        </nav>
+
+        <div id="fiscal-tax">
+            <div class="apple-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                    <h2 style="margin:0;">Simulateur fiscal Vaud</h2>
+                    <button class="btn-apple" onclick="saveTaxConfig()" style="padding:6px 12px; font-size:0.75rem;"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder Valeurs</button>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Revenu Annuel Brut Global (CHF)</label><input type="number" id="tax-rev" value="180000" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Fortune Déclarée Foyer (CHF)</label><input type="number" id="tax-fort" value="250000" oninput="calculateTax()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group">
+                        <label>Régime Matrimonial</label>
+                        <select id="tax-status" onchange="calculateTax()">
+                            <option value="single" selected>Célibataire / Imposition séparée</option>
+                            <option value="couple">Mariés / Partenariat (Splitting complet)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom:15px; border-bottom:1px solid var(--apple-gray); padding-bottom:5px;">Déductions Légales</h3>
+                <div class="form-row">
+                    <div class="field-group"><label>Frais de Déplacement</label><input type="number" id="ded-travel" value="800" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Frais de Repas Hors Domicile</label><input type="number" id="ded-meals" value="3200" oninput="calculateTax()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Primes d'Assurance Maladie</label><input type="number" id="ded-insurance" value="5000" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Versements 3ème Pilier (Auto-Sync)</label><input type="number" id="ded-p3" value="0" readonly style="background-color:#e8e8ed;"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Frais d'Entretien Immeubles</label><input type="number" id="ded-immo" value="0" oninput="calculateTax()"></div>
+                    <div class="field-group"><label>Autres Déductions</label><input type="number" id="ded-others" value="0" oninput="calculateTax()"></div>
+                </div>
+
+                <div style="background:var(--apple-gray); padding:30px; border-radius:8px; margin-top:25px;">
+                    <div class="list-line"><span>Impôt Fédéral Direct (IFD)</span><b id="tax-res-ifd" class="num">0.00 CHF</b></div>
+                    <div class="list-line"><span>Impôt Cantonal Vaud (ICC)</span><b id="tax-res-canton" class="num">0.00 CHF</b></div>
+                    <div class="list-line"><span>Impôt Communal Lausanne (78.5%)</span><b id="tax-res-commune" class="num">0.00 CHF</b></div>
+                    <div class="list-line" style="border-top:1px solid var(--apple-border); margin-top:15px; padding-top:15px; font-weight:700;">
+                        <span>CHARGE FISCALE NETTE ANNUELLE</span>
+                        <b id="tax-res-total" class="num" style="color:var(--apple-red); font-size:1.15rem;">0.00 CHF</b>
+                    </div>
+                    <div class="list-line" style="background:var(--apple-dark); color:white; padding:15px; border-radius:6px; margin-top:20px; font-weight:600;">
+                        <span>Acompte Mensuel Conseillé à Provisionner</span>
+                        <b id="tax-res-monthly" class="num" style="color:white; font-size:1.2rem;">0.00 CHF</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="fiscal-p3" class="hidden">
+            <div class="apple-card">
+                <h2>Saisie Versement 3A</h2>
+                <form id="form-p3" onsubmit="return false;">
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label>Date de Valeur</label>
+                            <div class="calendar-input-wrapper" id="trigger-p3-date">
+                                <input type="text" id="p3-date" readonly placeholder="JJ.MM.AAAA" required>
+                                <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
+                            </div>
+                        </div>
+                        <div class="field-group"><label>Montant Déposé (CHF)</label><input type="number" step="0.01" id="p3-amt" required></div>
+                    </div>
+                    <button type="button" onclick="submitP3Form()" class="btn-apple">Enregistrer la Ligne</button>
+                </form>
+            </div>
+            <div class="apple-card">
+                <h2>Avoirs Consolidés Prévoyance 3A</h2>
+                <div class="form-row" style="margin-bottom:25px;">
+                    <div class="metric-tile" style="background:var(--apple-dark); color:white;"><small style="color:#9cb0c9">Masse Historique Cumulée 3A</small><p id="p3-total-display" style="color:white; font-size:1.3rem;">0.00 CHF</p></div>
+                    <div class="metric-tile"><small>Versements Année Civile en Cours</small><p id="p3-year-display" style="color:var(--apple-blue);">0.00 CHF</p></div>
+                </div>
+                <h3 style="border-bottom:1px solid var(--apple-gray); padding-bottom:5px; margin-bottom:15px;">Détail des versements</h3>
+                <div id="list-p3"></div>
+            </div>
+        </div>
+
+        <div id="fiscal-p2" class="hidden">
+            <div class="apple-card">
+                <h2>Moteur Actuariel de Projection 2ème Pilier</h2>
+                <div class="form-row">
+                    <div class="field-group"><label>Avoirs Actuels Kévin</label><input type="number" id="p2-base-k" value="0" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Cotisation Annuelle Fixe Kévin</label><input type="number" id="p2-ann-k" value="0" oninput="runP2Projection()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Avoirs Actuels Charlotte</label><input type="number" id="p2-base-c" value="0" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Cotisation Annuelle Fixe Charlotte</label><input type="number" id="p2-ann-c" value="0" oninput="runP2Projection()"></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Horizon Temporel (Année Cible)</label><input type="number" id="p2-target-year" value="2035" oninput="runP2Projection()"></div>
+                    <div class="field-group"><label>Intérêt Technique (%)</label><input type="number" id="p2-rate" value="1.25" step="0.05" oninput="runP2Projection()"></div>
+                </div>
+                <button type="button" onclick="saveP2Config()" class="btn-apple">Figer la Configuration</button>
+
+                <div style="background:var(--apple-gray); padding:25px; border-radius:8px; margin-top:25px;">
+                    <div class="list-line"><span>Masse Totale Immédiate Actuelle</span><b id="p2-total-now" class="num">0.00 CHF</b></div>
+                    <div class="list-line" style="background:var(--apple-dark); color:white; padding:15px; border-radius:6px; margin-top:15px;">
+                        <span id="p2-projection-title">Capital attendu à l'échéance</span>
+                        <b id="p2-total-projected" class="num" style="color:white; font-size:1.2rem;">0.00 CHF</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-projets" class="module-view hidden">
+        <div class="apple-card">
+            <h2>Lignes d'Investissements</h2>
+            <div id="list-projets" style="margin-bottom:20px;"></div>
+            <div style="padding:20px; background:var(--apple-dark); color:white; border-radius:4px; display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.85rem;">BUDGET TOTAL HARMONISÉ</span>
+                <b id="proj-total-val" class="num" style="color:white;">0.00 CHF</b>
+            </div>
+        </div>
+        <div class="apple-card">
+            <h2>Nouveau Projet</h2>
+            <form id="form-proj" onsubmit="return false;">
+                <input type="text" id="p-name" placeholder="Intitulé du projet" required style="margin-bottom:15px;">
+                <input type="number" id="p-budget" placeholder="Allocation CHF" required style="margin-bottom:20px;">
+                <button type="button" onclick="submitProjectForm()" class="btn-apple">Inscrire le Projet</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="view-sport" class="module-view hidden">
+        <div class="apple-card">
+            <h2>Nouveau Log Sportif</h2>
+            <form id="form-sport" onsubmit="return false;">
+                <div class="form-row">
+                    <div class="field-group">
+                        <label>Date</label>
+                        <div class="calendar-input-wrapper" id="trigger-sp-date">
+                            <input type="text" id="sp-date" readonly placeholder="JJ.MM.AAAA" required>
+                            <i class="fa-solid fa-calendar-days calendar-icon-trigger"></i>
+                        </div>
+                    </div>
+                    <div class="field-group"><label>Type d'activité</label><input type="text" id="sp-type" required></div>
+                </div>
+                <div class="form-row">
+                    <div class="field-group"><label>Durée (min)</label><input type="number" id="sp-dur" required></div>
+                    <div class="field-group"><label>Calories (kcal)</label><input type="number" id="sp-kcal" required></div>
+                </div>
+                <button type="button" onclick="submitSportForm()" class="btn-apple" style="width:100%;">Enregistrer l'activité</button>
+            </form>
+        </div>
+        <div class="apple-card">
+            <h2>Historique des activités</h2>
+            <div id="list-sport"></div>
+        </div>
+    </div>
+
+</main>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, where, deleteDoc, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAV_k_524LY4pPlEngZ763qeq8viYFLgJk",
+        authDomain: "mybudget-ecb46.firebaseapp.com",
+        projectId: "mybudget-ecb46",
+        storageBucket: "mybudget-ecb46.firebasestorage.app",
+        messagingSenderId: "891853073723",
+        appId: "1:891853073723:web:29ec6bcf063a7fa8e8db1e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    
+    // Variables globales
+    let allFinData = [], allP3Data = [], allSportData = [], allStocks = [], allCredits = [];
+    let customWatchlist = [];
+    let chartAnInstance, chartEqInstance, eurToChfRate = 0.965;
+    let editStockId = null, editCreditId = null;
+    let analysisCurrentIndex = 0, uniqueMonthsList = [];
+    let totalLiquidsCalculated = 0;
+    let activeFirebaseListeners = []; 
+
+    const sysDate = new Date(); // Horloge système live
+
+    function escapeHTML(str) {
+        if (typeof str !== 'string') return str;
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag] || tag));
+    }
+
+    async function getLiveForexRate() {
+        try {
+            const res = await fetch('https://open.er-api.com/v6/latest/EUR');
+            const data = await res.json();
+            if(data?.rates?.CHF) eurToChfRate = parseFloat(data.rates.CHF);
+        } catch(e) { console.warn("Forex standard runtime fallback."); }
+    }
+
+    document.getElementById('login-btn').onclick = () => {
+        const mail = document.getElementById('email').value.trim();
+        const pass = document.getElementById('password').value;
+        if(mail && pass) {
+            signInWithEmailAndPassword(auth, mail, pass).catch(err => {
+                console.error("Erreur d'authentification:", err);
+                alert("Identifiants refusés.");
+            });
+        } else {
+            alert("Renseignez le formulaire d'ouverture.");
+        }
+    };
+
+    document.getElementById('logout-btn').onclick = () => {
+        activeFirebaseListeners.forEach(unsub => unsub());
+        activeFirebaseListeners = [];
+        signOut(auth);
+    };
+
+    window.switchModule = (m, event) => {
+        document.querySelectorAll('.module-view').forEach(v => v.classList.add('hidden'));
+        document.querySelectorAll('.apple-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('view-'+m).classList.remove('hidden');
+        if(event) event.currentTarget.classList.add('active');
+        if(m === 'fiscal') window.calculateTax();
+        if(m === 'bourse') setTimeout(injectTradingViewWidget, 200);
+    };
+
+    window.sportModuleActivation = (event) => {
+        window.switchModule('sport', event);
+        setTimeout(window.renderSportStats, 50);
+    };
+
+    window.switchFinTab = (t, event) => {
+        ['journal', 'analyse', 'equilibre', 'epargne', 'consolidation', 'advisory'].forEach(x => document.getElementById('fin-'+x).classList.add('hidden'));
+        document.getElementById('fin-'+t).classList.remove('hidden');
+        document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+        if(event) event.currentTarget.classList.add('active');
+        if(t === 'analyse') { compileAnalysisMonths(); setTimeout(renderChartAnalyse, 50); }
+        if(t === 'equilibre') setTimeout(renderChartEquilibre, 50);
+        if(t === 'consolidation') window.consolidateTotalAssets();
+        if(t === 'advisory') window.runAdvisoryOptimizationDiagnostic();
+    };
+
+    window.switchFiscalSubTab = (t, event) => {
+        ['tax', 'p3', 'p2'].forEach(x => document.getElementById('fiscal-'+x).classList.add('hidden'));
+        document.getElementById('fiscal-'+t).classList.remove('hidden');
+        document.querySelectorAll('#view-fiscal .sub-nav-btn').forEach(b => b.classList.remove('active'));
+        if(event) event.currentTarget.classList.add('active');
+    };
+
+    window.goHome = () => { document.querySelector('.apple-tab[id="tab-finance"]').click(); };
+
+    let currentDpInput = null;
+    let dpCurrentMonth = sysDate.getMonth();
+    let dpCurrentYear = sysDate.getFullYear();
+
+    function initCustomDatePicker() {
+        const triggers = [
+            { wrapper: 'trigger-fi-date', input: 'fi-date' },
+            { wrapper: 'trigger-cr-start', input: 'cr-start' },
+            { wrapper: 'trigger-p3-date', input: 'p3-date' },
+            { wrapper: 'trigger-sp-date', input: 'sp-date' }
+        ];
+
+        triggers.forEach(t => {
+            const wrapEl = document.getElementById(t.wrapper);
+            const inputEl = document.getElementById(t.input);
+            if(wrapEl && inputEl) {
+                wrapEl.onclick = (e) => {
+                    e.stopPropagation();
+                    currentDpInput = inputEl;
+                    openDatePicker(inputEl);
+                };
+            }
+        });
+
+        document.getElementById('dp-prev-btn').onclick = (e) => { e.stopPropagation(); changeDpMonth(-1); };
+        document.getElementById('dp-next-btn').onclick = (e) => { e.stopPropagation(); changeDpMonth(1); };
+        document.onclick = () => { document.getElementById('gs-custom-datepicker').style.display = 'none'; };
+        document.getElementById('gs-custom-datepicker').onclick = (e) => e.stopPropagation();
+    }
+
+    function openDatePicker(input) {
+        const picker = document.getElementById('gs-custom-datepicker');
+        const rect = input.getBoundingClientRect();
+        picker.style.top = (rect.bottom + window.scrollY) + 'px';
+        picker.style.left = (rect.left + window.scrollX) + 'px';
+        picker.style.display = 'block';
+        if (input.value) {
+            const parts = input.value.split('.');
+            if (parts.length === 3) { dpCurrentMonth = parseInt(parts[1]) - 1; dpCurrentYear = parseInt(parts[2]); }
+        } else { dpCurrentMonth = sysDate.getMonth(); dpCurrentYear = sysDate.getFullYear(); }
+        renderDatePickerCalendar();
+    }
+
+    function changeDpMonth(dir) {
+        dpCurrentMonth += dir;
+        if (dpCurrentMonth < 0) { dpCurrentMonth = 11; dpCurrentYear--; }
+        else if (dpCurrentMonth > 11) { dpCurrentMonth = 0; dpCurrentYear++; }
+        renderDatePickerCalendar();
+    }
+
+    function renderDatePickerCalendar() {
+        const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+        document.getElementById('dp-month-year-label').innerText = `${mNames[dpCurrentMonth]} ${dpCurrentYear}`;
+        const grid = document.getElementById('dp-grid-body'); grid.innerHTML = '';
+        const dayLabels = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+        dayLabels.forEach(l => { grid.innerHTML += `<div class="datepicker-day-label">${l}</div>`; });
+        const firstDayIndex = (new Date(dpCurrentYear, dpCurrentMonth, 1).getDay() + 6) % 7;
+        const totalDays = new Date(dpCurrentYear, dpCurrentMonth + 1, 0).getDate();
+        for (let i = 0; i < firstDayIndex; i++) { grid.innerHTML += `<div></div>`; }
+        for (let day = 1; day <= totalDays; day++) {
+            const dateStr = `${String(day).padStart(2,'0')}.${String(dpCurrentMonth+1).padStart(2,'0')}.${dpCurrentYear}`;
+            let isSelected = currentDpInput && currentDpInput.value === dateStr ? 'selected' : '';
+            grid.innerHTML += `<div class="datepicker-day-cell ${isSelected}" onclick="window.selectDpDate('${dateStr}')">${day}</div>`;
+        }
+    }
+
+    window.selectDpDate = (dateStr) => {
+        if (currentDpInput) { currentDpInput.value = dateStr; currentDpInput.dispatchEvent(new Event('input', { bubbles: true })); }
+        document.getElementById('gs-custom-datepicker').style.display = 'none';
+    };
+
+    function convertFrDateToIso(frDate) {
+        if (!frDate) return ""; const parts = frDate.split(/[\.\/]/);
+        if (parts.length !== 3) return frDate; 
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+
+    // --- REGENERATION DYNAMIQUE TRADINGVIEW ---
+    function injectTradingViewWidget() {
+        const box = document.getElementById('tv-widget-container'); 
+        if(!box) return;
+        
+        // Nettoyage de l'ancien widget
+        box.innerHTML = '';
+        
+        // Combinaison des Tickers possédés et des Tickers Watchlist (sans doublons)
+        let rawTickers = [...allStocks.map(s => s.ticker.toUpperCase()), ...customWatchlist.map(w => w.ticker.toUpperCase())];
+        let uniqueTickers = [...new Set(rawTickers)];
+        
+        // Fallback s'il n'y a rien
+        if(uniqueTickers.length === 0) uniqueTickers = ["SIX:VWRA"]; 
+
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js';
+        script.async = true;
+        
+        script.text = JSON.stringify({
+            "colorTheme": "light",
+            "dateRange": "12M",
+            "showChart": true,
+            "locale": "fr",
+            "width": "100%",
+            "height": "100%",
+            "tabs": [
+                {
+                    "name": "Live Assets",
+                    "symbols": uniqueTickers.map(t => ({ "s": t }))
+                }
+            ]
+        });
+        box.appendChild(script);
+    }
+
+    window.addCustomWatchlist = async () => {
+        const t = document.getElementById('custom-tv-ticker').value.trim().toUpperCase();
+        if(!t) return;
+        await addDoc(collection(db, "watchlist"), { uid: auth.currentUser.uid, ticker: t });
+        document.getElementById('custom-tv-ticker').value = '';
+    };
+
+    window.removeCustomWatchlist = async (id) => {
+        await deleteDoc(doc(db, "watchlist", id));
+    };
+
+    // --- TIMELINE CALCULATOR CORRIGÉ (DATES DYNAMIQUES + LE 5 DU MOIS) ---
+    function calculateCreditCompletion(startStr, endStr) {
+        if(!startStr || !endStr) return { completion: 0, elapsed: 0, totalMonths: 1 };
+        try {
+            const parseDate = (dStr) => {
+                if (dStr.includes('.')) { const p = dStr.split('.'); return { m: parseInt(p[1] || p[0]), y: parseInt(p[p.length-1]) }; }
+                if (dStr.includes('/')) { const p = dStr.split('/'); return { m: parseInt(p[0]), y: parseInt(p[1]) }; }
+                return { m: 1, y: sysDate.getFullYear() };
+            };
+            
+            const start = parseDate(startStr);
+            const end = parseDate(endStr);
+            
+            const totalMonths = (end.y - start.y) * 12 + (end.m - start.m);
+            
+            // Calcul mois écoulés
+            let elapsed = (sysDate.getFullYear() - start.y) * 12 + (sysDate.getMonth() + 1 - start.m);
+            
+            // On retire 1 mois si on n'a pas encore passé le 5 du mois en cours
+            if (sysDate.getDate() < 5) elapsed -= 1;
+            
+            if(elapsed < 0) elapsed = 0; 
+            if(elapsed > totalMonths) elapsed = totalMonths;
+            const completion = totalMonths > 0 ? (elapsed / totalMonths) * 100 : 0;
+            return { completion, elapsed, totalMonths };
+        } catch(e) { return { completion: 0, elapsed: 0, totalMonths: 1 }; }
+    }
+
+    function evaluateLoanAtTargetDate(principal, annualRate, totalMonths, startDateStr, targetDateStr) {
+        if (!principal || !totalMonths || !startDateStr || !targetDateStr) return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 };
+        try {
+            const P = parseFloat(principal); const R = (parseFloat(annualRate) / 100) / 12; const N = parseInt(totalMonths);
+            
+            const parseD = (str) => {
+                if(str.includes('.')) { const p = str.split('.'); return { m: parseInt(p[1]||p[0]), y: parseInt(p[p.length-1]) }; }
+                if(str.includes('/')) { const p = str.split('/'); return { m: parseInt(p[0]), y: parseInt(p[1]) }; }
+                return { m: 1, y: sysDate.getFullYear() };
+            };
+            
+            let start = parseD(startDateStr);
+            let target = parseD(targetDateStr);
+            
+            let elapsedMonths = (target.y - start.y) * 12 + (target.m - start.m);
+            if (elapsedMonths < 0) return { mens: 0, rest: P, repaidCap: 0, paidInt: 0, completion: 0 }; 
+            if (elapsedMonths > N) elapsedMonths = N;
+            
+            let mens = R === 0 ? P / N : P * (R * Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+            let currentBalance = P; let cumulatedInterest = 0; let cumulatedCapital = 0;
+            
+            for (let i = 1; i <= elapsedMonths; i++) {
+                let interestForMonth = currentBalance * R; let capitalForMonth = mens - interestForMonth;
+                if (currentBalance < capitalForMonth) capitalForMonth = currentBalance;
+                currentBalance -= capitalForMonth; cumulatedInterest += interestForMonth; cumulatedCapital += capitalForMonth;
+            }
+            let comp = P > 0 ? (cumulatedCapital / P) * 100 : 0;
+            return { mens, rest: Math.max(0, currentBalance), repaidCap: cumulatedCapital, paidInt: cumulatedInterest, completion: Math.min(100, Math.max(0, comp)) };
+        } catch(e) { return { mens: 0, rest: parseFloat(principal)||0, repaidCap: 0, paidInt: 0, completion: 0 }; }
+    }
+
+    onAuthStateChanged(auth, (user) => {
+        if(user) { 
+            getLiveForexRate(); 
+            document.getElementById('login-overlay').classList.add('hidden'); 
+            initPipeline(user.uid); 
+        } else { 
+            document.getElementById('login-overlay').classList.remove('hidden'); 
+        }
+    });
+
+    function initPipeline(uid) {
+        initCustomDatePicker();
+        const sel = document.getElementById('filter-month');
+        const mNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
+        sel.innerHTML = '<option value="all" selected>Vue Historique Globale</option>';
+        for(let i=0; i<12; i++) { sel.innerHTML += `<option value="${sysDate.getFullYear()}-${String(i+1).padStart(2,'0')}">${mNames[i]} ${sysDate.getFullYear()}</option>`; }
+        sel.onchange = renderFinanceLog;
+
+        const qTransactions = query(collection(db, "transactions"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qTransactions, s => {
+            allFinData = []; s.forEach(d => { if(d.exists()) allFinData.push({id: d.id, ...d.data()}); }); renderFinanceLog();
+        }, e => console.error("Transactions Access Error:", e)));
+
+        const qBourse = query(collection(db, "bourse"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qBourse, s => {
+            allStocks = []; let h = "", totalVal = 0;
+            s.forEach(d => {
+                const b = d.data(); allStocks.push({ id: d.id, ...b });
+                const qty = parseFloat(b.qty || 0); const prm = parseFloat(b.prm || 0); const live = parseFloat(b.live || 0);
+                const currentVal = qty * live; const totalCost = qty * prm; const gainLoss = currentVal - totalCost;
+                totalVal += currentVal;
+                h += `<div class="list-line"><span><b>${escapeHTML(b.ticker)}</b><br><small style="color:var(--apple-muted)">${qty} parts @ PRM ${prm.toFixed(2)}</small></span><div style="text-align:right"><b class="num">${currentVal.toFixed(2)} CHF</b><br><small class="num" style="color:${gainLoss >= 0 ? 'var(--apple-green)' : 'var(--apple-red)'}">${gainLoss >= 0 ? '+' : ''}${gainLoss.toFixed(2)} CHF</small></div><div><i class="fa-solid fa-pen" onclick="editStock('${d.id}')" style="opacity:0.4; cursor:pointer; margin-right:12px;"></i><i class="fa-solid fa-trash-can" onclick="delD('bourse','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div></div>`;
+            });
+            document.getElementById('portfolio-assets-list').innerHTML = h || "<p style='color:var(--apple-muted); padding:10px 0;'>Aucune ligne active.</p>";
+            document.getElementById('portfolio-total-val').innerText = totalVal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+            window.consolidateTotalAssets();
+            
+            // Si la vue Bourse est active, on actualise le widget
+            if(!document.getElementById('view-bourse').classList.contains('hidden')) injectTradingViewWidget();
+        }, e => console.error("Bourse Access Error:", e)));
+
+        // Ecouteur pour la Watchlist Custom
+        const qWatchlist = query(collection(db, "watchlist"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qWatchlist, s => {
+            customWatchlist = []; let h = "";
+            s.forEach(d => { 
+                const w = d.data(); customWatchlist.push({id: d.id, ...w});
+                h += `<span style="display:inline-block; background:var(--apple-gray); padding:4px 10px; border-radius:15px; font-size:0.75rem; margin-right:8px; border:1px solid var(--apple-border);">${escapeHTML(w.ticker)} <i class="fa-solid fa-xmark" onclick="removeCustomWatchlist('${d.id}')" style="margin-left:5px; cursor:pointer; color:var(--apple-red);"></i></span>`;
+            });
+            document.getElementById('custom-watchlist-list').innerHTML = h;
+            
+            // Si la vue Bourse est active, on actualise le widget
+            if(!document.getElementById('view-bourse').classList.contains('hidden')) injectTradingViewWidget();
+        }));
+
+        const qCredits = query(collection(db, "creditsconso"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qCredits, s => {
+            allCredits = []; let h = "";
+            s.forEach(d => {
+                const c = d.data(); allCredits.push({ id: d.id, ...c });
+                const timeMetrics = calculateCreditCompletion(c.start, c.end);
+                const totalCap = parseFloat(c.total) || 0; const mensVal = parseFloat(c.mens) || 0;
+                const labelCcy = c.ccy || "CHF";
+                
+                const paidCapTheoretical = Math.min(totalCap, timeMetrics.elapsed * mensVal);
+                const remainingCapTheoretical = Math.max(0, totalCap - paidCapTheoretical);
+                let displayRest = remainingCapTheoretical.toFixed(2) + " " + labelCcy;
+                if(labelCcy === "EUR") displayRest += ` (${(remainingCapTheoretical * eurToChfRate).toFixed(2)} CHF)`;
+
+                h += `<div class="list-line" style="flex-direction:column; align-items:stretch; padding:18px 0; border-bottom:1px solid var(--apple-border);">
+                    <div style="display:flex; justify-content:space-between; font-weight:700;"><span>${escapeHTML(c.name)} (${labelCcy})</span><span style="color:var(--apple-blue)">${displayRest}</span></div>
+                    <div class="progress-container"><div class="progress-bar" style="width: ${timeMetrics.completion}%"></div></div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--apple-muted);">
+                        <span>Complété à ${timeMetrics.completion.toFixed(1)}%</span>
+                        <span>Mensualité: ${mensVal.toFixed(2)} ${labelCcy} · Amorti: ${paidCapTheoretical.toFixed(0)}</span>
+                        <div>
+                            <span style="cursor:pointer; color:var(--apple-blue); margin-right:10px;" onclick="window.editCredit('${d.id}')"><i class="fa-solid fa-pen"></i></span>
+                            <span style="cursor:pointer; color:var(--apple-red);" onclick="delD('creditsconso','${d.id}')"><i class="fa-solid fa-trash-can"></i></span>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('list-credits').innerHTML = h || "Aucun engagement de consommation.";
+        }, e => console.error("Credits Access Error:", e)));
+
+        const qProjects = query(collection(db, "projects"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qProjects, s => {
+            let h = "", tot = 0; s.forEach(d => { const p = d.data(); h += `<div class="list-line"><span><b>${escapeHTML(p.name)}</b></span><b class="num">${parseFloat(p.budget).toFixed(2)} CHF</b></div>`; tot += parseFloat(p.budget); });
+            document.getElementById('list-projets').innerHTML = h || "Aucun projet actif engagé.";
+            document.getElementById('proj-total-val').innerText = tot.toFixed(2) + " CHF";
+        }, e => console.error("Projects Access Error:", e)));
+
+        const qP3 = query(collection(db, "pillar3"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qP3, s => {
+            allP3Data = []; s.forEach(d => allP3Data.push({ id: d.id, ...d.data() })); 
+            window.renderP3Stats(); 
+            window.consolidateTotalAssets();
+        }, e => console.error("Pillar3 Access Error:", e)));
+
+        const qSport = query(collection(db, "sport"), where("uid", "==", uid));
+        activeFirebaseListeners.push(onSnapshot(qSport, s => {
+            allSportData = []; let h = ""; 
+            s.forEach(d => { 
+                const x = d.data(); allSportData.push({ id: d.id, ...x }); 
+                h += `<div class="list-line"><span><b>${escapeHTML(x.type)}</b> — ${x.dur} min (${x.kcal} kcal)</span><i class="fa-solid fa-trash-can" onclick="delD('sport','${d.id}')" style="opacity:0.2; cursor:pointer;"></i></div>`; 
+            });
+            document.getElementById('list-sport').innerHTML = h || "Aucun log entraînement."; 
+            window.renderSportStats();
+        }, e => console.error("Sport Access Error:", e)));
+
+        loadSavings(uid); loadImmo(uid); loadP2Config(uid); loadTaxConfig(uid);
+    }
+
+    function renderFinanceLog() {
+        if(!allFinData) return;
+        const filter = document.getElementById('filter-month')?.value || 'all';
+        const tbody = document.getElementById('table-finance'); if(!tbody) return;
+        tbody.innerHTML = ""; let inc = 0; let exp = 0;
+        
+        const filtered = allFinData.filter(d => {
+            if(!d.date) return false;
+            return filter === 'all' || d.date.startsWith(filter.slice(0,7));
+        }).sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+        filtered.forEach(t => {
+            const amt = parseFloat(t.amt) || 0; if(t.type === 'income') inc += amt; else exp += amt;
+            const displayDate = t.date ? t.date.split('-').reverse().slice(0,2).join('.') : '';
+            tbody.innerHTML += `<tr><td style="width:70px; color:var(--apple-muted); font-size:0.8rem;">${displayDate}</td><td><b>${escapeHTML(t.desc) || ''}</b></td><td class="num ${t.type==='income'?'amt-pos':'amt-neg'}" style="text-align:right;">${amt.toFixed(2)}</td></tr>`;
+        });
+        if(document.getElementById('res-inc')) document.getElementById('res-inc').innerText = inc.toFixed(2) + " CHF";
+        if(document.getElementById('res-exp')) document.getElementById('res-exp').innerText = exp.toFixed(2) + " CHF";
+        if(document.getElementById('res-net')) {
+            const net = inc - exp; document.getElementById('res-net').innerText = net.toFixed(2) + " CHF";
+            document.getElementById('res-net').className = "num " + (net >= 0 ? "amt-pos" : "amt-neg");
+        }
+    }
+
+    function compileAnalysisMonths() {
+        let set = new Set(); allFinData.forEach(t => { if(t.date) set.add(t.date.slice(0,7)); });
+        uniqueMonthsList = [...set].sort(); if(uniqueMonthsList.length > 0 && analysisCurrentIndex === 0) analysisCurrentIndex = uniqueMonthsList.length - 1;
+    }
+
+    window.navigateAnalysisMonth = (dir) => {
+        analysisCurrentIndex += dir; if(analysisCurrentIndex < 0) analysisCurrentIndex = 0;
+        if(analysisCurrentIndex >= uniqueMonthsList.length) analysisCurrentIndex = uniqueMonthsList.length - 1; renderChartAnalyse();
+    };
+
+    function renderChartAnalyse() {
+        if(uniqueMonthsList.length === 0) return; let targetMonth = uniqueMonthsList[analysisCurrentIndex];
+        document.getElementById('analysis-time-label').innerText = targetMonth;
+        const stats = {}; allFinData.filter(t => t.date && t.date.startsWith(targetMonth)).forEach(t => { if(t.type === 'expense') stats[t.cat] = (stats[t.cat] || 0) + parseFloat(t.amt); });
+        const ctx = document.getElementById('chartAnalyse').getContext('2d'); if(chartAnInstance) chartAnInstance.destroy();
+        chartAnInstance = new Chart(ctx, {
+            type: 'doughnut', data: { labels: Object.keys(stats), datasets: [{ data: Object.values(stats), backgroundColor: ['#0c192c', '#60728a', '#0071e3', '#34c759', '#ff3b30', '#ff9500'], borderWidth: 0 }] },
+            options: { maintainAspectRatio: false, cutout: '78%', onClick: (e, el) => { if(el.length > 0) {
+                document.getElementById('liquid-modal').style.setProperty('display', 'flex', 'important');
+                openLiquidGlassModal(chartAnInstance.data.labels[el[0].index]);
+            } } }
+        });
+    }
+
+    function renderChartEquilibre() {
+        let inc = 0; let exp = 0; allFinData.forEach(t => { if(t.type === 'income') inc += parseFloat(t.amt); else exp += parseFloat(t.amt); });
+        const ctx = document.getElementById('chartEquilibre').getContext('2d'); if(chartEqInstance) chartEqInstance.destroy();
+        chartEqInstance = new Chart(ctx, {
+            type: 'bar', data: { labels: ['Flux Revenus', 'Flux Dépenses'], datasets: [{ data: [inc, exp], backgroundColor: ['#34c759', '#ff3b30'], borderRadius: 6 }] },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        });
+    }
+
+    window.consolidateTotalAssets = () => {
+        let p3Tot = 0; allP3Data.forEach(x => p3Tot += parseFloat(x.amt || 0));
+        let p2Now = parseFloat(document.getElementById('p2-total-now')?.innerText) || 0;
+        let stocksTotalValueCalculated = 0;
+        allStocks.forEach(b => { stocksTotalValueCalculated += (parseFloat(b.qty || 0) * parseFloat(b.live || 0)); });
+
+        if(document.getElementById('conso-liquid')) document.getElementById('conso-liquid').innerText = totalLiquidsCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-bourse-titres')) document.getElementById('conso-bourse-titres').innerText = stocksTotalValueCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-p3')) document.getElementById('conso-p3').innerText = p3Tot.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        if(document.getElementById('conso-p2')) document.getElementById('conso-p2').innerText = p2Now.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        
+        let netGlobalHubValue = totalLiquidsCalculated + stocksTotalValueCalculated + p3Tot + p2Now;
+        if(document.getElementById('conso-total-global')) document.getElementById('conso-total-global').innerText = netGlobalHubValue.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+    };
+
+    window.renderP3Stats = () => {
+        let histTotal = 0;
+        let yearTotal = 0;
+        let currentYearStr = sysDate.getFullYear().toString();
+        let h = "";
+        
+        let sortedP3 = [...allP3Data].sort((a,b) => new Date(convertFrDateToIso(b.date)||0) - new Date(convertFrDateToIso(a.date)||0));
+        
+        sortedP3.forEach(p => {
+            let amt = parseFloat(p.amt) || 0;
+            histTotal += amt;
+            if (p.date && p.date.includes(currentYearStr)) yearTotal += amt;
+            
+            h += `<div class="list-line">
+                    <span>Versement du ${escapeHTML(p.date)}</span>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <b class="num">${amt.toFixed(2)} CHF</b> 
+                        <i class="fa-solid fa-trash-can" onclick="delD('pillar3','${p.id}')" style="opacity:0.2; cursor:pointer;"></i>
+                    </div>
+                  </div>`;
+        });
+        
+        document.getElementById('p3-total-display').innerText = histTotal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('p3-year-display').innerText = yearTotal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        
+        if(document.getElementById('ded-p3')) document.getElementById('ded-p3').value = yearTotal;
+        document.getElementById('list-p3').innerHTML = h || "<p style='color:var(--apple-muted); padding:10px 0;'>Aucun versement enregistré.</p>";
+    };
+
+    window.runAdvisoryOptimizationDiagnostic = () => {
+        let p3TotYear = parseFloat(document.getElementById('ded-p3')?.value) || 0;
+        let html = "";
+        if(p3TotYear < 7056) {
+            html += `<div class="advisory-box"><h4>Optimisation Prévoyance 3A (${sysDate.getFullYear()})</h4><p style="font-size:0.85rem; margin-top:5px;">Vos versements annuels s'élèvent à <b>${p3TotYear.toFixed(2)} CHF</b> sur un plafond légal de <b>7'056 CHF</b>. Réduire l'écart permet d'abaisser l'impôt ICC/IFD imposable sur Vaud.</p></div>`;
+        }
+        document.getElementById('advisory-diagnostic-nodes').innerHTML = html || "<p style='color:var(--apple-muted); text-align:center;'>Gestion saine. Aucun écart budgétaire identifié.</p>";
+    };
+
+    window.renderSportStats = () => {
+        console.log("Les données sportives sont chargées :", allSportData.length, "sessions.");
+    };
+
+    window.editStock = (id) => {
+        const line = allStocks.find(x => x.id === id); if(!line) return;
+        editStockId = id; document.getElementById('stock-ticker').value = line.ticker;
+        document.getElementById('stock-qty').value = line.qty; document.getElementById('stock-prm').value = line.prm;
+        document.getElementById('stock-live').value = line.live; document.getElementById('bourse-form-title').innerText = "Ajuster la position";
+    };
+
+    window.editCredit = (id) => {
+        const c = allCredits.find(x => x.id === id); if(!c) return;
+        editCreditId = id; document.getElementById('cr-name').value = c.name;
+        document.getElementById('cr-total').value = c.total; document.getElementById('cr-mens').value = c.mens;
+        document.getElementById('cr-start').value = c.start;
+        document.getElementById('cr-end').value = c.end || "";
+        document.getElementById('cr-ccy').value = c.ccy || "CHF"; document.getElementById('btn-submit-credit').innerText = "Modifier l'Engagement";
+    };
+
+    window.syncSav = async () => {
+        const sq = parseFloat(document.getElementById('sav-sq').value) || 0;
+        const ep = parseFloat(document.getElementById('sav-ep').value) || 0;
+        const ec = parseFloat(document.getElementById('sav-ec').value) || 0;
+        await setDoc(doc(db, "savings", auth.currentUser.uid), { sq, ep, ec });
+        totalLiquidsCalculated = sq + ep + ec;
+        document.getElementById('sav-total-global').innerText = totalLiquidsCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        window.consolidateTotalAssets();
+    };
+
+    async function loadSavings(uid) {
+        const d = await getDoc(doc(db, "savings", uid));
+        if(d.exists()) {
+            const v = d.data(); document.getElementById('sav-sq').value = v.sq||0; document.getElementById('sav-ep').value = v.ep||0; document.getElementById('sav-ec').value = v.ec||0;
+            totalLiquidsCalculated = parseFloat(v.sq||0) + parseFloat(v.ep||0) + parseFloat(v.ec||0);
+            document.getElementById('sav-total-global').innerText = totalLiquidsCalculated.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        }
+    }
+
+    window.saveImmo = async (key) => {
+        const payload = { total: parseFloat(document.getElementById(`immo-${key}-total`).value)||0, ccy: document.getElementById(`immo-${key}-ccy`).value, rate: parseFloat(document.getElementById(`immo-${key}-rate`).value)||0, dur: parseInt(document.getElementById(`immo-${key}-dur`).value)||0, start: document.getElementById(`immo-${key}-start`).value };
+        await updateDoc(doc(db, "immo", auth.currentUser.uid), { [key]: payload }); window.triggerDynamicImmo(key);
+    };
+
+    window.triggerDynamicImmo = (key) => {
+        const total = parseFloat(document.getElementById(`immo-${key}-total`).value) || 0; const rate = parseFloat(document.getElementById(`immo-${key}-rate`).value) || 0;
+        const dur = parseInt(document.getElementById(`immo-${key}-dur`).value) || 0; const start = document.getElementById(`immo-${key}-start`).value;
+        const ccy = document.getElementById(`immo-${key}-ccy`).value;
+        let target = document.getElementById(`immo-${key}-target`).value; if (!target) target = `${String(sysDate.getMonth()+1).padStart(2,'0')}/${sysDate.getFullYear()}`;
+        const metrics = evaluateLoanAtTargetDate(total, rate, dur * 12, start, target);
+        
+        let finalRestEUR = metrics.rest;
+        let finalRestCHF = metrics.rest * eurToChfRate;
+        
+        document.getElementById(`calc-${key}-mens`).innerText = metrics.mens.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " " + ccy;
+        
+        if (ccy === "EUR") {
+            document.getElementById(`calc-${key}-rest`).innerText = finalRestEUR.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " EUR (" + finalRestCHF.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF)";
+        } else {
+            document.getElementById(`calc-${key}-rest`).innerText = finalRestEUR.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        }
+        
+        document.getElementById(`calc-${key}-caprep`).innerText = metrics.repaidCap.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " " + ccy;
+        document.getElementById(`calc-${key}-intpaid`).innerText = metrics.paidInt.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " " + ccy;
+    };
+
+    async function loadImmo(uid) {
+        const d = await getDoc(doc(db, "immo", uid));
+        if(d.exists()) {
+            const v = d.data(); ['dury', 'amiens'].forEach(k => { if(v[k]) { document.getElementById(`immo-${k}-total`).value = v[k].total||""; document.getElementById(`immo-${k}-ccy`).value = v[k].ccy || "EUR"; document.getElementById(`immo-${k}-rate`).value = v[k].rate||""; document.getElementById(`immo-${k}-dur`).value = v[k].dur||""; document.getElementById(`immo-${k}-start`).value = v[k].start||""; window.triggerDynamicImmo(k); } });
+        } else { await setDoc(doc(db, "immo", uid), { dury: {}, amiens: {} }); }
+    }
+
+    window.runP2Projection = () => {
+        const baseK = parseFloat(document.getElementById('p2-base-k').value) || 0; const annK = parseFloat(document.getElementById('p2-ann-k').value) || 0;
+        const baseC = parseFloat(document.getElementById('p2-base-c').value) || 0; const annC = parseFloat(document.getElementById('p2-ann-c').value) || 0;
+        const targetY = parseInt(document.getElementById('p2-target-year').value) || sysDate.getFullYear(); const r = (parseFloat(document.getElementById('p2-rate').value) || 1.25) / 100;
+        const totalNow = baseK + baseC; if(document.getElementById('p2-total-now')) document.getElementById('p2-total-now').innerText = totalNow.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        const horizon = Math.max(0, targetY - sysDate.getFullYear()); if(document.getElementById('p2-projection-title')) document.getElementById('p2-projection-title').innerText = `Capital attendu en ${targetY}`;
+        let projK = baseK * Math.pow(1 + r, horizon); let projC = baseC * Math.pow(1 + r, horizon);
+        if (r > 0) { const b = (Math.pow(1 + r, horizon) - 1) / r; projK += annK * b; projC += annC * b; } else { projK += annK * horizon; projC += annC * horizon; }
+        if(document.getElementById('p2-total-projected')) document.getElementById('p2-total-projected').innerText = (projK + projC).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+    };
+
+    window.saveP2Config = async () => {
+        await setDoc(doc(db, "prevoyance2", auth.currentUser.uid), { baseK: parseFloat(document.getElementById('p2-base-k').value)||0, annK: parseFloat(document.getElementById('p2-ann-k').value)||0, baseC: parseFloat(document.getElementById('p2-base-c').value)||0, annC: parseFloat(document.getElementById('p2-ann-c').value)||0, targetY: parseInt(document.getElementById('p2-target-year').value)||2035, rate: parseFloat(document.getElementById('p2-rate').value)||1.25 });
+    };
+
+    async function loadP2Config(uid) {
+        const d = await getDoc(doc(db, "prevoyance2", uid));
+        if(d.exists()) {
+            const v = d.data(); 
+            // Sécurité anti-fantôme
+            document.getElementById('p2-base-k').value = v.baseK || 0; 
+            document.getElementById('p2-ann-k').value = v.annK || 0; 
+            document.getElementById('p2-base-c').value = v.baseC || 0; 
+            document.getElementById('p2-ann-c').value = v.annC || 0; 
+            document.getElementById('p2-target-year').value = v.targetY || 2035; 
+            document.getElementById('p2-rate').value = v.rate || 1.25;
+        }
+        window.runP2Projection();
+    }
+
+    // --- MODULE DE SAUVEGARDE FISCALE ---
+    window.saveTaxConfig = async () => {
+        const payload = {
+            rev: parseFloat(document.getElementById('tax-rev').value) || 0,
+            fort: parseFloat(document.getElementById('tax-fort').value) || 0,
+            status: document.getElementById('tax-status').value || "single",
+            travel: parseFloat(document.getElementById('ded-travel').value) || 0,
+            meals: parseFloat(document.getElementById('ded-meals').value) || 0,
+            insurance: parseFloat(document.getElementById('ded-insurance').value) || 0,
+            immo: parseFloat(document.getElementById('ded-immo').value) || 0,
+            others: parseFloat(document.getElementById('ded-others').value) || 0
+        };
+        await setDoc(doc(db, "taxconfig", auth.currentUser.uid), payload);
+        alert("Configuration fiscale sauvegardée.");
+    };
+
+    async function loadTaxConfig(uid) {
+        const d = await getDoc(doc(db, "taxconfig", uid));
+        if(d.exists()) {
+            const v = d.data();
+            document.getElementById('tax-rev').value = v.rev || 0;
+            document.getElementById('tax-fort').value = v.fort || 0;
+            document.getElementById('tax-status').value = v.status || "single";
+            document.getElementById('ded-travel').value = v.travel || 0;
+            document.getElementById('ded-meals').value = v.meals || 0;
+            document.getElementById('ded-insurance').value = v.insurance || 0;
+            document.getElementById('ded-immo').value = v.immo || 0;
+            document.getElementById('ded-others').value = v.others || 0;
+        }
+        window.calculateTax();
+    }
+
+    window.calculateTax = () => {
+        const rev = parseFloat(document.getElementById('tax-rev').value) || 0; const status = document.getElementById('tax-status').value;
+        const dTravel = parseFloat(document.getElementById('ded-travel').value) || 0; const dMeals = parseFloat(document.getElementById('ded-meals').value) || 0;
+        const dIns = parseFloat(document.getElementById('ded-insurance').value) || 0; const dP3 = parseFloat(document.getElementById('ded-p3').value) || 0;
+        const dImmo = parseFloat(document.getElementById('ded-immo').value) || 0; const dOthers = parseFloat(document.getElementById('ded-others').value) || 0;
+        const netIncome = Math.max(0, rev - (dTravel + dMeals + dIns + dP3 + dImmo + dOthers));
+        let ifd = status === 'couple' ? Math.max(0, (netIncome - 30000) * 0.012) : Math.max(0, (netIncome - 14800) * 0.009);
+        const div = status === 'couple' ? 2 : 1; const baseTaxable = netIncome / div;
+        let baseCantonTax = baseTaxable * 0.082; if(baseTaxable > 60000) baseCantonTax += (baseTaxable - 60000) * 0.035;
+        const cantonalFinal = baseCantonTax * div; const totalTax = ifd + cantonalFinal + (cantonalFinal * 0.785);
+        document.getElementById('tax-res-ifd').innerText = ifd.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-canton').innerText = cantonalFinal.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-commune').innerText = (cantonalFinal * 0.785).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-total').innerText = totalTax.toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+        document.getElementById('tax-res-monthly').innerText = (totalTax / 12).toLocaleString('fr-CH', {minimumFractionDigits:2}) + " CHF";
+    };
+
+    window.openLiquidGlassModal = (cat) => {
+        const matched = allFinData.filter(t => t.cat === cat); let html = "";
+        matched.forEach(t => { html += `<div class="list-line"><span>${escapeHTML(t.desc)} <small style="color:var(--apple-muted)">(${t.date})</small></span><b class="num">${parseFloat(t.amt).toFixed(2)} CHF</b></div>`; });
+        document.getElementById('modal-title').innerText = escapeHTML(cat); document.getElementById('modal-body').innerHTML = html || "Aucune opération.";
+    };
+
+    window.closeModal = () => { document.getElementById('liquid-modal').style.setProperty('display', 'none', 'important'); };
+    window.delD = async (c, id) => { if(confirm("Confirmer la suppression définitive ?")) await deleteDoc(doc(db, c, id)); };
+
+    window.submitFinanceForm = async () => {
+        const cat = document.getElementById('fi-cat').value; const rawDate = document.getElementById('fi-date').value;
+        await addDoc(collection(db, "transactions"), { uid: auth.currentUser.uid, date: convertFrDateToIso(rawDate), desc: document.getElementById('fi-desc').value, amt: parseFloat(document.getElementById('fi-amt').value)||0, cat, type: cat === 'Revenu' ? 'income' : 'expense', ts: Date.now() });
+        document.getElementById('form-finance').reset();
+    };
+
+    window.submitStockPosition = async () => {
+        const p = { ticker: document.getElementById('stock-ticker').value.toUpperCase(), qty: parseFloat(document.getElementById('stock-qty').value)||0, prm: parseFloat(document.getElementById('stock-prm').value)||0, live: parseFloat(document.getElementById('stock-live').value)||0 };
+        if(editStockId) { await setDoc(doc(db, "bourse", editStockId), { ...p, uid: auth.currentUser.uid }); editStockId = null; document.getElementById('bourse-form-title').innerText = "Saisie Ligne Asset"; }
+        else { await addDoc(collection(db, "bourse"), { ...p, uid: auth.currentUser.uid, ts: Date.now() }); }
+        document.getElementById('form-bourse').reset();
+    };
+
+    window.submitCreditForm = async () => {
+        const p = { name: document.getElementById('cr-name').value, total: parseFloat(document.getElementById('cr-total').value)||0, mens: parseFloat(document.getElementById('cr-mens').value)||0, dur: parseInt(document.getElementById('cr-dur').value)||48, start: document.getElementById('cr-start').value, end: document.getElementById('cr-end').value, ccy: document.getElementById('cr-ccy').value };
+        if(editCreditId) { await setDoc(doc(db, "creditsconso", editCreditId), { ...p, uid: auth.currentUser.uid }); editCreditId = null; document.getElementById('btn-submit-credit').innerText = "Inscrire l'Engagement"; }
+        else { await addDoc(collection(db, "creditsconso"), { ...p, uid: auth.currentUser.uid, ts: Date.now() }); }
+        document.getElementById('form-credit').reset();
+    };
+
+    window.submitP3Form = async () => {
+        await addDoc(collection(db, "pillar3"), { uid: auth.currentUser.uid, date: document.getElementById('p3-date').value, amt: parseFloat(document.getElementById('p3-amt').value)||0, ts: Date.now() });
+        document.getElementById('form-p3').reset();
+    };
+
+    window.submitProjectForm = async () => {
+        await addDoc(collection(db, "projects"), { uid: auth.currentUser.uid, name: document.getElementById('p-name').value, budget: parseFloat(document.getElementById('p-budget').value)||0, ts: Date.now() });
+        document.getElementById('form-proj').reset();
+    };
+
+    window.submitSportForm = async () => {
+        await addDoc(collection(db, "sport"), { uid: auth.currentUser.uid, date: document.getElementById('sp-date').value, type: document.getElementById('sp-type').value, dur: parseFloat(document.getElementById('sp-dur').value)||0, kcal: parseFloat(document.getElementById('sp-kcal').value)||0, ts: Date.now() });
+        document.getElementById('form-sport').reset();
+    };
+</script>
+</body>
+</html>
