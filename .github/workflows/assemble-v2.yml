@@ -1,0 +1,32 @@
+name: Assemble Family Office v2
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/assemble-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Assemble verified app.js
+        run: |
+          cat             .build/app.part01.b64             .build/app.part02.b64             .build/app.part03.b64             .build/fix04a.b64             .build/fix04b.b64             .build/fix04c.b64             .build/fix04d.b64             .build/fix04e.b64             .build/fix04f.b64             .build/app.part05.b64             .build/app.part06.b64             .build/app.part07.b64             .build/fix08a.b64             .build/fix08b.b64             .build/fix08c.b64             .build/fix08d.b64             .build/fix08e.b64             .build/fix08f.b64             | tr -d '\n\r' | base64 --decode > app.js
+          echo "da67638108e0f67638204a302d28e2a5dab4b11c52590812484bb5a741473084  app.js" | sha256sum -c -
+          node --check app.js
+
+      - name: Commit v2 engine
+        run: |
+          git config user.name "Family Office Migration"
+          git config user.email "family-office@users.noreply.github.com"
+          rm -rf .build
+          git add app.js .build
+          git commit -m "Complete Family Office v2 application engine"
+          git push
