@@ -1,0 +1,13 @@
+{
+  "name":"Family Office",
+  "short_name":"Family Office",
+  "start_url":"./",
+  "scope":"./",
+  "display":"standalone",
+  "background_color":"#f5f5f7",
+  "theme_color":"#f5f5f7",
+  "lang":"fr",
+  "orientation":"portrait-primary",
+  "categories":["finance","lifestyle"],
+  "icons":[{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
